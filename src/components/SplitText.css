@@ -1,0 +1,9 @@
+.split-parent {
+  position: relative;
+  width: 100%;
+}
+
+.split-word,
+.split-char {
+  backface-visibility: hidden;
+}

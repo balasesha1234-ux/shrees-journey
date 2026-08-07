@@ -1,0 +1,127 @@
+import React, { useState } from 'react';
+import { useLenis } from './hooks/useLenis';
+import { useAudio } from './hooks/useAudio';
+import { CustomCursor } from './components/CustomCursor';
+import { FilmGrain } from './components/FilmGrain';
+import { ParticleField } from './components/ParticleField';
+import { AudioToggle } from './components/AudioToggle';
+import { TimeCompass } from './components/TimeCompass';
+import { MemoryCurator } from './components/MemoryCurator';
+import { PrivateEpilogueModal } from './components/PrivateEpilogueModal';
+import { FilmCredits } from './components/FilmCredits';
+import Hyperspeed, { hyperspeedPresets } from './components/Hyperspeed';
+import { OpeningScene } from './scenes/OpeningScene';
+import { SkyScene } from './scenes/SkyScene';
+import { TimelineScene } from './scenes/TimelineScene';
+import { ReflectionChapter } from './scenes/ReflectionChapter';
+
+export const App: React.FC = () => {
+  // Smooth scroll instance
+  useLenis();
+
+  // Audio manager hook
+  const { isPlaying, isMuted, toggleMute } = useAudio();
+
+  // Active scene state: 'opening' | 'experience'
+  const [sceneState, setSceneState] = useState<'opening' | 'experience'>('opening');
+  const [isSecretModalOpen, setIsSecretModalOpen] = useState(false);
+
+  const handleTransitionToSky = () => {
+    setSceneState('experience');
+    setTimeout(() => {
+      const skyEl = document.getElementById('sky-scene-container');
+      if (skyEl) {
+        skyEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  const handleScrollToTimeline = () => {
+    const timelineEl = document.getElementById('timeline-section');
+    if (timelineEl) {
+      timelineEl.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white flex flex-col justify-between">
+      {/* Luxury Magnetic Custom Cursor */}
+      <CustomCursor />
+
+      {/* Atmospheric Film Grain Overlay */}
+      <FilmGrain />
+
+      {/* Floating Dust & Ambient Light Particles */}
+      <ParticleField count={70} />
+
+      {/* Floating Ambient Audio Control */}
+      <AudioToggle
+        isMuted={isMuted}
+        isPlaying={isPlaying}
+        onToggle={toggleMute}
+      />
+
+      {/* Memory Curator Narrator Companion */}
+      <MemoryCurator />
+
+      {/* Signature Time Compass Instrument (Active during experience) */}
+      {sceneState === 'experience' && <TimeCompass />}
+
+      {/* Secret Chapter & Private Letter Modal */}
+      <PrivateEpilogueModal
+        isOpen={isSecretModalOpen}
+        onClose={() => setIsSecretModalOpen(false)}
+      />
+
+      {/* Scenes Container */}
+      <div className="relative z-10 w-full flex-grow">
+        {sceneState === 'opening' && (
+          <OpeningScene
+            onTransitionToSky={handleTransitionToSky}
+            onUserInteractAudio={toggleMute}
+          />
+        )}
+
+        {sceneState === 'experience' && (
+          <div className="relative w-full flex flex-col">
+            {/* Scene 2: Peaceful Cinematic Sky & World Entrance */}
+            <SkyScene onScrollToNext={handleScrollToTimeline} />
+
+            {/* Scene 3: Emotional Interactive Timeline (2023 - 2026) */}
+            <TimelineScene />
+
+            {/* HYPERSPEED 3D WARP TUNNEL TRANSITION */}
+            <section className="relative w-full h-[600px] md:h-[750px] my-16 overflow-hidden flex items-center justify-center border-y border-[#e5c158]/30 shadow-2xl select-none">
+              <Hyperspeed effectOptions={hyperspeedPresets.one} />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-[#0B0B0F] pointer-events-none z-10" />
+
+              {/* DEAD-CENTERED TYPOGRAPHY OVER WARP PORTAL */}
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-6 pointer-events-none">
+                <div className="max-w-xl flex flex-col items-center gap-3">
+                  <span className="font-general text-xs font-extrabold uppercase tracking-[0.35em] text-[#e5c158]">
+                    Warping Through Time
+                  </span>
+                  <h3 className="font-general text-3xl sm:text-5xl font-extrabold text-[#f0f0f5] leading-tight drop-shadow-[0_0_35px_rgba(229,193,88,0.6)]">
+                    Entering the Reflection Chapter
+                  </h3>
+                </div>
+              </div>
+            </section>
+
+            {/* Scene 4: REFLECTION CHAPTER (Memory Tree & Falling Petals) */}
+            <ReflectionChapter />
+
+            {/* Private Epilogue Hidden Letter */}
+            <PrivateEpilogueModal />
+          </div>
+        )}
+      </div>
+
+      {/* Film End Credits */}
+      <FilmCredits />
+    </main>
+  );
+};
+
+export default App;
