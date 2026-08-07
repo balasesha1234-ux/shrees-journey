@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Lock, Sparkles, X, Heart, Feather, ZoomIn } from 'lucide-react';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import SpecularButton from './SpecularButton';
@@ -152,6 +152,16 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
     };
   }, [internalOpen]);
 
+  const handleClose = useCallback(() => {
+    setInternalOpen(false);
+    setStep('prompt');
+    setPassword('');
+    setError(false);
+    setRevealedCount(0);
+    setActiveLightboxImage(null);
+    if (onClose) onClose();
+  }, [onClose]);
+
   // Handle ESC key to close lightbox or modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -165,7 +175,7 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeLightboxImage, internalOpen]);
+  }, [activeLightboxImage, internalOpen, handleClose]);
 
   // Focus letter container when unlocked so keyboard navigation works immediately
   useEffect(() => {
@@ -194,16 +204,6 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
     } else {
       setError(true);
     }
-  };
-
-  const handleClose = () => {
-    setInternalOpen(false);
-    setStep('prompt');
-    setPassword('');
-    setError(false);
-    setRevealedCount(0);
-    setActiveLightboxImage(null);
-    if (onClose) onClose();
   };
 
   return (

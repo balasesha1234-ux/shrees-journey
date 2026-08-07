@@ -68,7 +68,7 @@ export function useAudio() {
   }, []);
 
   useEffect(() => {
-    const audio = new Audio(ASSET_PATHS.audio.ambientMusic);
+    const audio = new Audio(ASSET_PATHS.audio.backgroundMusic);
     audio.loop = true;
     audio.volume = 0.4;
     audioRef.current = audio;

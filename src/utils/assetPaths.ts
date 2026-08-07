@@ -72,6 +72,7 @@ export const ASSET_PATHS = {
   },
   audio: {
     ambientMusic: '/assets/audio/ambient.mp3',
+    backgroundMusic: '/assets/audio/background.mp3',
   },
 } as const;
 
