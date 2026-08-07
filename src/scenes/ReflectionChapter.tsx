@@ -3,9 +3,10 @@ import { Heart, Sparkles, X } from 'lucide-react';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import CommunityPetalSection from '../components/CommunityPetalSection';
 import SpecularButton from '../components/SpecularButton';
+import { useSupabasePetals } from '../hooks/useSupabasePetals';
 
 interface FallingPetal {
-  id: number;
+  id: number | string;
   x: number;
   y: number;
   vx: number;
@@ -18,27 +19,20 @@ interface FallingPetal {
   country?: string;
 }
 
-const HEARTFELT_PETAL_MESSAGES = [
-  { text: 'Thank you for inspiring me to show up with faith every day.', author: 'A Grateful Supporter', country: 'India' },
-  { text: 'Your authenticity made difficult days so much easier.', author: 'Community Member', country: 'Canada' },
-  { text: 'You proved that small, quiet beginnings can touch millions of hearts.', author: 'Fellow Creator', country: 'United Kingdom' },
-  { text: 'I will always cherish memories of this beautiful journey.', author: 'Longtime Fan', country: 'Australia' },
-  { text: 'Where passion meets purpose, lives are transformed.', author: 'Anonymous Friend', country: 'United States' },
-];
-
 export const ReflectionChapter: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  const { petals: dbPetals, addPetal: addSupabasePetal } = useSupabasePetals();
   const [petals, setPetals] = useState<FallingPetal[]>([]);
   const [activeUnfoldedPetal, setActiveUnfoldedPetal] = useState<FallingPetal | null>(null);
 
-  // Initialize Falling Petals
+  // Synchronize falling petals with fetched Supabase & curated petals
   useEffect(() => {
-    const initial: FallingPetal[] = HEARTFELT_PETAL_MESSAGES.map((msg, i) => ({
-      id: i + 1,
+    const initial: FallingPetal[] = dbPetals.map((msg, i) => ({
+      id: msg.id || i + 1,
       x: Math.random() * (window.innerWidth - 200) + 100,
-      y: Math.random() * (window.innerHeight * 0.7),
-      vx: Math.random() * 0.6 + 0.3,
+      y: Math.random() * (window.innerHeight * 0.6) + 40,
+      vx: Math.random() * 0.5 + 0.3,
       vy: Math.random() * 0.5 + 0.4,
       size: Math.random() * 8 + 12,
       rotation: Math.random() * Math.PI * 2,
@@ -48,7 +42,7 @@ export const ReflectionChapter: React.FC = () => {
       country: msg.country,
     }));
     setPetals(initial);
-  }, []);
+  }, [dbPetals]);
 
   // Atmospheric Canvas: Fog, Light Beams, Floating Particles, Falling Cherry Petals
   useEffect(() => {
@@ -158,22 +152,8 @@ export const ReflectionChapter: React.FC = () => {
     }
   };
 
-  const handleAddCommunityPetal = (name: string, country: string, message: string) => {
-    const newPetal: FallingPetal = {
-      id: Date.now(),
-      x: window.innerWidth * 0.5,
-      y: 80,
-      vx: Math.random() * 0.6 + 0.3,
-      vy: Math.random() * 0.5 + 0.4,
-      size: 16,
-      rotation: 0,
-      vRot: 0.01,
-      text: message,
-      author: name || 'A Grateful Friend',
-      country: country || 'Global',
-    };
-
-    setPetals((prev) => [...prev, newPetal]);
+  const handleAddCommunityPetal = async (name: string, country: string, message: string) => {
+    await addSupabasePetal(name, country, message);
   };
 
   return (
