@@ -9,21 +9,14 @@ export interface PetalData {
   created_at?: string;
 }
 
-const DEFAULT_CURATED_PETALS: PetalData[] = [
-  { id: 'curated-1', text: 'Thank you for inspiring me to show up with faith every day.', author: 'A Grateful Supporter', country: 'India' },
-  { id: 'curated-2', text: 'Your authenticity made difficult days so much easier.', author: 'Community Member', country: 'Canada' },
-  { id: 'curated-3', text: 'You proved that small, quiet beginnings can touch millions of hearts.', author: 'Fellow Creator', country: 'United Kingdom' },
-  { id: 'curated-4', text: 'I will always cherish memories of this beautiful journey.', author: 'Longtime Fan', country: 'Australia' },
-  { id: 'curated-5', text: 'Where passion meets purpose, lives are transformed.', author: 'Anonymous Friend', country: 'United States' },
-];
-
 export function useSupabasePetals() {
-  const [petals, setPetals] = useState<PetalData[]>(DEFAULT_CURATED_PETALS);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [petals, setPetals] = useState<PetalData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchPetals = useCallback(async () => {
     if (!isSupabaseConfigured || !supabase) {
+      setLoading(false);
       return;
     }
 
@@ -38,7 +31,8 @@ export function useSupabasePetals() {
 
       if (dbError) {
         console.warn('Supabase fetch notice:', dbError.message);
-        setError(dbError.message);
+        setError('Unable to load the Memory Garden right now. Please try again in a moment.');
+        setPetals([]);
         return;
       }
 
@@ -50,14 +44,15 @@ export function useSupabasePetals() {
           country: row.country || 'Global',
           created_at: row.created_at,
         }));
-
-        // Merge fetched database petals with curated petals so Memory Tree is always rich
-        setPetals([...fetchedPetals, ...DEFAULT_CURATED_PETALS]);
+        setPetals(fetchedPetals);
+      } else {
+        setPetals([]);
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to fetch petals';
       console.warn('Failed to load petals from Supabase:', msg);
-      setError(msg);
+      setError('Unable to load the Memory Garden right now. Please try again in a moment.');
+      setPetals([]);
     } finally {
       setLoading(false);
     }
@@ -78,6 +73,7 @@ export function useSupabasePetals() {
 
     // Optimistically update local state immediately so UI updates without refresh
     setPetals((prev) => [newPetal, ...prev]);
+    setError(null);
 
     if (isSupabaseConfigured && supabase) {
       try {
