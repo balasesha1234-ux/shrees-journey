@@ -58,7 +58,7 @@ export const CustomCursor: React.FC = () => {
   }, [targetPos]);
 
   return (
-    <>
+    <div className="hidden md:block">
       {/* Ambient Spotlight Glow */}
       <div
         className="fixed pointer-events-none z-[9990] rounded-full transition-transform duration-300 ease-out"
@@ -89,6 +89,6 @@ export const CustomCursor: React.FC = () => {
           boxShadow: isHovered ? '0 0 20px rgba(229, 193, 88, 0.4)' : 'none',
         }}
       />
-    </>
+    </div>
   );
 };
