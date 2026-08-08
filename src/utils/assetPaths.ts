@@ -70,6 +70,14 @@ export const ASSET_PATHS = {
     treeImage: '/assets/ending/tree.jpg',
     treeVideo: '/assets/ending/tree.mp4',
   },
+  cinematicMoments: {
+    moment1: '/assets/moments/moment1.jpg',
+    moment2: '/assets/moments/moment2.jpg',
+    moment3: '/assets/moments/moment3.jpg',
+    moment4: '/assets/moments/moment4.jpg',
+    moment5: '/assets/moments/moment5.jpg',
+    moment6: '/assets/moments/moment6.jpg',
+  },
   audio: {
     ambientMusic: '/assets/audio/ambient.mp3',
     backgroundMusic: '/assets/audio/background.mp3',

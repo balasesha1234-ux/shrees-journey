@@ -3,6 +3,7 @@ import { Heart, Sparkles, X, AlertCircle, RefreshCw } from 'lucide-react';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import CommunityPetalSection from '../components/CommunityPetalSection';
 import SpecularButton from '../components/SpecularButton';
+import LivingGardenCounter from '../components/LivingGardenCounter';
 import { useSupabasePetals } from '../hooks/useSupabasePetals';
 
 interface FallingPetal {
@@ -367,6 +368,9 @@ export const ReflectionChapter: React.FC = () => {
 
       {/* Community Message Component ("Leave Your Petal") */}
       <CommunityPetalSection onAddPetal={handleAddCommunityPetal} />
+
+      {/* FEATURE 1: LIVING GARDEN COUNTER */}
+      <LivingGardenCounter petals={dbPetals} />
     </section>
   );
 };
