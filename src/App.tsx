@@ -10,6 +10,7 @@ import { MemoryCurator } from './components/MemoryCurator';
 import { PrivateEpilogueModal } from './components/PrivateEpilogueModal';
 import { FilmCredits } from './components/FilmCredits';
 import { CinematicMemoryWall } from './components/CinematicMemoryWall';
+import { DeveloperMotiveSection } from './components/DeveloperMotiveSection';
 import Hyperspeed, { hyperspeedPresets } from './components/Hyperspeed';
 import { OpeningScene } from './scenes/OpeningScene';
 import { SkyScene } from './scenes/SkyScene';
@@ -94,6 +95,9 @@ export const App: React.FC = () => {
             {/* CINEMATIC MEMORY WALL (Personal floating memory collection) */}
             <CinematicMemoryWall />
 
+            {/* A LETTER FROM THE DEVELOPER / CREATOR'S MOTIVE SECTION */}
+            <DeveloperMotiveSection />
+
             {/* HYPERSPEED 3D WARP TUNNEL TRANSITION */}
             <section className="relative w-full h-[600px] md:h-[750px] my-16 overflow-hidden flex items-center justify-center border-y border-[#e5c158]/30 shadow-2xl select-none">
               <Hyperspeed effectOptions={hyperspeedPresets.one} />
@@ -115,15 +119,12 @@ export const App: React.FC = () => {
 
             {/* Scene 4: REFLECTION CHAPTER (Memory Tree, Petal Form, Living Counter, Global Map) */}
             <ReflectionChapter />
-
-            {/* Private Epilogue Hidden Letter */}
-            <PrivateEpilogueModal />
           </div>
         )}
       </div>
 
       {/* Film End Credits */}
-      <FilmCredits />
+      <FilmCredits onOpenSecretModal={() => setIsSecretModalOpen(true)} />
     </main>
   );
 };

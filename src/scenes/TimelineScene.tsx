@@ -10,7 +10,8 @@ import MagicBento from '../components/MagicBento';
 import OptionWheel from '../components/OptionWheel';
 import GradualBlur from '../components/GradualBlur';
 import DotField from '../components/DotField';
-import { Calendar, Sparkles, TrendingUp } from 'lucide-react';
+import SpecularButton from '../components/SpecularButton';
+import { Calendar, Sparkles, TrendingUp, X } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -44,6 +45,17 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
       { image: ASSET_PATHS.timeline.y2023.gallery1, title: 'First Steps' },
       { image: ASSET_PATHS.timeline.y2023.gallery2, title: 'Quiet Faith' },
       { image: ASSET_PATHS.timeline.y2023.landscape, title: 'Early Vision' },
+      { image: '/assets/serial/1s.jpg', title: 'Moment 1s' },
+      { image: '/assets/serial/2s.jpg', title: 'Moment 2s' },
+      { image: '/assets/serial/3s.jpg', title: 'Moment 3s' },
+      { image: '/assets/serial/4s.jpg', title: 'Moment 4s' },
+      { image: '/assets/serial/5s.jpg', title: 'Moment 5s' },
+      { image: '/assets/serial/6s.jpg', title: 'Moment 6s' },
+      { image: '/assets/serial/7s.jpg', title: 'Moment 7s' },
+      { image: '/assets/serial/8s.jpg', title: 'Moment 8s' },
+      { image: '/assets/serial/9s.jpg', title: 'Moment 9s' },
+      { image: '/assets/serial/10s.jpg', title: 'Moment 10s' },
+      { image: '/assets/serial/11s.jpg', title: 'Moment 11s' },
     ],
   },
   {
@@ -64,6 +76,15 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
       { image: ASSET_PATHS.timeline.y2024.gallery1, title: '500K Spark' },
       { image: ASSET_PATHS.timeline.y2024.gallery2, title: 'Community Wave' },
       { image: ASSET_PATHS.timeline.y2024.landscape, title: 'Growth Horizon' },
+      { image: '/assets/serial/12s old.jpg', title: 'Moment 12s' },
+      { image: '/assets/serial/13s old.jpg', title: 'Moment 13s' },
+      { image: '/assets/serial/14s old.jpg', title: 'Moment 14s' },
+      { image: '/assets/serial/15s old.jpg', title: 'Moment 15s' },
+      { image: '/assets/serial/16s old.jpg', title: 'Moment 16s' },
+      { image: '/assets/serial/17s mid.jpg', title: 'Moment 17s' },
+      { image: '/assets/serial/18s mid.jpg', title: 'Moment 18s' },
+      { image: '/assets/serial/19s mid.jpg', title: 'Moment 19s' },
+      { image: '/assets/serial/20s mid.jpg', title: 'Moment 20s' },
     ],
   },
   {
@@ -86,6 +107,13 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
       { image: ASSET_PATHS.timeline.y2025.gallery4, title: 'Memory 22s' },
       { image: ASSET_PATHS.timeline.y2025.gallery5, title: 'Memory 23s' },
       { image: ASSET_PATHS.timeline.y2025.landscape, title: 'Expanding Impact' },
+      { image: '/assets/serial/21s.jpg', title: 'Moment 21s' },
+      { image: '/assets/serial/22s.jpg', title: 'Moment 22s' },
+      { image: '/assets/serial/23s.jpg', title: 'Moment 23s' },
+      { image: '/assets/serial/24s.jpg', title: 'Moment 24s' },
+      { image: '/assets/serial/25s.jpg', title: 'Moment 25s' },
+      { image: '/assets/serial/26s.jpg', title: 'Moment 26s' },
+      { image: '/assets/serial/27s.jpg', title: 'Moment 27s' },
     ],
   },
   {
@@ -110,6 +138,12 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
       { image: ASSET_PATHS.timeline.y2026.gallery5, title: 'Memory 26s' },
       { image: ASSET_PATHS.timeline.y2026.gallery6, title: 'Memory 27s' },
       { image: ASSET_PATHS.timeline.y2026.landscape, title: 'Future Horizons' },
+      { image: '/assets/serial/28s.jpg', title: 'Moment 28s' },
+      { image: '/assets/serial/29s.jpg', title: 'Moment 29s' },
+      { image: '/assets/serial/30s.jpg', title: 'Moment 30s' },
+      { image: '/assets/serial/31s.jpg', title: 'Moment 31s' },
+      { image: '/assets/serial/32s.jpg', title: 'Moment 32s' },
+      { image: '/assets/serial/33s.jpg', title: 'Moment 33s' },
     ],
   },
 ];
@@ -117,6 +151,12 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
 export const TimelineScene: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [activeYearIdx, setActiveYearIdx] = useState<number>(0);
+  const [selectedDriftItem, setSelectedDriftItem] = useState<{
+    item: DriftWallItem;
+    year: string;
+    tag: string;
+    quote: string;
+  } | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -335,29 +375,33 @@ export const TimelineScene: React.FC = () => {
 
                     {/* 3D DriftWall Media Frame */}
                     <div className={`lg:col-span-7 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
-                      <div className="animate-reveal relative w-full h-[360px] sm:h-[480px] md:h-[600px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                      <div className="animate-reveal relative w-full h-[380px] sm:h-[500px] md:h-[620px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
                         <DriftWall
                           items={spread.driftItems}
-                          columns={3}
-                          tileWidth={120}
-                          tileHeight={126}
-                          gap={6}
+                          columns={5}
+                          tileWidth={135}
+                          tileHeight={145}
+                          gap={8}
                           tilt={21}
                           turn={-14}
                           perspective={1550}
                           depth={380}
                           speed={42}
                           direction="down"
-                          variance={0.45}
-                          parallax={0.6}
-                          lift={64}
-                          fade={0}
-                          dim={0.55}
+                          dim={0.45}
                           overlayColor="#0B0B0F"
-                          radius={25}
+                          radius={22}
                           roll={-8}
                           pauseOnHover={false}
                           grayscale={false}
+                          onItemClick={(item) =>
+                            setSelectedDriftItem({
+                              item,
+                              year: spread.year,
+                              tag: spread.tag,
+                              quote: spread.quote,
+                            })
+                          }
                         />
                       </div>
                     </div>
@@ -370,6 +414,57 @@ export const TimelineScene: React.FC = () => {
         })}
 
       </div>
+
+      {/* DRIFTWALL PHOTO POPUP LIGHTBOX MODAL */}
+      {selectedDriftItem && (
+        <div
+          onClick={() => setSelectedDriftItem(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/92 backdrop-blur-2xl animate-fade-in cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-w-4xl w-full p-5 sm:p-8 md:p-10 rounded-3xl bg-[#0c0d12] border border-[#e5c158]/40 flex flex-col items-center gap-5 sm:gap-6 shadow-[0_0_90px_rgba(229,193,88,0.25)] text-center cursor-default animate-fade-in max-h-[92vh] overflow-y-auto custom-scrollbar"
+          >
+            <button
+              onClick={() => setSelectedDriftItem(null)}
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 sm:p-2.5 rounded-full bg-white/5 border border-white/15 text-[#f0f0f5]/70 hover:text-[#e5c158] hover:border-[#e5c158] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Uncropped Full Image Container */}
+            <div className="w-full max-h-[52vh] sm:max-h-[62vh] md:max-h-[68vh] rounded-2xl overflow-hidden border border-white/10 bg-[#050507] p-2 flex items-center justify-center shadow-2xl">
+              <img
+                src={selectedDriftItem.item.image}
+                alt={selectedDriftItem.item.title}
+                className="max-w-full max-h-[48vh] sm:max-h-[58vh] md:max-h-[64vh] object-contain rounded-xl"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:gap-2 max-w-xl px-2">
+              <span className="font-general text-[11px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#e5c158]">
+                {selectedDriftItem.year} • {selectedDriftItem.item.title}
+              </span>
+              <h4 className="font-serif italic text-xl sm:text-2xl md:text-3xl text-[#f0f0f5] leading-snug">
+                {selectedDriftItem.quote}
+              </h4>
+            </div>
+
+            <SpecularButton
+              size="md"
+              radius={20}
+              lineColor="#e5c158"
+              baseColor="#0c0d12"
+              onClick={() => setSelectedDriftItem(null)}
+              className="mt-1 sm:mt-2 px-6 sm:px-8"
+            >
+              <span>Return to Timeline ✨</span>
+            </SpecularButton>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
+
+export default TimelineScene;

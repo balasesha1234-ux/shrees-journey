@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Sparkles, User, Globe, PenTool, Wind } from 'lucide-react';
+import { Heart, Sparkles, User, Globe, PenTool, Wind, Award, X } from 'lucide-react';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import SpecularButton from './SpecularButton';
 
@@ -13,6 +13,14 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [isLifting, setIsLifting] = useState(false);
+  const [showKeepsake, setShowKeepsake] = useState(false);
+  const [savedPetalInfo, setSavedPetalInfo] = useState<{
+    id: string;
+    name: string;
+    country: string;
+    message: string;
+    date: string;
+  } | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,18 +28,35 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
 
     setIsLifting(true);
 
-    setTimeout(() => {
-      onAddPetal(name.trim(), country.trim(), message.trim());
-      setSubmitted(true);
-      setIsLifting(false);
-    }, 1200);
+    const petalId = `PETAL #${Math.floor(4800 + Math.random() * 400)}`;
+    const formattedDate = new Date().toLocaleDateString('en-US', {
+      month: 'long',
+      year: 'numeric',
+    });
+
+    const info = {
+      id: petalId,
+      name: name.trim() || 'Anonymous Fan',
+      country: country.trim() || 'Global Family',
+      message: message.trim(),
+      date: formattedDate,
+    };
 
     setTimeout(() => {
-      setName('');
-      setCountry('');
-      setMessage('');
-      setSubmitted(false);
-    }, 5500);
+      onAddPetal(info.name, info.country, info.message);
+      setSavedPetalInfo(info);
+      setSubmitted(true);
+      setIsLifting(false);
+      setShowKeepsake(true);
+    }, 1200);
+  };
+
+  const handleResetForm = () => {
+    setName('');
+    setCountry('');
+    setMessage('');
+    setSubmitted(false);
+    setShowKeepsake(false);
   };
 
   return (
@@ -89,7 +114,7 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
         </div>
 
         {submitted ? (
-          <div className="w-full py-12 px-6 sm:py-16 sm:px-8 rounded-3xl bg-rose-500/10 border border-rose-400/40 text-rose-200 font-general text-base font-semibold flex flex-col items-center gap-4 sm:gap-6 animate-fade-in shadow-2xl">
+          <div className="w-full py-10 px-6 sm:py-14 sm:px-8 rounded-3xl bg-rose-500/10 border border-rose-400/40 text-rose-200 font-general text-base font-semibold flex flex-col items-center gap-4 sm:gap-6 animate-fade-in shadow-2xl">
             <div className="relative flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-rose-500/20 border border-rose-400/60 shadow-[0_0_40px_rgba(244,63,94,0.6)]">
               <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-rose-300 fill-rose-300 animate-pulse" />
             </div>
@@ -99,6 +124,26 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
             <p className="text-xs text-[#f0f0f5]/70 tracking-widest uppercase max-w-md leading-relaxed">
               Your petal is now drifting smoothly with the wind over the Memory Tree
             </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-2">
+              <SpecularButton
+                size="md"
+                radius={20}
+                lineColor="#e5c158"
+                baseColor="#0c0d12"
+                onClick={() => setShowKeepsake(true)}
+              >
+                <Award className="w-4 h-4 text-[#e5c158]" />
+                <span>View Digital Keepsake Card ✨</span>
+              </SpecularButton>
+
+              <button
+                onClick={handleResetForm}
+                className="px-5 py-2.5 rounded-2xl bg-white/5 border border-white/15 text-xs text-[#f0f0f5]/80 hover:text-white hover:border-white/30 transition-all font-semibold uppercase tracking-wider"
+              >
+                Plant Another Petal 🌱
+              </button>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6 sm:gap-8">
@@ -164,6 +209,81 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
           </form>
         )}
       </div>
+
+      {/* DIGITAL KEEPSAKE CARD MODAL */}
+      {showKeepsake && savedPetalInfo && (
+        <div
+          onClick={() => setShowKeepsake(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/92 backdrop-blur-2xl animate-fade-in cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-w-xl w-full p-6 sm:p-10 rounded-[36px] bg-[#0c0d12] border-2 border-[#e5c158]/60 flex flex-col items-center gap-6 shadow-[0_0_100px_rgba(229,193,88,0.3)] text-center cursor-default animate-fade-in"
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowKeepsake(false)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-white/5 border border-white/15 text-[#f0f0f5]/70 hover:text-[#e5c158] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Gold Foil Header Tag */}
+            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e5c158]/15 border border-[#e5c158]/50 text-[#e5c158] font-general text-[10px] sm:text-xs font-bold uppercase tracking-[0.35em]">
+              <Award className="w-4 h-4" />
+              <span>Official Memory Keepsake</span>
+            </div>
+
+            {/* Keepsake Certificate Inner Frame */}
+            <div className="w-full p-6 sm:p-8 rounded-3xl bg-[#050507] border border-[#e5c158]/30 flex flex-col items-center gap-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 bg-[radial-gradient(circle_at_center,rgba(229,193,88,0.15),transparent_70%)] pointer-events-none" />
+
+              <span className="font-general text-xs font-extrabold tracking-[0.4em] text-[#e5c158] uppercase">
+                {savedPetalInfo.id}
+              </span>
+
+              <h3 className="font-general text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight">
+                Shree’s 5 Million Garden
+              </h3>
+
+              <div className="w-16 h-0.5 bg-[#e5c158]/40" />
+
+              <p className="font-serif italic text-base sm:text-lg text-[#f0f0f5]/90 leading-relaxed px-2">
+                “{savedPetalInfo.message}”
+              </p>
+
+              <div className="flex flex-col items-center gap-1 mt-2 text-xs font-semibold text-[#e5c158]">
+                <span>— {savedPetalInfo.name}</span>
+                <span className="text-[10px] text-[#f0f0f5]/60 uppercase tracking-widest">
+                  {savedPetalInfo.country} • {savedPetalInfo.date}
+                </span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-3 w-full">
+              <SpecularButton
+                size="md"
+                radius={20}
+                lineColor="#e5c158"
+                baseColor="#0c0d12"
+                onClick={() => setShowKeepsake(false)}
+                className="px-6"
+              >
+                <Sparkles className="w-4 h-4 text-[#e5c158]" />
+                <span>Keep Memory Card ✨</span>
+              </SpecularButton>
+
+              <button
+                onClick={handleResetForm}
+                className="px-5 py-2.5 rounded-2xl bg-white/5 border border-white/15 text-xs text-[#f0f0f5]/80 hover:text-white hover:border-white/30 transition-all font-semibold uppercase tracking-wider"
+              >
+                Plant Another Petal 🌱
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

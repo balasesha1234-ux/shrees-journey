@@ -10,11 +10,12 @@ export interface MemoryMoment {
   caption: string;
   subtext?: string;
   isHero?: boolean;
+  year?: '2023' | '2024' | '2025' | '2026';
 }
 
 /**
  * CENTRALIZED EDITABLE MEMORY MOMENTS CONFIGURATION
- * Add, remove, reorder, or update photographs easily here.
+ * Real memory moments using authentic timeline photographs.
  */
 export const MEMORY_MOMENTS: MemoryMoment[] = [
   {
@@ -24,6 +25,7 @@ export const MEMORY_MOMENTS: MemoryMoment[] = [
     caption: 'A landmark milestone built on gratitude.',
     subtext: 'Standing together celebrating 5 million hearts connected along the path.',
     isHero: true,
+    year: '2026',
   },
   {
     id: 'moment-01',
@@ -31,48 +33,95 @@ export const MEMORY_MOMENTS: MemoryMoment[] = [
     title: 'Quiet Beginnings',
     caption: 'Where the journey first took root.',
     subtext: 'The small, unseen steps of dedication and passion.',
+    year: '2023',
   },
   {
     id: 'moment-02',
+    image: ASSET_PATHS.timeline.y2023.gallery1,
+    title: 'First Spark',
+    caption: 'Creating content with pure intention.',
+    subtext: 'Nurturing early dreams that would soon inspire millions.',
+    year: '2023',
+  },
+  {
+    id: 'moment-03',
+    image: ASSET_PATHS.timeline.y2023.gallery2,
+    title: 'Unwavering Faith',
+    caption: 'Believing in the vision before the world saw it.',
+    subtext: 'Quiet daily consistency laying the groundwork for legendary chapters.',
+    year: '2023',
+  },
+  {
+    id: 'moment-04',
     image: ASSET_PATHS.timeline.y2024.heroImage,
     title: 'Building Momentum',
     caption: 'Persistence in every single detail.',
     subtext: 'Showing up day after day until the vision began breaking through.',
+    year: '2024',
   },
   {
-    id: 'moment-03',
+    id: 'moment-05',
+    image: ASSET_PATHS.timeline.y2024.gallery1,
+    title: '1 Million Breakthrough',
+    caption: 'A massive wave of shared joy.',
+    subtext: 'Uniting hundreds of thousands across boundaries with authentic love.',
+    year: '2024',
+  },
+  {
+    id: 'moment-06',
+    image: ASSET_PATHS.timeline.y2024.gallery2,
+    title: 'Community Spark',
+    caption: 'Connecting deeply with a vibrant audience.',
+    subtext: 'Turning everyday effort into unforgettable shared milestones.',
+    year: '2024',
+  },
+  {
+    id: 'moment-07',
     image: ASSET_PATHS.timeline.y2025.heroImage,
     title: 'Reaching New Horizons',
     caption: 'Connecting hearts around the world.',
-    subtext: 'A growing community united by authenticity and shared joy.',
+    subtext: 'A growing community united by authenticity and shared purpose.',
+    year: '2025',
   },
   {
-    id: 'moment-04',
+    id: 'moment-08',
+    image: ASSET_PATHS.timeline.y2025.gallery1,
+    title: 'Deep Connections',
+    caption: 'Creating deeper impact across borders.',
+    subtext: 'Weaving timeless memories with supporters worldwide.',
+    year: '2025',
+  },
+  {
+    id: 'moment-09',
+    image: ASSET_PATHS.timeline.y2025.gallery2,
+    title: 'Creative Purpose',
+    caption: 'Crafting memories with care and devotion.',
+    subtext: 'Solidifying a foundation of purpose, creativity, and mutual trust.',
+    year: '2025',
+  },
+  {
+    id: 'moment-10',
     image: ASSET_PATHS.timeline.y2025.landscape,
     title: 'Cherished Reflections',
     caption: 'Unforgettable memories along the way.',
     subtext: 'Memories shared with family, team, and lifelong supporters.',
+    year: '2025',
   },
   {
-    id: 'moment-05',
+    id: 'moment-11',
+    image: ASSET_PATHS.timeline.y2026.gallery1,
+    title: 'Eternal Celebration',
+    caption: 'Moments of genuine happiness and unity.',
+    subtext: 'Grateful for every single soul who believes in this journey.',
+    year: '2026',
+  },
+  {
+    id: 'moment-12',
     image: ASSET_PATHS.timeline.y2026.landscape,
     title: 'Looking to the Future',
-    caption: 'The story continues forward.',
+    caption: 'The story continues forward into eternity.',
     subtext: 'Every milestone is simply the threshold of a greater chapter.',
-  },
-  {
-    id: 'moment-06',
-    image: ASSET_PATHS.timeline.y2025.gallery1,
-    title: 'Behind the Scenes',
-    caption: 'The quiet hours of preparation.',
-    subtext: 'Crafting content with care when no one was watching.',
-  },
-  {
-    id: 'moment-07',
-    image: ASSET_PATHS.timeline.y2026.gallery2,
-    title: 'Shared Celebrations',
-    caption: 'Moments of genuine happiness.',
-    subtext: 'Grateful for every single soul who believes in this journey.',
+    year: '2026',
   },
 ];
 
@@ -80,9 +129,26 @@ export const CinematicMemoryWall: React.FC = () => {
   const [activeMoment, setActiveMoment] = useState<MemoryMoment | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedMobileId, setSelectedMobileId] = useState<string | null>(null);
+  const [selectedEra, setSelectedEra] = useState<string>('all');
 
   const heroMoment = MEMORY_MOMENTS.find((m) => m.isHero) || MEMORY_MOMENTS[0];
   const surroundingMoments = MEMORY_MOMENTS.filter((m) => m.id !== heroMoment.id);
+
+  // Hand-curated organic balanced layout offsets for surrounding photo cards
+  const organicPositions = [
+    { top: '2%', left: '4%', rotate: '-5deg', animClass: 'animate-float-a' },     // Top-Left
+    { top: '4%', left: '26%', rotate: '3deg', animClass: 'animate-float-c' },    // Top-Center-Left
+    { top: '4%', right: '26%', rotate: '-3deg', animClass: 'animate-float-b' },  // Top-Center-Right
+    { top: '2%', right: '4%', rotate: '5deg', animClass: 'animate-float-d' },    // Top-Right
+    { top: '38%', left: '1.5%', rotate: '2deg', animClass: 'animate-float-b' },   // Mid-Far-Left
+    { top: '42%', left: '20%', rotate: '-4deg', animClass: 'animate-float-c' },  // Mid-Inner-Left
+    { top: '42%', right: '20%', rotate: '4deg', animClass: 'animate-float-a' },  // Mid-Inner-Right
+    { top: '38%', right: '1.5%', rotate: '-2deg', animClass: 'animate-float-d' }, // Mid-Far-Right
+    { top: '74%', left: '4%', rotate: '-4deg', animClass: 'animate-float-d' },   // Bottom-Left
+    { top: '76%', left: '26%', rotate: '3deg', animClass: 'animate-float-a' },   // Bottom-Mid-Left
+    { top: '76%', right: '26%', rotate: '-3deg', animClass: 'animate-float-c' }, // Bottom-Mid-Right
+    { top: '74%', right: '4%', rotate: '4deg', animClass: 'animate-float-b' },   // Bottom-Right
+  ];
 
   // Touch tap handler for mobile & tablet compatibility
   const handleCardTap = (moment: MemoryMoment) => {
@@ -106,7 +172,7 @@ export const CinematicMemoryWall: React.FC = () => {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(229,193,88,0.12),transparent_70%)] pointer-events-none" />
 
       {/* Header */}
-      <header className="relative z-10 max-w-3xl text-center flex flex-col items-center gap-3 mb-12 sm:mb-16 lg:mb-24">
+      <header className="relative z-10 max-w-3xl text-center flex flex-col items-center gap-3 mb-8 sm:mb-12 lg:mb-16">
         <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/90 px-4 py-1.5 rounded-full border border-[#e5c158]/30 backdrop-blur-md shadow-lg">
           <Sparkles className="w-4 h-4 text-[#e5c158]" />
           <span className="font-general text-[11px] sm:text-xs font-bold uppercase tracking-[0.35em]">
@@ -121,10 +187,27 @@ export const CinematicMemoryWall: React.FC = () => {
         <p className="font-general italic text-sm sm:text-lg lg:text-xl text-[#e5c158]/90 max-w-lg leading-relaxed px-2">
           “Moments that shaped the story, floating softly through time.”
         </p>
+
+        {/* ERA FILTER PILL BAR */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-4 z-20">
+          {['all', '2023', '2024', '2025', '2026'].map((era) => (
+            <button
+              key={era}
+              onClick={() => setSelectedEra(era)}
+              className={`px-4 py-1.5 rounded-full font-general text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${
+                selectedEra === era
+                  ? 'bg-[#e5c158] text-[#0c0d12] shadow-[0_0_20px_rgba(229,193,88,0.5)] scale-105'
+                  : 'bg-[#0c0d12]/90 border border-white/10 text-[#f0f0f5]/70 hover:text-[#e5c158] hover:border-[#e5c158]/50'
+              }`}
+            >
+              {era === 'all' ? 'All Eras' : `${era} Era`}
+            </button>
+          ))}
+        </div>
       </header>
 
       {/* ORGANIC FLOATING MEMORY WALL CONTAINER (DESKTOP / LARGE TABLET) */}
-      <div className="relative z-10 max-w-6xl w-full hidden md:flex flex-col items-center justify-center min-h-[620px] my-4">
+      <div className="relative z-10 max-w-7xl w-full hidden md:flex flex-col items-center justify-center min-h-[820px] my-4">
         
         {/* CENTER HERO PHOTOGRAPH */}
         <div
@@ -132,39 +215,50 @@ export const CinematicMemoryWall: React.FC = () => {
           onMouseEnter={() => setHoveredId(heroMoment.id)}
           onMouseLeave={() => setHoveredId(null)}
           data-cursor-hover
-          className="relative z-20 w-72 h-96 rounded-3xl p-2.5 bg-[#0c0d12] border-2 border-[#e5c158]/50 shadow-[0_0_50px_rgba(229,193,88,0.35)] cursor-pointer transition-all duration-400 ease-out group animate-pulse-subtle"
-          style={{
-            transform: hoveredId === heroMoment.id ? 'scale(1.04) translateZ(30px)' : 'scale(1)',
-            filter: hoveredId === heroMoment.id ? 'brightness(112%) contrast(104%)' : 'brightness(100%)',
-            boxShadow: hoveredId === heroMoment.id ? '0 0 60px rgba(229,193,88,0.55)' : undefined,
-          }}
+          className={`relative z-20 cursor-pointer pointer-events-auto transition-all duration-500 ${
+            selectedEra !== 'all' && heroMoment.year !== selectedEra ? 'opacity-40 filter brightness-75 scale-95' : 'opacity-100'
+          }`}
         >
-          {/* Hero Tag */}
-          <div className="absolute top-4 left-4 z-30 px-3 py-1 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/60 text-[#e5c158] font-general text-[10px] font-bold uppercase tracking-widest backdrop-blur-md pointer-events-none">
-            ⭐ Main Memory
-          </div>
+          {/* LAYER 2: PURE FLOAT KEYFRAME ANIMATION */}
+          <div className={hoveredId === heroMoment.id ? '' : 'animate-float-hero'}>
+            {/* LAYER 3: CARD & HOVER TRANSFORM */}
+            <div
+              className={`w-72 h-96 rounded-3xl p-2.5 bg-[#0c0d12] border-2 shadow-[0_0_50px_rgba(229,193,88,0.35)] transition-all duration-400 ease-out group ${
+                selectedEra === heroMoment.year ? 'border-[#e5c158] shadow-[0_0_70px_rgba(229,193,88,0.7)]' : 'border-[#e5c158]/50'
+              }`}
+              style={{
+                transform: hoveredId === heroMoment.id ? 'scale(1.08)' : 'scale(1)',
+                filter: hoveredId === heroMoment.id ? 'brightness(112%) contrast(104%)' : 'brightness(100%)',
+              }}
+            >
+              {/* Hero Tag */}
+              <div className="absolute top-4 left-4 z-30 px-3 py-1 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/60 text-[#e5c158] font-general text-[10px] font-bold uppercase tracking-widest backdrop-blur-md pointer-events-none">
+                ⭐ Main Memory
+              </div>
 
-          {/* Uncropped Hero Photo Container */}
-          <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
-            <img
-              src={heroMoment.image}
-              alt={heroMoment.title}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-contain filter contrast-105 group-hover:scale-[1.03] transition-transform duration-400 ease-out"
-            />
-            {/* Smooth Fading Ambient Dark Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-[#0c0d12]/20 to-transparent opacity-50 group-hover:opacity-85 transition-opacity duration-400 ease-out pointer-events-none" />
-          </div>
+              {/* Uncropped Hero Photo Container */}
+              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
+                <img
+                  src={heroMoment.image}
+                  alt={heroMoment.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-contain filter contrast-105 group-hover:scale-[1.03] transition-transform duration-400 ease-out"
+                />
+                {/* Smooth Fading Ambient Dark Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-[#0c0d12]/20 to-transparent opacity-50 group-hover:opacity-85 transition-opacity duration-400 ease-out pointer-events-none" />
+              </div>
 
-          {/* Smooth Revealing Hover Badge & Title */}
-          <div className="absolute bottom-3.5 left-3.5 right-3.5 z-30 flex items-center justify-between font-general text-[11px] font-bold uppercase tracking-wider text-[#e5c158] pointer-events-none">
-            <span className="truncate drop-shadow transition-transform duration-400 ease-out group-hover:-translate-y-0.5">
-              {heroMoment.title}
-            </span>
-            <div className="transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400 ease-out bg-black/85 backdrop-blur-md px-3 py-1 rounded-full border border-[#e5c158]/50 shadow-md flex items-center gap-1 shrink-0">
-              <ZoomIn className="w-3.5 h-3.5 text-[#e5c158]" />
-              <span>View</span>
+              {/* Smooth Revealing Hover Badge & Title */}
+              <div className="absolute bottom-3.5 left-3.5 right-3.5 z-30 flex items-center justify-between font-general text-[11px] font-bold uppercase tracking-wider text-[#e5c158] pointer-events-none">
+                <span className="truncate drop-shadow transition-transform duration-400 ease-out group-hover:-translate-y-0.5">
+                  {heroMoment.title}
+                </span>
+                <div className="transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400 ease-out bg-black/85 backdrop-blur-md px-3 py-1 rounded-full border border-[#e5c158]/50 shadow-md flex items-center gap-1 shrink-0">
+                  <ZoomIn className="w-3.5 h-3.5 text-[#e5c158]" />
+                  <span>View</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -172,65 +266,71 @@ export const CinematicMemoryWall: React.FC = () => {
         {/* SURROUNDING ORGANIC FLOATING PHOTOGRAPHS */}
         <div className="absolute inset-0 w-full h-full pointer-events-none">
           {surroundingMoments.map((moment, index) => {
-            // Calculated organic offsets around the center hero photo
-            const positions = [
-              { top: '4%', left: '8%', rotate: '-3deg', delay: '0s' },    // Top-Left
-              { top: '6%', right: '8%', rotate: '4deg', delay: '1.2s' },   // Top-Right
-              { top: '42%', left: '4%', rotate: '2deg', delay: '2.4s' },   // Mid-Left
-              { top: '44%', right: '4%', rotate: '-4deg', delay: '3.6s' }, // Mid-Right
-              { bottom: '4%', left: '12%', rotate: '-2deg', delay: '0.8s' }, // Bottom-Left
-              { bottom: '6%', right: '12%', rotate: '3deg', delay: '2.0s' }, // Bottom-Right
-              { bottom: '2%', left: '42%', rotate: '1deg', delay: '1.6s' },  // Bottom-Center
-            ];
-
-            const pos = positions[index % positions.length];
+            const pos = organicPositions[index % organicPositions.length];
             const isHovered = hoveredId === moment.id;
+            const isSelectedEra = selectedEra === moment.year;
+            const isFilteredOut = selectedEra !== 'all' && !isSelectedEra;
 
             return (
+              /* LAYER 1: ABSOLUTE GRID PLACEMENT */
               <div
                 key={moment.id}
                 onClick={() => setActiveMoment(moment)}
                 onMouseEnter={() => setHoveredId(moment.id)}
                 onMouseLeave={() => setHoveredId(null)}
                 data-cursor-hover
-                className="absolute w-52 h-72 rounded-3xl p-2 bg-[#0c0d12] border border-[#e5c158]/30 shadow-xl cursor-pointer pointer-events-auto transition-all duration-400 ease-out group"
+                className={`absolute cursor-pointer pointer-events-auto transition-all duration-500 ${
+                  isFilteredOut ? 'opacity-30 filter brightness-65 scale-95' : 'opacity-100'
+                }`}
                 style={{
                   top: pos.top,
                   left: pos.left,
                   right: pos.right,
-                  bottom: pos.bottom,
-                  transform: isHovered
-                    ? 'scale(1.04) rotate(0deg) translateZ(20px)'
-                    : `rotate(${pos.rotate})`,
                   zIndex: isHovered ? 40 : 10 + index,
-                  boxShadow: isHovered
-                    ? '0 0 35px rgba(229,193,88,0.45)'
-                    : '0 10px 25px rgba(0,0,0,0.7)',
-                  filter: isHovered ? 'brightness(112%) contrast(104%)' : 'brightness(92%)',
-                  animation: !isHovered ? `floatDrift 7s ease-in-out infinite alternate ${pos.delay}` : 'none',
                 }}
               >
-                {/* Uncropped Photo Container */}
-                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
-                  <img
-                    src={moment.image}
-                    alt={moment.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-contain filter contrast-105 group-hover:scale-[1.03] transition-transform duration-400 ease-out"
-                  />
-                  {/* Smooth Fading Ambient Dark Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-[#0c0d12]/20 to-transparent opacity-50 group-hover:opacity-85 transition-opacity duration-400 ease-out pointer-events-none" />
-                </div>
+                {/* LAYER 2: PURE FLOAT KEYFRAME ANIMATION */}
+                <div className={`w-48 lg:w-52 h-64 lg:h-72 ${!isHovered ? pos.animClass : ''}`}>
+                  {/* LAYER 3: INNER CARD WITH ORGANIC TILT & HOVER SCALE */}
+                  <div
+                    className={`w-full h-full rounded-3xl p-2 bg-[#0c0d12] border shadow-xl transition-all duration-400 ease-out group ${
+                      isSelectedEra
+                        ? 'border-[#e5c158] shadow-[0_0_35px_rgba(229,193,88,0.55)] scale-[1.04]'
+                        : 'border-[#e5c158]/30'
+                    }`}
+                    style={{
+                      transform: isHovered ? 'scale(1.08) rotate(0deg)' : `rotate(${pos.rotate})`,
+                      boxShadow: isHovered
+                        ? '0 0 45px rgba(229,193,88,0.55)'
+                        : isSelectedEra
+                        ? '0 0 35px rgba(229,193,88,0.55)'
+                        : '0 10px 30px rgba(0,0,0,0.8)',
+                      filter: isHovered ? 'brightness(112%) contrast(104%)' : 'brightness(92%)',
+                    }}
+                  >
+                    {/* Uncropped Photo Container */}
+                    <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
+                      <img
+                        src={moment.image}
+                        alt={moment.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-contain filter contrast-105 group-hover:scale-[1.03] transition-transform duration-400 ease-out"
+                      />
+                      {/* Smooth Fading Ambient Dark Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-[#0c0d12]/20 to-transparent opacity-50 group-hover:opacity-85 transition-opacity duration-400 ease-out pointer-events-none" />
+                    </div>
 
-                {/* Smooth Revealing Hover Badge & Title */}
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 z-30 flex items-center justify-between font-general text-[10px] font-bold uppercase tracking-wider text-[#e5c158] pointer-events-none">
-                  <span className="truncate drop-shadow transition-transform duration-400 ease-out group-hover:-translate-y-0.5">
-                    {moment.title}
-                  </span>
-                  <div className="transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400 ease-out bg-black/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-[#e5c158]/50 shadow-md flex items-center gap-1 shrink-0">
-                    <ZoomIn className="w-3 h-3 text-[#e5c158]" />
-                    <span className="text-[9px]">View</span>
+                    {/* Smooth Revealing Hover Badge & Title */}
+                    <div className="absolute bottom-2.5 left-2.5 right-2.5 z-30 flex items-center justify-between font-general text-[10px] font-bold uppercase tracking-wider text-[#e5c158] pointer-events-none">
+                      <span className="truncate drop-shadow transition-transform duration-400 ease-out group-hover:-translate-y-0.5">
+                        {moment.title}
+                      </span>
+                      <div className="transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400 ease-out bg-black/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-[#e5c158]/50 shadow-md flex items-center gap-1 shrink-0">
+                        <ZoomIn className="w-3 h-3 text-[#e5c158]" />
+                        <span className="text-[9px]">View</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -240,13 +340,13 @@ export const CinematicMemoryWall: React.FC = () => {
 
       </div>
 
-      {/* INTENTIONAL RESPONSIVE COMPOSITION (MOBILE & SMALL TABLET) */}
+      {/* INTENTIONAL RESPONSIVE COMPOSITION (MOBILE & SMALL TABLET WITH EXPANDED MEMORY GRID) */}
       <div className="relative z-10 w-full max-w-2xl md:hidden flex flex-col gap-6 my-2">
         
         {/* PROMINENT MOBILE HERO CARD */}
         <div
           onClick={() => handleCardTap(heroMoment)}
-          className={`relative w-full h-80 sm:h-96 rounded-3xl p-2.5 bg-[#0c0d12] border-2 border-[#e5c158]/50 shadow-[0_0_35px_rgba(229,193,88,0.3)] transition-all duration-300 ${
+          className={`animate-float-hero relative w-full h-80 sm:h-96 rounded-3xl p-2.5 bg-[#0c0d12] border-2 border-[#e5c158]/50 shadow-[0_0_35px_rgba(229,193,88,0.3)] transition-all duration-300 ${
             selectedMobileId === heroMoment.id ? 'scale-[1.02] border-[#e5c158]' : ''
           }`}
         >
@@ -272,18 +372,20 @@ export const CinematicMemoryWall: React.FC = () => {
           </div>
         </div>
 
-        {/* SURROUNDING MEMORIES GRID (MOBILE & TABLET) */}
+        {/* SURROUNDING MEMORIES GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {surroundingMoments.map((moment) => {
+          {surroundingMoments.map((moment, idx) => {
             const isSelected = selectedMobileId === moment.id;
+            const animClass = idx % 2 === 0 ? 'animate-float-a' : 'animate-float-b';
+            const isFilteredOut = selectedEra !== 'all' && moment.year !== selectedEra;
 
             return (
               <div
                 key={moment.id}
                 onClick={() => handleCardTap(moment)}
-                className={`relative w-full h-64 sm:h-72 rounded-3xl p-2 bg-[#0c0d12] border border-[#e5c158]/30 shadow-xl cursor-pointer transition-all duration-300 flex flex-col justify-between ${
-                  isSelected ? 'scale-[1.02] border-[#e5c158] shadow-[0_0_25px_rgba(229,193,88,0.4)]' : ''
-                }`}
+                className={`${animClass} relative w-full h-64 sm:h-72 rounded-3xl p-2 bg-[#0c0d12] border border-[#e5c158]/30 shadow-xl cursor-pointer transition-all duration-300 flex flex-col justify-between ${
+                  isFilteredOut ? 'opacity-40 grayscale' : 'opacity-100'
+                } ${isSelected ? 'scale-[1.02] border-[#e5c158] shadow-[0_0_25px_rgba(229,193,88,0.4)]' : ''}`}
               >
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
                   <img
@@ -336,7 +438,7 @@ export const CinematicMemoryWall: React.FC = () => {
 
             <div className="flex flex-col gap-1.5 sm:gap-2 max-w-xl px-2">
               <span className="font-general text-[11px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#e5c158]">
-                {activeMoment.title}
+                {activeMoment.year ? `${activeMoment.year} Era • ` : ''}{activeMoment.title}
               </span>
               <h4 className="font-serif italic text-xl sm:text-2xl md:text-3xl text-[#f0f0f5] leading-snug">
                 “{activeMoment.caption}”
@@ -361,31 +463,6 @@ export const CinematicMemoryWall: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Floating Drift Keyframes & Accessibility Styles Injection */}
-      <style>{`
-        @keyframes floatDrift {
-          0% { transform: translateY(0px) rotate(-1deg); }
-          50% { transform: translateY(-8px) rotate(1deg); }
-          100% { transform: translateY(0px) rotate(-1deg); }
-        }
-        @keyframes pulse-subtle {
-          0%, 100% { box-shadow: 0 0 50px rgba(229, 193, 88, 0.35); }
-          50% { box-shadow: 0 0 65px rgba(229, 193, 88, 0.5); }
-        }
-        .animate-pulse-subtle {
-          animation: pulse-subtle 4s ease-in-out infinite;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .animate-pulse-subtle {
-            animation: none !important;
-          }
-          div[style*="floatDrift"] {
-            animation: none !important;
-          }
-        }
-      `}</style>
     </section>
   );
 };

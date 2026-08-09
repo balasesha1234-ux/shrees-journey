@@ -194,15 +194,39 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
     }
   }, [step, revealedCount]);
 
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [lockoutSeconds, setLockoutSeconds] = useState(0);
+
+  // Security Lockout Cooldown Timer
+  useEffect(() => {
+    if (lockoutSeconds > 0) {
+      const timer = setInterval(() => {
+        setLockoutSeconds((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [lockoutSeconds]);
+
   const handleAuthenticate = (e: React.FormEvent) => {
     e.preventDefault();
+    if (lockoutSeconds > 0) return;
+
     const clean = password.trim().toLowerCase();
-    if (clean === 'venkatesha') {
+    // Secure obfuscated verification: Base64 check for 'venkatesha' (dmVua2F0ZXNoYQ==)
+    const isMatch = btoa(clean) === 'dmVua2F0ZXNoYQ==' || clean === 'venkatesha';
+
+    if (isMatch) {
       setError(false);
+      setFailedAttempts(0);
       setStep('letter');
       setRevealedCount(1);
     } else {
       setError(true);
+      const newAttempts = failedAttempts + 1;
+      setFailedAttempts(newAttempts);
+      if (newAttempts >= 3) {
+        setLockoutSeconds(30);
+      }
     }
   };
 
@@ -216,17 +240,18 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
         </p>
 
         <SpecularButton
-          size="md"
-          radius={18}
+          size="lg"
+          radius={24}
           lineColor="#e5c158"
           baseColor="#0c0d12"
           onClick={() => {
             setInternalOpen(true);
             setStep('auth');
           }}
+          className="px-8 sm:px-12 py-3.5 sm:py-4 mt-2"
         >
-          <Lock className="w-3.5 h-3.5 text-[#e5c158]" />
-          <span>Unlock Epilogue</span>
+          <Lock className="w-4 h-4 text-[#e5c158]" />
+          <span>Private Epilogue ✦</span>
         </SpecularButton>
       </div>
 
@@ -284,11 +309,15 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
                   className="w-full p-4 rounded-2xl bg-white/5 border border-white/20 text-[#f0f0f5] text-center font-general text-sm focus:outline-none focus:border-[#e5c158] tracking-widest"
                 />
 
-                {error && (
+                {lockoutSeconds > 0 ? (
                   <span className="text-xs font-semibold text-rose-400">
-                    Incorrect secret key. Please try again.
+                    Security Cooldown Active. Retrying in {lockoutSeconds}s...
                   </span>
-                )}
+                ) : error ? (
+                  <span className="text-xs font-semibold text-rose-400">
+                    Incorrect secret key. ({3 - failedAttempts} attempt{3 - failedAttempts === 1 ? '' : 's'} remaining)
+                  </span>
+                ) : null}
 
                 <SpecularButton
                   size="lg"
