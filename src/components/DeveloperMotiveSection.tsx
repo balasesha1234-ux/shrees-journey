@@ -130,7 +130,11 @@ export const DeveloperMotiveSection: React.FC = () => {
                 </p>
 
                 <p className="border-l-2 border-[#e5c158]/50 pl-4 py-1 text-[#e5c158]/95 font-serif">
-                  Along this path, life brought unexpected blessings—accidentally meeting Shree herself and being able to talk with her and her brothers, as well as meeting Vardhan Prabhu Ji, Dhrubayan, Yogesh, Vicky, and Ram (onlogic). Beyond memories, this journey gave me a true purpose to achieve in life, a spiritual awakening, and brothers for life who will stand together forever.
+                  Along this path, life brought unexpected blessings—accidentally meeting Shree herself and being able to talk with her and her brothers, Garv Ji and Moksh Ji. Beyond memories, this journey gave me a true purpose to achieve in life, a spiritual awakening, and brothers for life who will stand together forever.
+                </p>
+
+                <p>
+                  To my brothers—Vardhan Prabhu Ji, Garv Ji, Moksh Ji, Dhrubayan Ji, Yogesh Ji, Vicky Ji, and Ram Ji (onlogic)—thank you for walking beside me. You supported me through every low and high, sent thoughtful gifts to make me feel special, valued my advice, and showed me genuine respect. You are more than friends; you are lifelong brothers who mean the world to me.
                 </p>
 
                 <p>
