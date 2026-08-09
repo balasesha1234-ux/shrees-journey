@@ -49,13 +49,10 @@ export const FilmCredits: React.FC<FilmCreditsProps> = ({ onOpenSecretModal }) =
               <span>Garv Ji</span>
               <span>Moksh Ji</span>
             </p>
-            <span className="text-[#e5c158]/80 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.3em] mt-1">Companions & Brothers on the Path</span>
+            <span className="text-[#e5c158]/80 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.3em] mt-1">Companions on the Path</span>
             <p className="font-general text-sm sm:text-lg font-bold text-[#f0f0f5]/90 tracking-[0.2em] flex flex-col gap-1">
               <span>Vardhan Prabhu Ji</span>
               <span>Dhrubayan Ji</span>
-              <span>Yogesh Ji</span>
-              <span>Vicky Ji</span>
-              <span>Ram Ji (onlogic)</span>
             </p>
           </div>
         </div>
