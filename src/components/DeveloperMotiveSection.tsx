@@ -129,6 +129,10 @@ export const DeveloperMotiveSection: React.FC = () => {
                   Her journey wasn't just inspiring content; it became a quiet spiritual compass. Her consistency, humility, and positive energy guided me toward inner peace, faith, and a deeper connection to the spiritual world.
                 </p>
 
+                <p className="border-l-2 border-[#e5c158]/50 pl-4 py-1 text-[#e5c158]/95 font-serif">
+                  Along this path, life brought unexpected blessings—accidentally meeting Shree herself and being able to talk with her and her brothers, as well as meeting Vardhan Prabhu Ji, Dhrubayan, Yogesh, Vicky, and Ram (onlogic). Beyond memories, this journey gave me a true purpose to achieve in life, a spiritual awakening, and brothers for life who will stand together forever.
+                </p>
+
                 <p>
                   Every line of code, every floating memory card, and every golden light on this website was crafted with care to celebrate her 5 Million milestone and share that light with everyone who walks through this journey.
                 </p>
