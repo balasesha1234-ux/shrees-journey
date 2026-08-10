@@ -21,13 +21,13 @@ export const TimeCompass: React.FC<TimeCompassProps> = ({
   };
 
   return (
-    <div className="fixed top-1/2 -translate-y-1/2 left-4 sm:left-8 z-40 w-44 h-80 pointer-events-auto hidden lg:block">
+    <div className="fixed top-1/2 -translate-y-1/2 right-4 sm:right-8 z-40 w-44 h-80 pointer-events-auto hidden lg:block">
       <OptionWheel
         items={years}
         defaultSelected={0}
         textColor="#a6a6a6"
         activeColor="#e5c158"
-        side="left"
+        side="right"
         fontSize={3}
         spacing={1.4}
         curve={1}
