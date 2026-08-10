@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import { GridMotion } from '../components/GridMotion';
@@ -16,7 +16,6 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
   onUserInteractAudio,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -87,27 +86,13 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
       id="opening-scene-container"
       className="relative w-full h-screen bg-[#0B0B0F] text-[#f0f0f5] font-general select-none overflow-hidden flex flex-col items-center justify-center text-center"
     >
-      {/* AMBIENT LOOPING BACKGROUND VIDEO LAYER ON LANDING PAGE */}
-      {!videoError && (
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          onError={() => setVideoError(true)}
-          className="absolute inset-0 w-full h-full object-cover opacity-45 filter blur-[1px] brightness-125 scale-105 z-0"
-        >
-          <source src={ASSET_PATHS.intro.montageVideo} type="video/mp4" />
-        </video>
-      )}
-
-      {/* GRID MOTION BACKGROUND ANIMATION ON LANDING PAGE WITH BRIGHT VISIBLE PHOTOS */}
-      <div className="absolute inset-0 z-0 opacity-85 brightness-125 contrast-110">
+      {/* INTERACTIVE GRID MOTION BACKGROUND ANIMATION - 100% EDGE-TO-EDGE FULL-SCREEN COVERAGE WITH ZERO BOTTOM GAP */}
+      <div className="absolute inset-0 w-full h-full z-0 opacity-80 brightness-110 contrast-105 scale-125 pointer-events-none">
         <GridMotion items={gridItems} gradientColor="#0B0B0F" />
       </div>
 
-      {/* Soft Vignette Overlay Mask for High-Visibility Photo Backdrop */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/70 via-transparent to-[#0B0B0F]/85 pointer-events-none z-0" />
+      {/* Vignette Overlay Mask for High Contrast Title & Interaction Readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/80 via-[#0B0B0F]/30 to-[#0B0B0F]/90 pointer-events-none z-0" />
 
       {/* Title Text Mask & Opening Sequence Content */}
       <div className="relative z-10 flex flex-col items-center gap-6 max-w-4xl p-8">
@@ -154,3 +139,5 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
     </section>
   );
 };
+
+export default OpeningScene;
