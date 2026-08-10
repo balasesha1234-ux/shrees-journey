@@ -12,7 +12,7 @@ export const LivingGardenCounter: React.FC<LivingGardenCounterProps> = ({ petals
   const indianStates = new Set([
     'andhra pradesh','arunachal pradesh','assam','bihar','chhattisgarh','goa','gujarat','haryana','himachal pradesh','jharkhand','karnataka','kerala','madhya pradesh','maharashtra','manipur','meghalaya','mizoram','nagaland','odisha','punjab','rajasthan','sikkim','tamil nadu','telangana','tripura','uttar pradesh','uttarakhand','west bengal','delhi','puducherry','jammu and kashmir','ladakh']
   );
-  const normalizeCountry = (c) => {
+  const normalizeCountry = (c: string) => {
     const lower = c.trim().toLowerCase();
     if (indianStates.has(lower)) return 'india';
     return lower;

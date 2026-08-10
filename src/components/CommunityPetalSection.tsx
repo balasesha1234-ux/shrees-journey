@@ -25,7 +25,7 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanMessage = message.replace(/<[^>]*>/g, '').trim().slice(0, 300);
+    const cleanMessage = message.replace(/<[^>]*>/g, '').trim();
     if (!cleanMessage) return;
 
     const cleanName = name.replace(/<[^>]*>/g, '').trim().slice(0, 40);
@@ -197,7 +197,6 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
               <textarea
                 required
                 rows={5}
-                maxLength={300}
                 placeholder="Write your heartfelt memory or reflection..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}

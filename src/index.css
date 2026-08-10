@@ -1,4 +1,9 @@
-@import "tailwindcss";
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
 
 @layer base {
   body {
@@ -6,6 +11,14 @@
     color: #f0f0f5;
     overflow-x: hidden;
   }
+}
+
+/* GPU Hardware Acceleration Utilities for Butter-Smooth 60/120fps Animations */
+.gpu-accelerated {
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 /* Custom Scrollbar */
