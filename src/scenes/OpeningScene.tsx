@@ -84,15 +84,15 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
     <section
       ref={containerRef}
       id="opening-scene-container"
-      className="relative w-full min-h-[100dvh] bg-[#0B0B0F] text-[#f0f0f5] font-general select-none overflow-y-auto sm:overflow-hidden flex flex-col items-center justify-center text-center py-10 sm:py-0"
+      className="relative w-full h-screen min-h-[100dvh] bg-[#0B0B0F] text-[#f0f0f5] font-general select-none overflow-hidden flex flex-col items-center justify-center text-center"
     >
-      {/* INTERACTIVE GRID MOTION BACKGROUND ANIMATION - 100% EDGE-TO-EDGE FULL-SCREEN COVERAGE WITH ZERO BOTTOM GAP */}
-      <div className="absolute inset-0 w-full h-full z-0 opacity-80 brightness-110 contrast-105 scale-125 pointer-events-none">
-        <GridMotion items={gridItems} gradientColor="#0B0B0F" />
+      {/* INTERACTIVE GRID MOTION BACKGROUND ANIMATION - 100% EDGE-TO-EDGE FULL-SCREEN COVERAGE */}
+      <div className="absolute inset-0 w-full h-full z-0 opacity-85 brightness-110 scale-110 pointer-events-none overflow-hidden">
+        <GridMotion items={gridItems} gradientColor="transparent" />
       </div>
 
-      {/* Vignette Overlay Mask for High Contrast Title & Interaction Readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/80 via-[#0B0B0F]/30 to-[#0B0B0F]/90 pointer-events-none z-0" />
+      {/* Subtle Dark Radial Blur Overlay for Readable Hero Text */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(11,11,15,0.4)_0%,rgba(11,11,15,0.85)_100%)] pointer-events-none z-0" />
 
       {/* Title Text Mask & Opening Sequence Content */}
       <div className="relative z-10 flex flex-col items-center gap-6 max-w-4xl p-8">
