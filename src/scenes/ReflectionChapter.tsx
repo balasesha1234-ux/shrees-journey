@@ -31,6 +31,7 @@ export const ReflectionChapter: React.FC = () => {
       phase: number;
       rotation: number;
       rotationSpeed: number;
+      isHovered?: boolean;
     }
   }>({});
 
@@ -163,39 +164,43 @@ export const ReflectionChapter: React.FC = () => {
             phase: Math.random() * Math.PI * 2,
             rotation: (Math.random() - 0.5) * 360,
             rotationSpeed: (Math.random() - 0.5) * 0.25,
+            isHovered: false,
           };
         }
 
         const state = physicsRefs.current[id];
+        const isHovered = Boolean(state.isHovered || el.matches(':hover'));
 
-        // Apply velocities
-        state.x += state.vx;
-        state.y += state.vy;
-        state.phase += state.swaySpeed;
-        state.rotation += state.rotationSpeed;
+        // Advance position only when NOT static and NOT hovered
+        if (!isStatic && !isHovered) {
+          state.x += state.vx;
+          state.y += state.vy;
+          state.phase += state.swaySpeed;
+          state.rotation += state.rotationSpeed;
 
-        // Keep strictly inside the boundary of the sanctuary box in pixels
-        const paddingX = 40;
-        const paddingY = 40;
-        const xMin = paddingX;
-        const xMax = boxWidth - paddingX;
-        const yMin = paddingY;
-        const yMax = boxHeight - paddingY;
+          // Keep strictly inside the boundary of the sanctuary box in pixels
+          const paddingX = 40;
+          const paddingY = 40;
+          const xMin = paddingX;
+          const xMax = boxWidth - paddingX;
+          const yMin = paddingY;
+          const yMax = boxHeight - paddingY;
 
-        if (state.x < xMin) {
-          state.x = xMin;
-          state.vx = Math.abs(state.vx);
-        } else if (state.x > xMax) {
-          state.x = xMax;
-          state.vx = -Math.abs(state.vx);
-        }
+          if (state.x < xMin) {
+            state.x = xMin;
+            state.vx = Math.abs(state.vx);
+          } else if (state.x > xMax) {
+            state.x = xMax;
+            state.vx = -Math.abs(state.vx);
+          }
 
-        if (state.y < yMin) {
-          state.y = yMin;
-          state.vy = Math.abs(state.vy);
-        } else if (state.y > yMax) {
-          state.y = yMax;
-          state.vy = -Math.abs(state.vy);
+          if (state.y < yMin) {
+            state.y = yMin;
+            state.vy = Math.abs(state.vy);
+          } else if (state.y > yMax) {
+            state.y = yMax;
+            state.vy = -Math.abs(state.vy);
+          }
         }
 
         // Calculate offset from initial position
@@ -206,8 +211,12 @@ export const ReflectionChapter: React.FC = () => {
         const swayX = Math.sin(state.phase) * state.swayRange;
         const swayY = Math.cos(state.phase * 0.85) * (state.swayRange * 0.7);
 
+        // Smooth scale & zIndex boost on hover/static
+        const scale = isStatic ? 1.35 : isHovered ? 1.25 : 1;
+        el.style.zIndex = isStatic ? '30' : isHovered ? '40' : '10';
+
         // Apply pure 3D transforms offloaded to GPU
-        el.style.transform = `translate3d(${dx + swayX}px, ${dy + swayY}px, 0) rotate(${state.rotation}deg)`;
+        el.style.transform = `translate3d(${dx + swayX}px, ${dy + swayY}px, 0) rotate(${state.rotation}deg) scale(${scale})`;
       });
 
       animId = requestAnimationFrame(updatePhysics);
@@ -217,19 +226,15 @@ export const ReflectionChapter: React.FC = () => {
     return () => cancelAnimationFrame(animId);
   }, [fallingPetals]);
 
-  const handlePetalHoverEnter = (p: FallingPetal) => {
-    // Temporarily freeze petal while hovered (if not already the active clicked petal)
-    setFallingPetals((prev) =>
-      prev.map((item) => (item.id === p.id ? { ...item, isStatic: true } : item))
-    );
+  const handlePetalHoverEnter = (id: number | string) => {
+    if (physicsRefs.current[id]) {
+      physicsRefs.current[id].isHovered = true;
+    }
   };
 
-  const handlePetalHoverLeave = (p: FallingPetal) => {
-    // Unfreeze only if this petal is not the actively opened one
-    if (activeUnfoldedPetal?.id !== p.id) {
-      setFallingPetals((prev) =>
-        prev.map((item) => (item.id === p.id ? { ...item, isStatic: false } : item))
-      );
+  const handlePetalHoverLeave = (id: number | string) => {
+    if (physicsRefs.current[id]) {
+      physicsRefs.current[id].isHovered = false;
     }
   };
 
@@ -344,8 +349,8 @@ export const ReflectionChapter: React.FC = () => {
             <button
               key={p.id}
               onClick={() => handlePetalTap(p)}
-              onMouseEnter={() => handlePetalHoverEnter(p)}
-              onMouseLeave={() => handlePetalHoverLeave(p)}
+              onMouseEnter={() => handlePetalHoverEnter(p.id)}
+              onMouseLeave={() => handlePetalHoverLeave(p.id)}
               data-cursor-hover
               data-petal-id={p.id}
               data-init-x={p.xPercent}
@@ -355,14 +360,14 @@ export const ReflectionChapter: React.FC = () => {
                 left: `${p.xPercent}%`,
                 top: `${p.yPercent}%`,
               }}
-              className={`absolute pointer-events-auto group w-8 h-12 rounded-[50%_0_50%_50%] transition-shadow duration-300 active:scale-95 cursor-pointer flex items-center justify-center ${
+              className={`absolute pointer-events-auto group w-8 h-12 rounded-[50%_0_50%_50%] transition-transform duration-200 ease-out active:scale-95 cursor-pointer flex items-center justify-center ${
                 p.isStatic
-                  ? 'bg-gradient-to-br from-[#e5c158] via-[#ffd700] to-[#b89530] border-2 border-white shadow-[0_0_35px_#e5c158] scale-130 z-30'
-                  : 'bg-gradient-to-br from-rose-300/90 via-pink-400/95 to-rose-400/90 border-2 border-[#e5c158]/70 hover:border-white shadow-[0_0_20px_rgba(244,63,94,0.45)] hover:scale-115'
+                  ? 'bg-gradient-to-br from-[#e5c158] via-[#ffd700] to-[#b89530] border-2 border-white shadow-[0_0_35px_#e5c158] z-30'
+                  : 'bg-gradient-to-br from-rose-300/90 via-pink-400/95 to-rose-400/90 border-2 border-[#e5c158]/70 hover:border-white shadow-[0_0_20px_rgba(244,63,94,0.45)] hover:shadow-[0_0_35px_rgba(255,255,255,0.9)]'
               } petal-node`}
             >
               {/* Central Glowing Heart Essence inside Petal */}
-              <Heart className={`w-3.5 h-3.5 ${p.isStatic ? 'text-[#0c0d12] fill-[#0c0d12]' : 'text-white/80 fill-white/80 group-hover:scale-125'} transition-transform`} />
+              <Heart className={`w-3.5 h-3.5 ${p.isStatic ? 'text-[#0c0d12] fill-[#0c0d12]' : 'text-white/80 fill-white/80 group-hover:scale-130 group-hover:text-white'} transition-all duration-200`} />
             </button>
           ))}
         </div>
