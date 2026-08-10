@@ -2,17 +2,20 @@ import React, { useEffect, useRef } from 'react';
 
 export const CustomCursor: React.FC = () => {
   const spotlightRef = useRef<HTMLDivElement | null>(null);
+  const ringRef = useRef<HTMLDivElement | null>(null);
   const dotRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // Completely disable custom cursor on touch devices to save 100% of mouse listener CPU
+    // Disable custom cursor on touch devices
     const isTouch = window.innerWidth < 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouch) return;
 
     let mouseX = -100;
     let mouseY = -100;
-    let currentX = -100;
-    let currentY = -100;
+    let dotX = -100;
+    let dotY = -100;
+    let trailX = -100;
+    let trailY = -100;
     let animId: number;
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -22,18 +25,27 @@ export const CustomCursor: React.FC = () => {
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
-    // Direct DOM ref transform loop - ZERO React state re-renders!
+    // Smooth Lerp Physics Loop - Zero React state re-renders!
     const render = () => {
-      currentX += (mouseX - currentX) * 0.22;
-      currentY += (mouseY - currentY) * 0.22;
+      // Fast lerp for main dot
+      dotX += (mouseX - dotX) * 0.45;
+      dotY += (mouseY - dotY) * 0.45;
 
-      const transformStr = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+      // Smooth trailing lerp for outer glowing ring and spotlight lens
+      trailX += (mouseX - trailX) * 0.15;
+      trailY += (mouseY - trailY) * 0.15;
 
-      if (spotlightRef.current) {
-        spotlightRef.current.style.transform = transformStr;
-      }
+      const dotTransform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+      const trailTransform = `translate3d(${trailX}px, ${trailY}px, 0) translate(-50%, -50%)`;
+
       if (dotRef.current) {
-        dotRef.current.style.transform = transformStr;
+        dotRef.current.style.transform = dotTransform;
+      }
+      if (ringRef.current) {
+        ringRef.current.style.transform = trailTransform;
+      }
+      if (spotlightRef.current) {
+        spotlightRef.current.style.transform = trailTransform;
       }
 
       animId = requestAnimationFrame(render);
@@ -48,18 +60,26 @@ export const CustomCursor: React.FC = () => {
   }, []);
 
   return (
-    <div className="hidden md:block pointer-events-none">
-      {/* Ambient Spotlight Glow */}
+    <div className="hidden md:block pointer-events-none select-none">
+      {/* 1. Large Ambient Spotlight Glow Lens */}
       <div
         ref={spotlightRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9990] w-[220px] h-[220px] rounded-full opacity-60 bg-[radial-gradient(circle,rgba(229,193,88,0.18)_0%,rgba(229,193,88,0.02)_40%,transparent_70%)] will-change-transform"
+        className="fixed top-0 left-0 pointer-events-none z-[9990] w-[320px] h-[320px] rounded-full bg-[radial-gradient(circle,rgba(229,193,88,0.22)_0%,rgba(229,193,88,0.04)_45%,transparent_70%)] will-change-transform opacity-80"
       />
 
-      {/* Main Liquid Pointer Dot */}
+      {/* 2. Trailing Glowing Golden Spotlight Ring */}
+      <div
+        ref={ringRef}
+        className="fixed top-0 left-0 pointer-events-none z-[9995] w-14 h-14 rounded-full border-2 border-[#e5c158] bg-[radial-gradient(circle,rgba(229,193,88,0.35)_0%,rgba(229,193,88,0.08)_50%,transparent_70%)] shadow-[0_0_35px_rgba(229,193,88,0.7)] backdrop-blur-[1px] will-change-transform"
+      />
+
+      {/* 3. Main Liquid Glowing Pointer Dot */}
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9999] w-[10px] h-[10px] rounded-full bg-[#e5c158] border border-rgba(229,193,88,0.6) shadow-[0_0_12px_rgba(229,193,88,0.5)] will-change-transform"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] w-4 h-4 rounded-full bg-[#e5c158] border-2 border-white shadow-[0_0_25px_#e5c158] will-change-transform"
       />
     </div>
   );
 };
+
+export default CustomCursor;
