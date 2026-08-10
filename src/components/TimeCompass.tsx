@@ -13,24 +13,33 @@ export const TimeCompass: React.FC<TimeCompassProps> = ({
   // Two-way scroll sync: Update active year on OptionWheel as user scrolls through sections
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      const viewportMid = window.innerHeight * 0.5;
 
+      let activeIdx = -1;
       years.forEach((year, index) => {
         const el = document.getElementById(`year-section-${year}`);
         if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setSelectedIndex(index);
+          const rect = el.getBoundingClientRect();
+          // If section top has entered middle area of viewport and section bottom is still visible
+          if (rect.top <= viewportMid && rect.bottom >= 120) {
+            activeIdx = index;
           }
         }
       });
+
+      if (activeIdx !== -1) {
+        setSelectedIndex(activeIdx);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, [years]);
 
   const handleYearChange = (index: number, year: string) => {

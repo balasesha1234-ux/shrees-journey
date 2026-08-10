@@ -179,21 +179,30 @@ export const CinematicMemoryWall: React.FC = () => {
           “Moments that shaped the story, floating softly through time.”
         </p>
 
-        {/* ERA FILTER PILL BAR */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-4 z-20">
-          {['all', '2023', '2024', '2025', '2026'].map((era) => (
-            <button
-              key={era}
-              onClick={() => setSelectedEra(era)}
-              className={`px-4 py-1.5 rounded-full font-general text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${
-                selectedEra === era
-                  ? 'bg-[#e5c158] text-[#0c0d12] shadow-[0_0_20px_rgba(229,193,88,0.5)] scale-105'
-                  : 'bg-[#0c0d12]/90 border border-white/10 text-[#f0f0f5]/70 hover:text-[#e5c158] hover:border-[#e5c158]/50'
-              }`}
-            >
-              {era === 'all' ? 'All Eras' : `${era} Era`}
-            </button>
-          ))}
+        {/* ERA FILTER PILL BAR WITH SPECULAR BUTTON ANIMATION */}
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-5 mt-6 mb-2 z-20 max-w-3xl px-4">
+          {['all', '2023', '2024', '2025', '2026'].map((era) => {
+            const isSelected = selectedEra === era;
+            return (
+              <SpecularButton
+                key={era}
+                size="sm"
+                radius={24}
+                lineColor={isSelected ? '#ffffff' : '#e5c158'}
+                baseColor={isSelected ? '#e5c158' : '#0c0d12'}
+                onClick={() => setSelectedEra(era)}
+                className={`transition-all duration-300 ${
+                  isSelected
+                    ? '!bg-gradient-to-r !from-[#e5c158] !via-[#ffd700] !to-[#b89530] !text-[#0c0d12] font-black shadow-[0_0_25px_rgba(229,193,88,0.7)] scale-105'
+                    : 'hover:scale-105'
+                }`}
+              >
+                <span className={`text-[11px] font-bold uppercase tracking-widest ${isSelected ? 'text-[#0c0d12]' : 'text-[#f0f0f5]/90'}`}>
+                  {era === 'all' ? 'All Eras ✦' : `${era} Era 🌸`}
+                </span>
+              </SpecularButton>
+            );
+          })}
         </div>
       </header>
 

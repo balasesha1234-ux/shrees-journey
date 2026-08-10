@@ -192,7 +192,7 @@ export const OptionWheel: React.FC<OptionWheelProps> = ({
     if (selected !== undefined && selected !== selectedRef.current) {
       selectedRef.current = selected;
       setSelectedIndex(selected);
-      applyTarget(selected, true, false);
+      applyTarget(selected, false, false);
     }
   }, [selected, applyTarget]);
 
