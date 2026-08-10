@@ -25,7 +25,11 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    const cleanMessage = message.replace(/<[^>]*>/g, '').trim().slice(0, 300);
+    if (!cleanMessage) return;
+
+    const cleanName = name.replace(/<[^>]*>/g, '').trim().slice(0, 40);
+    const cleanCountry = country.replace(/<[^>]*>/g, '').trim().slice(0, 40);
 
     setIsLifting(true);
 
@@ -37,9 +41,9 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
 
     const info = {
       id: petalId,
-      name: name.trim() || 'Anonymous Fan',
-      country: country.trim() || 'Global Family',
-      message: message.trim(),
+      name: cleanName || 'Anonymous Fan',
+      country: cleanCountry || 'Global Family',
+      message: cleanMessage,
       date: formattedDate,
     };
 
@@ -167,6 +171,7 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
                 <input
                   type="text"
                   placeholder="Your Name (Optional)"
+                  maxLength={40}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full pl-11 pr-4 py-3.5 sm:py-4 rounded-2xl bg-white/[0.04] border border-white/15 text-[#f0f0f5] font-general text-sm focus:outline-none focus:border-[#e5c158] focus:ring-1 focus:ring-[#e5c158]/60 transition-all placeholder:text-[#f0f0f5]/35 backdrop-blur-md min-h-[44px]"
@@ -178,6 +183,7 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
                 <input
                   type="text"
                   placeholder="Country / Location (Optional)"
+                  maxLength={40}
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
                   className="w-full pl-11 pr-4 py-3.5 sm:py-4 rounded-2xl bg-white/[0.04] border border-white/15 text-[#f0f0f5] font-general text-sm focus:outline-none focus:border-[#e5c158] focus:ring-1 focus:ring-[#e5c158]/60 transition-all placeholder:text-[#f0f0f5]/35 backdrop-blur-md min-h-[44px]"
@@ -191,6 +197,7 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
               <textarea
                 required
                 rows={5}
+                maxLength={300}
                 placeholder="Write your heartfelt memory or reflection..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
