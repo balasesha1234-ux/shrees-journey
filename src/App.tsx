@@ -18,6 +18,7 @@ import { OpeningScene } from './scenes/OpeningScene';
 import { SkyScene } from './scenes/SkyScene';
 import { TimelineScene } from './scenes/TimelineScene';
 import { ReflectionChapter } from './scenes/ReflectionChapter';
+import { ViewModeToggle } from './components/ViewModeToggle';
 
 export const App: React.FC = () => {
   // Smooth scroll instance
@@ -25,9 +26,12 @@ export const App: React.FC = () => {
 
   // Audio manager hook
   const { isPlaying, isMuted, toggleMute } = useAudio();
-  const isMobile = useIsMobile(768);
+  const autoMobile = useIsMobile(768);
 
+  const [viewMode, setViewMode] = useState<'auto' | 'mobile' | 'desktop'>('auto');
   const [isSecretModalOpen, setIsSecretModalOpen] = useState(false);
+
+  const isMobile = viewMode === 'auto' ? autoMobile : viewMode === 'mobile';
 
   const handleScrollToNext = (targetId: string) => {
     const el = document.getElementById(targetId);
@@ -42,6 +46,7 @@ export const App: React.FC = () => {
         <FilmGrain />
         <ParticleField count={20} />
         <AudioToggle isMuted={isMuted} isPlaying={isPlaying} onToggle={toggleMute} />
+        <ViewModeToggle viewMode={viewMode} onChangeViewMode={setViewMode} />
         
         <MobileExperience
           onUserInteractAudio={toggleMute}
@@ -131,6 +136,9 @@ export const App: React.FC = () => {
 
       {/* Film End Credits */}
       <FilmCredits onOpenSecretModal={() => setIsSecretModalOpen(true)} />
+
+      {/* Floating View Mode Switcher Badge (Allows switching Desktop / Mobile view instantly) */}
+      <ViewModeToggle viewMode={viewMode} onChangeViewMode={setViewMode} />
     </main>
   );
 };
