@@ -84,7 +84,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
     <section
       ref={containerRef}
       id="opening-scene-container"
-      className="relative w-full h-screen bg-[#0B0B0F] text-[#f0f0f5] font-general select-none overflow-hidden flex flex-col items-center justify-center text-center"
+      className="relative w-full min-h-[100dvh] bg-[#0B0B0F] text-[#f0f0f5] font-general select-none overflow-y-auto sm:overflow-hidden flex flex-col items-center justify-center text-center py-10 sm:py-0"
     >
       {/* INTERACTIVE GRID MOTION BACKGROUND ANIMATION - 100% EDGE-TO-EDGE FULL-SCREEN COVERAGE WITH ZERO BOTTOM GAP */}
       <div className="absolute inset-0 w-full h-full z-0 opacity-80 brightness-110 contrast-105 scale-125 pointer-events-none">

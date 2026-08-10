@@ -86,7 +86,7 @@ export const BlurText: React.FC<BlurTextProps> = ({
             key={idx}
             className="inline-block transition-all duration-300 ease-out"
             style={{
-              opacity: inView ? 1 : 0,
+              opacity: inView || isMobile ? 1 : 0,
               filter: inView || isMobile ? 'none' : 'blur(8px)',
               transform: inView || isMobile ? 'translateY(0)' : `translateY(${translateY})`,
               transitionDelay: `${itemDelay}ms`,

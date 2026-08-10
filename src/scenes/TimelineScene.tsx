@@ -157,11 +157,22 @@ export const TimelineScene: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
+    const isMobile = window.innerWidth < 768 || 'ontouchstart' in window;
+    if (isMobile) {
+      // Guarantee immediate visibility on mobile viewports
+      const reveals = containerRef.current?.querySelectorAll('.animate-reveal');
+      reveals?.forEach((el) => {
+        (el as HTMLElement).style.opacity = '1';
+        (el as HTMLElement).style.transform = 'none';
+      });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       MAGAZINE_SPREADS.forEach((item) => {
         const sectionEl = document.getElementById(`year-section-${item.year}`);
         if (sectionEl) {
-          // Reveal animation per section
+          // Reveal animation per section on desktop/tablet
           gsap.fromTo(
             sectionEl.querySelectorAll('.animate-reveal'),
             {
