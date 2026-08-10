@@ -12,7 +12,7 @@ export interface BlurTextProps {
 
 export const BlurText: React.FC<BlurTextProps> = ({
   text,
-  delay = 170,
+  delay = 140,
   animateBy = 'words',
   direction = 'top',
   onAnimationComplete,
@@ -25,28 +25,37 @@ export const BlurText: React.FC<BlurTextProps> = ({
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
 
   useEffect(() => {
+    // Bulletproof fallback: Guarantee text is visible on all devices after max 350ms
+    const fallbackTimer = setTimeout(() => {
+      setInView(true);
+    }, 350);
+
     const el = containerRef.current;
-    if (!el) return;
+    if (!el) return () => clearTimeout(fallbackTimer);
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setInView(true);
+            clearTimeout(fallbackTimer);
             observer.disconnect();
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.01, rootMargin: '120px' }
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(fallbackTimer);
+      observer.disconnect();
+    };
   }, []);
 
   useEffect(() => {
     if (inView && onAnimationComplete) {
-      const totalDuration = elements.length * delay + 600;
+      const totalDuration = elements.length * delay + 500;
       const timer = setTimeout(() => {
         onAnimationComplete();
       }, totalDuration);
@@ -62,15 +71,15 @@ export const BlurText: React.FC<BlurTextProps> = ({
     >
       {elements.map((item, idx) => {
         const itemDelay = idx * delay;
-        const translateY = direction === 'top' ? '-18px' : '18px';
+        const translateY = direction === 'top' ? '-12px' : '12px';
 
         return (
           <span
             key={idx}
-            className="inline-block transition-all duration-700 ease-out"
+            className="inline-block transition-all duration-500 ease-out"
             style={{
               opacity: inView ? 1 : 0,
-              filter: inView ? 'blur(0px)' : 'blur(10px)',
+              filter: inView ? 'blur(0px)' : 'blur(8px)',
               transform: inView ? 'translateY(0)' : `translateY(${translateY})`,
               transitionDelay: `${itemDelay}ms`,
             }}
