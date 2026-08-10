@@ -11,7 +11,7 @@ interface Particle {
   alphaSpeed: number;
 }
 
-export const ParticleField: React.FC<{ count?: number }> = ({ count = 65 }) => {
+export const ParticleField: React.FC<{ count?: number }> = ({ count }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -21,6 +21,11 @@ export const ParticleField: React.FC<{ count?: number }> = ({ count = 65 }) => {
     if (!ctx) return;
 
     let animationFrameId: number;
+    
+    // Responsive particle count: lighter on mobile screens for 60fps performance
+    const isMobile = window.innerWidth < 768;
+    const activeCount = count ?? (isMobile ? 25 : 45);
+
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
@@ -33,23 +38,32 @@ export const ParticleField: React.FC<{ count?: number }> = ({ count = 65 }) => {
     window.addEventListener('resize', handleResize);
 
     const colors = [
-      'rgba(229, 193, 88, ', // Gold
-      'rgba(240, 240, 245, ', // White
-      'rgba(141, 169, 196, ', // Soft atmospheric blue
+      'rgba(229, 193, 88, ',  // Warm Gold
+      'rgba(240, 240, 245, ', // Crisp White
+      'rgba(141, 169, 196, ', // Soft Blue
     ];
 
-    const particles: Particle[] = Array.from({ length: count }, () => ({
+    const particles: Particle[] = Array.from({ length: activeCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      radius: Math.random() * 1.8 + 0.5,
+      radius: Math.random() * 1.5 + 0.5,
       color: colors[Math.floor(Math.random() * colors.length)],
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: -Math.random() * 0.35 - 0.08, // Slow upward drift
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: -Math.random() * 0.3 - 0.05, // Slow upward drift
       alpha: Math.random(),
-      alphaSpeed: (Math.random() * 0.008 + 0.002) * (Math.random() > 0.5 ? 1 : -1),
+      alphaSpeed: (Math.random() * 0.006 + 0.002) * (Math.random() > 0.5 ? 1 : -1),
     }));
 
-    const render = () => {
+    let lastTime = performance.now();
+
+    const render = (time: number) => {
+      // Throttle to ~60fps maximum to prevent CPU overheating
+      if (time - lastTime < 14) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+      lastTime = time;
+
       ctx.clearRect(0, 0, width, height);
 
       particles.forEach((p) => {
@@ -57,7 +71,7 @@ export const ParticleField: React.FC<{ count?: number }> = ({ count = 65 }) => {
         p.y += p.vy;
         p.alpha += p.alphaSpeed;
 
-        if (p.alpha <= 0.1 || p.alpha >= 0.85) {
+        if (p.alpha <= 0.1 || p.alpha >= 0.8) {
           p.alphaSpeed = -p.alphaSpeed;
         }
 
@@ -78,7 +92,7 @@ export const ParticleField: React.FC<{ count?: number }> = ({ count = 65 }) => {
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    animationFrameId = requestAnimationFrame(render);
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -89,7 +103,7 @@ export const ParticleField: React.FC<{ count?: number }> = ({ count = 65 }) => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[10] opacity-80"
+      className="fixed inset-0 pointer-events-none z-[10] opacity-75"
     />
   );
 };

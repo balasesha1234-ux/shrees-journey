@@ -58,19 +58,19 @@ export const hyperspeedPresets = {
     lightStickHeight: [1.3, 1.7],
     movingAwaySpeed: [60, 80],
     movingCloserSpeed: [-120, -160],
-    carLightsLength: [400 * 0.05, 400 * 0.15],
+    carLightsLength: [400 * 0.03, 400 * 0.2],
     carLightsRadius: [0.05, 0.14],
-    carWidth: [1, 2],
-    carHeight: [0.3, 0.6],
-    carSpace: [3, 5],
+    carWidth: [3, 5],
+    carHeight: [2, 3],
+    carSpace: [4, 7],
     colors: {
       roadColor: 0x08080c,
-      islandColor: 0x0a0a10,
-      background: 0x050507,
-      shoulderLines: 0xffffff,
-      brokenLines: 0xffffff,
-      leftCars: [0xd856bf, 0x6750a2, 0xc247ac],
-      rightCars: [0xe5c158, 0xecb435, 0xf6d678],
+      islandColor: 0x0a0a0e,
+      background: 0x000000,
+      shoulderLines: 0xe5c158,
+      brokenLines: 0xe5c158,
+      leftCars: [0xe5c158, 0xffe899, 0xf0f0f5],
+      rightCars: [0x72a5cf, 0x98c1e6, 0xffffff],
       sticks: 0xe5c158,
     },
   },
@@ -85,8 +85,9 @@ interface HyperspeedProps {
 export const Hyperspeed: React.FC<HyperspeedProps> = ({
   effectOptions = hyperspeedPresets.one,
   className = '',
-  style = {},
+  style,
 }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -96,6 +97,20 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
     if (!ctx) return;
 
     let animId: number;
+    let isVisible = true;
+
+    // Pause Three.js render loop when Hyperspeed section is scrolled offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.05 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
     let w = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let h = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
 
@@ -104,29 +119,42 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
       w = canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
       h = canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
     };
+
     window.addEventListener('resize', handleResize);
 
-    // Light Streaks Starfield Tunnel Particles
-    const streaks = Array.from({ length: 140 }, () => ({
+    const isMobile = window.innerWidth < 768;
+    const numStreaks = isMobile ? 35 : 75;
+
+    const streaks = Array.from({ length: numStreaks }, () => ({
       x: (Math.random() - 0.5) * w * 1.5,
       y: (Math.random() - 0.5) * h * 1.5,
-      z: Math.random() * 1000 + 1,
-      length: Math.random() * 90 + 50,
-      color: Math.random() > 0.4 ? '#e5c158' : Math.random() > 0.5 ? '#72a5cf' : '#ffffff',
-      speed: Math.random() * 25 + 15,
+      z: Math.random() * 1000,
+      length: Math.random() * 80 + 30,
+      speed: Math.random() * 14 + 10,
+      color: Math.random() > 0.3 ? '#e5c158' : '#72a5cf',
     }));
 
-    let time = 0;
+    let lastTime = performance.now();
 
-    const render = () => {
-      time += 0.03;
+    const render = (time: number) => {
+      if (!isVisible) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
+      // Throttle render ticks to ~60fps maximum
+      if (time - lastTime < 15) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+      lastTime = time;
+
       ctx.fillStyle = '#050507';
       ctx.fillRect(0, 0, w, h);
 
       const cx = w / 2;
       const cy = h / 2;
 
-      // Draw Warp Speed Light Streaks
       streaks.forEach((st) => {
         st.z -= st.speed;
         if (st.z <= 1) {
@@ -153,7 +181,6 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
         }
       });
 
-      // Warp Tunnel Central Light Core Glow
       const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w, h) * 0.4);
       coreGrad.addColorStop(0, 'rgba(229, 193, 88, 0.25)');
       coreGrad.addColorStop(0.5, 'rgba(114, 165, 207, 0.1)');
@@ -164,16 +191,17 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
       animId = requestAnimationFrame(render);
     };
 
-    render();
+    animId = requestAnimationFrame(render);
 
     return () => {
+      observer.disconnect();
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animId);
     };
   }, [effectOptions]);
 
   return (
-    <div className={`relative w-full h-full overflow-hidden ${className}`} style={style}>
+    <div ref={containerRef} className={`relative w-full h-full overflow-hidden ${className}`} style={style}>
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" />
     </div>
   );

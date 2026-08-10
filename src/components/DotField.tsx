@@ -31,7 +31,7 @@ interface Dot {
 
 export const DotField: React.FC<DotFieldProps> = memo(({
   dotRadius = 1.5,
-  dotSpacing = 14,
+  dotSpacing = 32,
   cursorRadius = 500,
   cursorForce = 0.1,
   bulgeOnly = true,

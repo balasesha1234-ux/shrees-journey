@@ -13,48 +13,43 @@ export const GridMotion: React.FC<GridMotionProps> = ({
 }) => {
   const gridRef = useRef<HTMLDivElement | null>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const mouseXRef = useRef(window.innerWidth / 2);
 
   const totalItems = 28;
   const defaultItems = Array.from({ length: totalItems }, (_, index) => `Item ${index + 1}`);
   const combinedItems = items.length > 0 ? items.slice(0, totalItems) : defaultItems;
 
   useEffect(() => {
-    gsap.ticker.lagSmoothing(0);
+    let ticking = false;
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseXRef.current = e.clientX;
-    };
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const maxMoveAmount = 180;
+          const mouseRatio = e.clientX / window.innerWidth;
 
-    const updateMotion = () => {
-      const maxMoveAmount = 300;
-      const baseDuration = 0.8;
-      const inertiaFactors = [0.6, 0.4, 0.3, 0.2];
+          rowRefs.current.forEach((row, index) => {
+            if (row) {
+              const direction = index % 2 === 0 ? 1 : -1;
+              const moveAmount = (mouseRatio * maxMoveAmount - maxMoveAmount / 2) * direction;
 
-      rowRefs.current.forEach((row, index) => {
-        if (row) {
-          const direction = index % 2 === 0 ? 1 : -1;
-          const moveAmount =
-            ((mouseXRef.current / window.innerWidth) * maxMoveAmount - maxMoveAmount / 2) * direction;
-
-          gsap.to(row, {
-            x: moveAmount,
-            duration: baseDuration + inertiaFactors[index % inertiaFactors.length],
-            ease: 'power3.out',
-            overwrite: 'auto',
+              gsap.to(row, {
+                x: moveAmount,
+                duration: 1.2,
+                ease: 'power2.out',
+                overwrite: 'auto',
+              });
+            }
           });
-        }
-      });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    const removeAnimationLoop = () => gsap.ticker.remove(updateMotion);
-    gsap.ticker.add(updateMotion);
-
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      removeAnimationLoop();
     };
   }, []);
 
@@ -100,10 +95,7 @@ export const GridMotion: React.FC<GridMotionProps> = ({
             </div>
           ))}
         </div>
-        <div className="fullview" />
       </section>
     </div>
   );
 };
-
-export default GridMotion;

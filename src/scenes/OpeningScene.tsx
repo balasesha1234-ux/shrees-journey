@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ASSET_PATHS } from '../utils/assetPaths';
-import GridMotion from '../components/GridMotion';
+import { GridMotion } from '../components/GridMotion';
 import SpecularButton from '../components/SpecularButton';
 import ElasticSlider from '../components/ElasticSlider';
 import { Sparkles, Heart } from 'lucide-react';
