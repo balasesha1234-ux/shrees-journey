@@ -76,7 +76,7 @@
   animation: spinSlow 12s linear infinite;
 }
 
-/* GPU HARDWARE-ACCELERATED ORGANIC PETAL DRIFT ANIMATIONS (60 FPS SMOOTH) */
+/* PC (DESKTOP) HIGH-DEFINITION GPU 3D ORGANIC ANIMATIONS */
 @keyframes floatPetalOrganic1 {
   0% {
     transform: translate3d(0, 0, 0) rotate(-6deg);
@@ -125,22 +125,71 @@
   }
 }
 
-.animate-petal-float-1 {
-  animation: floatPetalOrganic1 7s ease-in-out infinite;
-  will-change: transform;
+/* MOBILE (PHONE) LIGHTWEIGHT 2D ANIMATIONS (ZERO GPU FILL-RATE THRASHING) */
+@keyframes floatPetalMobile1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(5deg);
+  }
 }
 
-.animate-petal-float-2 {
-  animation: floatPetalOrganic2 8.5s ease-in-out infinite;
-  will-change: transform;
+@keyframes floatPetalMobile2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(-6deg);
+  }
 }
 
-.animate-petal-float-3 {
-  animation: floatPetalOrganic3 9s ease-in-out infinite;
-  will-change: transform;
+/* DESKTOP GPU ACCELERATED RULES */
+@media (min-width: 768px) {
+  .animate-petal-float-1 {
+    animation: floatPetalOrganic1 7s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .animate-petal-float-2 {
+    animation: floatPetalOrganic2 8.5s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .animate-petal-float-3 {
+    animation: floatPetalOrganic3 9s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .animate-petal-float-4 {
+    animation: floatPetalOrganic4 7.8s ease-in-out infinite;
+    will-change: transform;
+  }
 }
 
-.animate-petal-float-4 {
-  animation: floatPetalOrganic4 7.8s ease-in-out infinite;
-  will-change: transform;
+/* MOBILE PHONE PERFORMANCE RULES */
+@media (max-width: 767px) {
+  .animate-petal-float-1 {
+    animation: floatPetalMobile1 5.5s ease-in-out infinite;
+  }
+
+  .animate-petal-float-2 {
+    animation: floatPetalMobile2 6.5s ease-in-out infinite;
+  }
+
+  .animate-petal-float-3 {
+    animation: floatPetalMobile1 7s ease-in-out infinite;
+  }
+
+  .animate-petal-float-4 {
+    animation: floatPetalMobile2 6s ease-in-out infinite;
+  }
+
+  /* Strip heavy GPU fill-rate box shadows & backdrop-blur on mobile phones */
+  .mobile-gpu-light {
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
 }

@@ -229,7 +229,7 @@ export const ReflectionChapter: React.FC = () => {
                 top: `${p.yPercent}%`,
                 animationPlayState: p.isStatic ? 'paused' : 'running',
               }}
-              className={`absolute pointer-events-auto group w-11 h-14 sm:w-14 sm:h-16 rounded-[45%_10%_45%_45%] flex flex-col items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer shadow-2xl ${p.animClass} ${
+              className={`absolute pointer-events-auto group w-11 h-14 sm:w-14 sm:h-16 rounded-[45%_10%_45%_45%] flex flex-col items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer mobile-gpu-light ${p.animClass} ${
                 p.isStatic
                   ? 'bg-gradient-to-br from-rose-500 to-rose-700 text-white border-2 border-[#e5c158] shadow-[0_0_40px_#e5c158] scale-125 z-30'
                   : 'bg-gradient-to-br from-rose-400/90 via-pink-500/85 to-rose-600/90 border border-pink-200/40 shadow-[0_0_20px_rgba(244,114,182,0.6)] hover:scale-125 hover:shadow-[0_0_35px_rgba(244,114,182,0.9)]'
