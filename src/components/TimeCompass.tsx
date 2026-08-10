@@ -46,7 +46,13 @@ export const TimeCompass: React.FC<TimeCompassProps> = ({
     setSelectedIndex(index);
     const el = document.getElementById(`year-section-${year}`);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      const lenis = (window as any).lenis;
+      if (lenis && typeof lenis.scrollTo === 'function') {
+        lenis.scrollTo(el, { offset: -60 });
+      } else {
+        const top = el.getBoundingClientRect().top + window.scrollY - 60;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
     } else {
       const timelineEl = document.getElementById('timeline-section');
       if (timelineEl) {

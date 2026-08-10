@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Sparkles, Calendar, Heart, Compass, Image, Home } from 'lucide-react';
+import { Sparkles, Calendar, Heart, Compass, Image, X, Lock } from 'lucide-react';
 import SpecularButton from '../components/SpecularButton';
 import CommunityPetalSection from '../components/CommunityPetalSection';
 import LivingGardenCounter from '../components/LivingGardenCounter';
+import FilmCredits from '../components/FilmCredits';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import { useSupabasePetals } from '../hooks/useSupabasePetals';
 
@@ -15,22 +16,14 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
   onUserInteractAudio,
   onOpenSecretModal,
 }) => {
-  const [activeTab, setActiveTab] = useState<'home' | 'timeline' | 'wall' | 'garden'>('home');
   const [selectedEra, setSelectedEra] = useState<string>('all');
   const [activeMoment, setActiveMoment] = useState<any | null>(null);
+  const [activePetalModal, setActivePetalModal] = useState<any | null>(null);
   const [loveCount, setLoveCount] = useState<number>(5000000);
   const [heartBurst, setHeartBurst] = useState<boolean>(false);
   const [developerMotiveOpen, setDeveloperMotiveOpen] = useState<boolean>(false);
 
   const { petals: dbPetals, addPetal, deletePetal } = useSupabasePetals();
-
-  const handleNavClick = (tab: 'home' | 'timeline' | 'wall' | 'garden', elementId: string) => {
-    setActiveTab(tab);
-    const el = document.getElementById(elementId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const timelineYears = [
     {
@@ -121,39 +114,33 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
     : allMoments.filter((m) => m.year === selectedEra);
 
   return (
-    <div className="relative w-full min-h-screen bg-[#0B0B0F] text-[#f0f0f5] font-general select-none pb-24 overflow-x-hidden">
+    <div className="relative w-full min-h-screen bg-[#0B0B0F] text-[#f0f0f5] font-general select-none pb-12 overflow-x-hidden">
       
       {/* 1. MOBILE HERO SECTION */}
       <section
         id="mobile-hero"
-        className="relative w-full min-h-[92dvh] flex flex-col items-center justify-center text-center px-6 py-12 border-b border-[#e5c158]/20 bg-[radial-gradient(ellipse_at_top,rgba(229,193,88,0.16),transparent_70%)]"
+        className="relative w-full min-h-[85dvh] flex flex-col items-center justify-center text-center px-6 py-12 border-b border-[#e5c158]/20 bg-[radial-gradient(ellipse_at_top,rgba(229,193,88,0.2),transparent_70%)]"
       >
-        <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/90 px-4 py-1.5 rounded-full border border-[#e5c158]/40 backdrop-blur-xl shadow-xl mb-6">
-          <Sparkles className="w-4 h-4 text-[#e5c158] animate-spin-slow" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em]">
-            A Mobile Tribute Experience
-          </span>
-        </div>
-
-        <h1 className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight leading-tight drop-shadow-[0_0_40px_rgba(229,193,88,0.5)]">
+        <h1 className="text-4xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight leading-tight drop-shadow-[0_0_50px_rgba(229,193,88,0.6)]">
           SHREE'S JOURNEY
         </h1>
 
-        <p className="font-serif italic text-base text-[#f0f0f5]/90 max-w-sm mt-4 leading-relaxed">
+        <p className="font-serif italic text-base sm:text-xl text-[#f0f0f5]/90 max-w-sm mt-4 leading-relaxed">
           “Some journeys are not measured by time... but by the hearts they touch.”
         </p>
 
-        <div className="mt-8 flex flex-col items-center gap-4 w-full max-w-xs">
+        <div className="mt-10 flex flex-col items-center gap-4 w-full max-w-xs z-20">
           <SpecularButton
             size="lg"
-            radius={20}
+            radius={22}
             lineColor="#e5c158"
             baseColor="#0c0d12"
             onClick={() => {
               if (onUserInteractAudio) onUserInteractAudio();
-              handleNavClick('timeline', 'mobile-timeline');
+              const el = document.getElementById('mobile-timeline');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="w-full justify-center py-4 text-sm font-bold uppercase tracking-widest shadow-[0_0_30px_rgba(229,193,88,0.4)]"
+            className="w-full justify-center py-4 text-sm font-extrabold uppercase tracking-widest shadow-[0_0_40px_rgba(229,193,88,0.5)] active:scale-95"
           >
             <Sparkles className="w-4 h-4 text-[#e5c158]" />
             <span>Begin Experience ✦</span>
@@ -164,7 +151,7 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
       {/* 2. MOBILE TIMELINE CHAPTERS */}
       <section id="mobile-timeline" className="relative w-full py-16 px-4 flex flex-col gap-12 border-b border-[#e5c158]/15">
         <div className="flex flex-col items-center text-center gap-3">
-          <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12] px-4 py-1 rounded-full border border-[#e5c158]/30">
+          <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12] px-4 py-1.5 rounded-full border border-[#e5c158]/30 shadow-lg">
             <Calendar className="w-3.5 h-3.5" />
             <span className="text-[10px] font-bold uppercase tracking-widest">
               Interactive Story (2023 - 2026)
@@ -177,10 +164,16 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           <article
             key={item.year}
             id={`year-section-${item.year}`}
-            className="relative w-full p-6 sm:p-8 rounded-[32px] bg-[#0c0d12]/95 border-2 border-[#e5c158]/35 shadow-[0_0_50px_rgba(229,193,88,0.18)] backdrop-blur-2xl flex flex-col gap-6 overflow-hidden transition-all duration-300 active:border-[#e5c158]/70"
+            className="relative w-full p-6 sm:p-8 rounded-[32px] bg-[#0c0d12]/95 border-2 border-[#e5c158]/35 shadow-[0_0_50px_rgba(229,193,88,0.2)] backdrop-blur-2xl flex flex-col gap-6 overflow-hidden transition-all duration-300 active:border-[#e5c158]/70"
           >
+            {/* Cool Chapter Background Atmosphere Image */}
+            <div className="absolute inset-0 z-0 opacity-25 pointer-events-none overflow-hidden rounded-[32px]">
+              <img src={item.bgImage} alt="" className="w-full h-full object-cover filter brightness-75 scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#0c0d12]/90 via-[#0c0d12]/80 to-[#0c0d12]" />
+            </div>
+
             {/* Giant Background Watermark Number */}
-            <div className="absolute right-[-1rem] top-[-1.5rem] pointer-events-none select-none font-black text-[9rem] text-white/[0.03] leading-none z-0">
+            <div className="absolute right-[-1rem] top-[-1.5rem] pointer-events-none select-none font-black text-[9rem] text-white/[0.04] leading-none z-0">
               {item.year}
             </div>
 
@@ -197,7 +190,7 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
 
             {/* Headline & Quote */}
             <div className="relative z-10 flex flex-col gap-3">
-              <h3 className="text-xl sm:text-2xl font-black text-[#f0f0f5] leading-snug tracking-tight">
+              <h3 className="text-xl sm:text-2xl font-black text-[#f0f0f5] leading-snug tracking-tight animate-fade-in">
                 {item.headline}
               </h3>
 
@@ -324,7 +317,7 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
         </div>
       </section>
 
-      {/* 5. MOBILE REFLECTION GARDEN */}
+      {/* 5. MOBILE REFLECTION GARDEN WITH INTERACTIVE FLOATING PETALS BOX */}
       <section id="mobile-garden" className="relative w-full py-16 px-4 flex flex-col items-center gap-8">
         <div className="flex flex-col items-center text-center gap-2">
           <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12] px-4 py-1 rounded-full border border-[#e5c158]/30">
@@ -332,6 +325,31 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
             <span className="text-[10px] font-bold uppercase tracking-widest">Reflection Chapter</span>
           </div>
           <h2 className="text-3xl font-black text-[#f0f0f5]">Living Garden</h2>
+        </div>
+
+        {/* Mobile Floating Memory Petals Sanctuary Box */}
+        <div className="relative z-10 w-full h-[360px] rounded-3xl bg-[#0c0d12]/95 border-2 border-[#e5c158]/50 shadow-[0_0_60px_rgba(229,193,88,0.25)] overflow-hidden p-4 flex flex-col items-center justify-between">
+          <div className="relative z-10 flex items-center gap-2 text-[#e5c158] bg-[#050507]/90 px-3.5 py-1.5 rounded-full border border-[#e5c158]/40 text-[10px] font-bold uppercase tracking-widest text-center shadow-lg">
+            <Sparkles className="w-3.5 h-3.5 text-[#e5c158]" />
+            <span>Tap any petal below to unfold memory 🌸</span>
+          </div>
+
+          {/* Floating Memory Petals Grid */}
+          <div className="relative w-full h-56 flex flex-wrap items-center justify-center gap-4 p-2">
+            {dbPetals.slice(0, 8).map((p, idx) => (
+              <button
+                key={p.id || idx}
+                onClick={() => setActivePetalModal(p)}
+                className="w-10 h-14 rounded-[50%_0_50%_50%] bg-gradient-to-br from-rose-300/90 via-pink-400/95 to-rose-400/90 border-2 border-[#e5c158] shadow-[0_0_20px_rgba(244,63,94,0.5)] flex items-center justify-center active:scale-125 transition-transform animate-pulse"
+              >
+                <Heart className="w-4 h-4 text-white fill-white" />
+              </button>
+            ))}
+          </div>
+
+          <div className="relative z-10 text-[10px] font-bold uppercase tracking-widest text-[#e5c158]/80 bg-[#050507]/80 px-3 py-1 rounded-full border border-[#e5c158]/20">
+            {dbPetals.length} Memory Petals Floating
+          </div>
         </div>
 
         {/* Love Button */}
@@ -368,61 +386,23 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           <LivingGardenCounter petals={dbPetals} />
         </div>
 
+        {/* UNLOCK SECRET EPILOGUE BUTTON ON MOBILE */}
         {onOpenSecretModal && (
-          <button
-            onClick={onOpenSecretModal}
-            className="text-xs font-bold uppercase tracking-widest text-[#e5c158]/80 hover:text-[#e5c158] underline py-4"
-          >
-            Unlock Secret Chapter ✦
-          </button>
+          <div className="w-full flex justify-center py-6">
+            <SpecularButton
+              size="md"
+              radius={20}
+              lineColor="#e5c158"
+              baseColor="#0c0d12"
+              onClick={onOpenSecretModal}
+              className="w-full max-w-xs justify-center py-3.5 text-xs font-extrabold uppercase tracking-widest"
+            >
+              <Lock className="w-4 h-4 text-[#e5c158]" />
+              <span>Unlock Secret Epilogue ✦</span>
+            </SpecularButton>
+          </div>
         )}
       </section>
-
-      {/* 6. FLOATING GLASSMORPHIC MOBILE BOTTOM NAVIGATION BAR */}
-      <nav
-        aria-label="Mobile Navigation"
-        className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-md bg-[#0c0d12]/95 border border-[#e5c158]/40 rounded-full px-3 py-2 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex items-center justify-around text-[10px] font-bold uppercase tracking-wider"
-      >
-        <button
-          onClick={() => handleNavClick('home', 'mobile-hero')}
-          className={`flex flex-col items-center gap-1 px-3 py-1 rounded-full transition-colors ${
-            activeTab === 'home' ? 'text-[#e5c158] bg-white/5' : 'text-[#f0f0f5]/60'
-          }`}
-        >
-          <Home className="w-4 h-4" />
-          <span>Home</span>
-        </button>
-
-        <button
-          onClick={() => handleNavClick('timeline', 'mobile-timeline')}
-          className={`flex flex-col items-center gap-1 px-3 py-1 rounded-full transition-colors ${
-            activeTab === 'timeline' ? 'text-[#e5c158] bg-white/5' : 'text-[#f0f0f5]/60'
-          }`}
-        >
-          <Calendar className="w-4 h-4" />
-          <span>Timeline</span>
-        </button>
-
-        <button
-          onClick={() => handleNavClick('wall', 'mobile-wall')}
-          className={`flex flex-col items-center gap-1 px-3 py-1 rounded-full transition-colors ${
-            activeTab === 'wall' ? 'text-[#e5c158] bg-white/5' : 'text-[#f0f0f5]/60'
-          }`}
-        >
-          <Image className="w-4 h-4" />
-          <span>Wall</span>
-        </button>
-
-        <button
-          onClick={() => handleNavClick('garden', 'mobile-garden')}
-          className={`flex flex-col items-center gap-1 px-3 py-1 rounded-full transition-colors ${
-            activeTab === 'garden' ? 'text-[#e5c158] bg-white/5' : 'text-[#f0f0f5]/60'
-          }`}
-        >
-          <Heart className="w-4 h-4" />
-          <span>Garden</span>
-        </button>
-      </nav>
 
       {/* FULL SCREEN PHOTO MODAL */}
       {activeMoment && (
@@ -440,6 +420,39 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           </button>
         </div>
       )}
+
+      {/* MOBILE UNFOLDED PETAL MODAL */}
+      {activePetalModal && (
+        <div
+          onClick={() => setActivePetalModal(null)}
+          className="fixed inset-0 z-50 p-6 bg-black/92 backdrop-blur-2xl flex items-center justify-center cursor-pointer animate-fade-in"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-w-sm w-full p-8 rounded-3xl bg-[#0c0d12] border-2 border-[#e5c158]/60 shadow-2xl flex flex-col items-center text-center gap-5"
+          >
+            <button
+              onClick={() => setActivePetalModal(null)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-white/5 text-[#f0f0f5]/70"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <Heart className="w-8 h-8 text-rose-400 fill-rose-400 animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-widest text-[#e5c158]">
+              Unfolded Memory Petal 🌸
+            </span>
+            <p className="font-serif italic text-base text-[#f0f0f5] leading-relaxed">
+              “{activePetalModal.text}”
+            </p>
+            <span className="text-xs font-bold text-[#e5c158]">
+              — {activePetalModal.author} {activePetalModal.country ? `(${activePetalModal.country})` : ''}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* FILM END CREDITS FOOTER ON MOBILE */}
+      <FilmCredits onOpenSecretModal={onOpenSecretModal} />
 
     </div>
   );
