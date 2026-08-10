@@ -18,6 +18,7 @@ interface FallingPetal {
   author: string;
   country?: string;
   isNew?: boolean;
+  isStatic?: boolean;
 }
 
 export const ReflectionChapter: React.FC = () => {
@@ -26,6 +27,8 @@ export const ReflectionChapter: React.FC = () => {
   const { petals: dbPetals, error, addPetal: addSupabasePetal, deletePetal, refreshPetals } = useSupabasePetals();
   const [activeUnfoldedPetal, setActiveUnfoldedPetal] = useState<FallingPetal | null>(null);
   const [showToast, setShowToast] = useState<boolean>(false);
+  const [loveCount, setLoveCount] = useState<number>(5000000);
+  const [heartBurst, setHeartBurst] = useState<boolean>(false);
   const fallingPetalsRef = useRef<FallingPetal[]>([]);
 
   // Synchronize falling petals ref with database petals
@@ -42,6 +45,7 @@ export const ReflectionChapter: React.FC = () => {
       text: msg.text,
       author: msg.author,
       country: msg.country,
+      isStatic: false,
     }));
     fallingPetalsRef.current = initial;
   }, [dbPetals]);
@@ -124,19 +128,29 @@ export const ReflectionChapter: React.FC = () => {
 
       // 3. Draw & Update Natural Falling Petals inside ref array (ZERO React state re-renders!)
       fallingPetalsRef.current.forEach((p) => {
-        p.x += p.vx + Math.sin(time + p.y * 0.01) * 0.4;
-        p.y += p.vy;
-        p.rotation += p.vRot;
+        if (!p.isStatic) {
+          p.x += p.vx + Math.sin(time + p.y * 0.01) * 0.4;
+          p.y += p.vy;
+          p.rotation += p.vRot;
 
-        if (p.y > h + 30) {
-          p.y = -30;
-          p.x = Math.random() * (w - 100) + 50;
+          if (p.y > h + 30) {
+            p.y = -30;
+            p.x = Math.random() * (w - 100) + 50;
+          }
         }
 
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rotation);
-        ctx.fillStyle = 'rgba(244, 114, 182, 0.75)';
+
+        if (p.isStatic) {
+          ctx.shadowColor = '#e5c158';
+          ctx.shadowBlur = 18;
+          ctx.fillStyle = 'rgba(244, 63, 94, 0.95)';
+        } else {
+          ctx.fillStyle = 'rgba(244, 114, 182, 0.75)';
+        }
+
         ctx.beginPath();
         ctx.ellipse(0, 0, p.size * 0.6, p.size, 0, 0, Math.PI * 2);
         ctx.fill();
@@ -155,12 +169,66 @@ export const ReflectionChapter: React.FC = () => {
     };
   }, []);
 
+  // Direct Canvas Touch / Click Interaction to Freeze & Open Petal
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    const found = fallingPetalsRef.current.find(
+      (p) => Math.hypot(p.x - clickX, p.y - clickY) < p.size + 22
+    );
+
+    if (found) {
+      found.isStatic = true;
+      found.vx = 0;
+      found.vy = 0;
+      setActiveUnfoldedPetal(found);
+    }
+  };
+
+  const handleCanvasTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!e.touches[0]) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const touchX = e.touches[0].clientX - rect.left;
+    const touchY = e.touches[0].clientY - rect.top;
+
+    const found = fallingPetalsRef.current.find(
+      (p) => Math.hypot(p.x - touchX, p.y - touchY) < p.size + 26
+    );
+
+    if (found) {
+      found.isStatic = true;
+      found.vx = 0;
+      found.vy = 0;
+      setActiveUnfoldedPetal(found);
+    }
+  };
+
   const handlePetalClick = (p: FallingPetal) => {
+    p.isStatic = true;
+    p.vx = 0;
+    p.vy = 0;
     setActiveUnfoldedPetal(p);
   };
 
   const handleCloseModal = () => {
+    if (activeUnfoldedPetal) {
+      activeUnfoldedPetal.isStatic = false;
+      activeUnfoldedPetal.vx = Math.random() * 0.4 + 0.2;
+      activeUnfoldedPetal.vy = Math.random() * 0.4 + 0.3;
+    }
     setActiveUnfoldedPetal(null);
+  };
+
+  const handleSendLove = () => {
+    setLoveCount((prev) => prev + 1);
+    setHeartBurst(true);
+    setTimeout(() => setHeartBurst(false), 1600);
   };
 
   const handleAddCommunityPetal = async (name: string, country: string, message: string) => {
@@ -180,6 +248,7 @@ export const ReflectionChapter: React.FC = () => {
         author: newPetal.author,
         country: newPetal.country,
         isNew: true,
+        isStatic: false,
       };
 
       fallingPetalsRef.current = [newFalling, ...fallingPetalsRef.current];
@@ -200,15 +269,17 @@ export const ReflectionChapter: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/90 via-[#0B0B0F]/60 to-[#0B0B0F] pointer-events-none z-0" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,193,88,0.18),transparent_70%)] pointer-events-none z-0" />
 
-      {/* FULL-SCREEN 2D CANVAS FOR FALLING PETALS & LIGHT BEAMS */}
+      {/* INTERACTIVE FULL-SCREEN 2D CANVAS FOR FALLING PETALS */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full pointer-events-none z-10"
+        onClick={handleCanvasClick}
+        onTouchStart={handleCanvasTouch}
+        className="absolute inset-0 w-full h-full cursor-pointer z-10"
       />
 
       {/* HEADER CONTENT */}
-      <div className="relative z-20 max-w-4xl mx-auto text-center flex flex-col items-center gap-4">
-        <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/90 px-4 py-1.5 rounded-full border border-[#e5c158]/40 backdrop-blur-xl shadow-2xl">
+      <div className="relative z-20 max-w-4xl mx-auto text-center flex flex-col items-center gap-4 pointer-events-none">
+        <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/90 px-4 py-1.5 rounded-full border border-[#e5c158]/40 backdrop-blur-xl shadow-2xl pointer-events-auto">
           <Sparkles className="w-4 h-4 animate-spin-slow" />
           <span className="font-general text-[10px] sm:text-xs font-bold uppercase tracking-[0.35em]">
             The Tree of Gratitude
@@ -223,9 +294,15 @@ export const ReflectionChapter: React.FC = () => {
           “Every petal falling from this tree holds a memory planted by someone whose life was touched by Shree.”
         </p>
 
+        {/* TAP PETAL TO OPEN INSTRUCTION HEADING */}
+        <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/80 px-4 py-1.5 rounded-full border border-[#e5c158]/30 backdrop-blur-md text-xs font-bold uppercase tracking-[0.25em] my-2 animate-pulse pointer-events-auto shadow-lg">
+          <Sparkles className="w-3.5 h-3.5 text-[#e5c158]" />
+          <span>Tap any falling petal on screen to make it static & read the memory 🌸</span>
+        </div>
+
         {/* Supabase Error State Notice */}
         {error && (
-          <div className="mt-3 px-4 py-2 rounded-2xl bg-rose-500/10 border border-rose-400/30 text-rose-200 text-xs flex items-center gap-2 shadow-lg animate-fade-in">
+          <div className="mt-3 px-4 py-2 rounded-2xl bg-rose-500/10 border border-rose-400/30 text-rose-200 text-xs flex items-center gap-2 shadow-lg animate-fade-in pointer-events-auto">
             <AlertCircle className="w-4 h-4 text-rose-300 shrink-0" />
             <span>{error}</span>
             <button
@@ -240,7 +317,7 @@ export const ReflectionChapter: React.FC = () => {
       </div>
 
       {/* FALLING PETAL INTERACTION LIST / TREE NODES */}
-      <div className="relative z-20 max-w-5xl mx-auto w-full my-12 flex flex-wrap items-center justify-center gap-3">
+      <div className="relative z-20 max-w-5xl mx-auto w-full my-8 flex flex-wrap items-center justify-center gap-3">
         {fallingPetalsRef.current.slice(0, 12).map((p) => (
           <button
             key={p.id}
@@ -253,6 +330,23 @@ export const ReflectionChapter: React.FC = () => {
             <span className="text-[10px] text-[#e5c158]/70">🌸 Unfold</span>
           </button>
         ))}
+      </div>
+
+      {/* INTERACTIVE SEND LOVE TO SHREE FEATURE */}
+      <div className="relative z-20 flex flex-col items-center gap-3 my-4">
+        <button
+          onClick={handleSendLove}
+          className="group px-6 py-3 rounded-full bg-gradient-to-r from-rose-500/20 via-rose-400/10 to-rose-500/20 border-2 border-rose-400/50 hover:border-rose-300 text-rose-200 text-xs sm:text-sm font-bold uppercase tracking-widest backdrop-blur-2xl shadow-[0_0_40px_rgba(244,63,94,0.3)] hover:shadow-[0_0_60px_rgba(244,63,94,0.6)] transition-all duration-300 active:scale-95 flex items-center gap-2.5"
+        >
+          <Heart className="w-4 h-4 text-rose-400 fill-rose-400 group-hover:scale-125 transition-transform" />
+          <span>Send Love to Shree ({loveCount.toLocaleString()}) 💖</span>
+        </button>
+
+        {heartBurst && (
+          <div className="animate-fade-in text-xs font-bold text-rose-300 uppercase tracking-widest">
+            💖 Heart sent into the sky!
+          </div>
+        )}
       </div>
 
       {/* TOAST NOTIFICATION ON ADDING A PETAL */}
@@ -285,7 +379,7 @@ export const ReflectionChapter: React.FC = () => {
             </div>
 
             <span className="font-general text-xs font-bold uppercase tracking-[0.3em] text-[#e5c158]">
-              Unfolded Petal Memory
+              Unfolded Petal Memory 🌸
             </span>
 
             <p className="font-serif italic text-lg sm:text-2xl text-[#f0f0f5] leading-relaxed">
@@ -307,7 +401,7 @@ export const ReflectionChapter: React.FC = () => {
               onClick={handleCloseModal}
               className="mt-2"
             >
-              <span>Let Petal Fly Away ✨</span>
+              <span>Release Petal to Wind ✨</span>
             </SpecularButton>
           </div>
         </div>
