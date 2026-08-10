@@ -39,8 +39,9 @@ export const ParticleField: React.FC<{ count?: number }> = ({ count }) => {
 
     const colors = [
       'rgba(229, 193, 88, ',  // Warm Gold
-      'rgba(240, 240, 245, ', // Crisp White
-      'rgba(141, 169, 196, ', // Soft Blue
+      'rgba(251, 113, 133, ', // Cherry Blossom Rose/Pink
+      'rgba(240, 240, 245, ', // Crystal White
+      'rgba(255, 215, 0, ',   // Pure Gold Sparkle
     ];
 
     const particles: Particle[] = Array.from({ length: activeCount }, () => ({

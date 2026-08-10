@@ -61,22 +61,22 @@ export const CustomCursor: React.FC = () => {
 
   return (
     <div className="hidden md:block pointer-events-none select-none">
-      {/* 1. Large Ambient Spotlight Glow Lens */}
+      {/* 1. Large Ambient Spotlight Glow Lens (Warm Gold + Cherry Blossom Rose Aura) */}
       <div
         ref={spotlightRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9990] w-[320px] h-[320px] rounded-full bg-[radial-gradient(circle,rgba(229,193,88,0.22)_0%,rgba(229,193,88,0.04)_45%,transparent_70%)] will-change-transform opacity-80"
+        className="fixed top-0 left-0 pointer-events-none z-[9990] w-[360px] h-[360px] rounded-full bg-[radial-gradient(circle,rgba(229,193,88,0.18)_0%,rgba(244,63,94,0.12)_35%,rgba(229,193,88,0.03)_60%,transparent_75%)] will-change-transform opacity-90"
       />
 
       {/* 2. Trailing Glowing Golden Spotlight Ring */}
       <div
         ref={ringRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9995] w-14 h-14 rounded-full border-2 border-[#e5c158] bg-[radial-gradient(circle,rgba(229,193,88,0.35)_0%,rgba(229,193,88,0.08)_50%,transparent_70%)] shadow-[0_0_35px_rgba(229,193,88,0.7)] backdrop-blur-[1px] will-change-transform"
+        className="fixed top-0 left-0 pointer-events-none z-[9995] w-14 h-14 rounded-full border-2 border-[#e5c158] bg-[radial-gradient(circle,rgba(229,193,88,0.35)_0%,rgba(244,63,94,0.15)_50%,transparent_75%)] shadow-[0_0_40px_rgba(229,193,88,0.85)] backdrop-blur-[1px] will-change-transform"
       />
 
       {/* 3. Main Liquid Glowing Pointer Dot */}
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9999] w-4 h-4 rounded-full bg-[#e5c158] border-2 border-white shadow-[0_0_25px_#e5c158] will-change-transform"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] w-4 h-4 rounded-full bg-gradient-to-r from-[#e5c158] to-[#fb7185] border-2 border-white shadow-[0_0_30px_#e5c158] will-change-transform"
       />
     </div>
   );

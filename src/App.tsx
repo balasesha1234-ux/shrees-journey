@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useLenis } from './hooks/useLenis';
 import { useAudio } from './hooks/useAudio';
+import { useIsMobile } from './hooks/useIsMobile';
+import { MobileExperience } from './layouts/MobileExperience';
 import { CustomCursor } from './components/CustomCursor';
 import { FilmGrain } from './components/FilmGrain';
 import { ParticleField } from './components/ParticleField';
@@ -23,6 +25,7 @@ export const App: React.FC = () => {
 
   // Audio manager hook
   const { isPlaying, isMuted, toggleMute } = useAudio();
+  const isMobile = useIsMobile(768);
 
   const [isSecretModalOpen, setIsSecretModalOpen] = useState(false);
 
@@ -32,6 +35,26 @@ export const App: React.FC = () => {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  if (isMobile) {
+    return (
+      <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white">
+        <FilmGrain />
+        <ParticleField count={20} />
+        <AudioToggle isMuted={isMuted} isPlaying={isPlaying} onToggle={toggleMute} />
+        
+        <MobileExperience
+          onUserInteractAudio={toggleMute}
+          onOpenSecretModal={() => setIsSecretModalOpen(true)}
+        />
+
+        <PrivateEpilogueModal
+          isOpen={isSecretModalOpen}
+          onClose={() => setIsSecretModalOpen(false)}
+        />
+      </main>
+    );
+  }
 
   return (
     <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white flex flex-col justify-between">
