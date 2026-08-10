@@ -24,13 +24,14 @@ export function useSupabasePetals() {
       setLoading(true);
       setError(null);
 
+      // Explicit field filtering - fetch ONLY public petal display fields
       const { data, error: dbError } = await supabase
         .from('petals')
-        .select('*')
+        .select('id, name, country, message, created_at')
         .order('created_at', { ascending: false });
 
       if (dbError) {
-        console.warn('Supabase fetch notice:', dbError.message);
+        console.warn('Supabase fetch notice: [REDACTED_ERROR_DETAILS]');
         setError('Unable to load the Memory Garden right now. Please try again in a moment.');
         setPetals([]);
         return;
@@ -48,9 +49,8 @@ export function useSupabasePetals() {
       } else {
         setPetals([]);
       }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to fetch petals';
-      console.warn('Failed to load petals from Supabase:', msg);
+    } catch {
+      console.warn('Failed to load petals from Supabase: [REDACTED]');
       setError('Unable to load the Memory Garden right now. Please try again in a moment.');
       setPetals([]);
     } finally {
@@ -87,10 +87,10 @@ export function useSupabasePetals() {
               created_at: new Date().toISOString(),
             },
           ])
-          .select('*');
+          .select('id, name, country, message, created_at');
 
         if (insertError) {
-          console.warn('Supabase insert notice:', insertError.message);
+          console.warn('Supabase insert notice: [REDACTED_ERROR_DETAILS]');
         } else if (data && data[0]) {
           const insertedRow = data[0];
           setPetals((prev) =>
@@ -105,12 +105,24 @@ export function useSupabasePetals() {
             )
           );
         }
-      } catch (err) {
-        console.warn('Failed to insert petal into Supabase:', err);
+      } catch {
+        console.warn('Failed to insert petal into Supabase: [REDACTED]');
       }
     }
 
     return newPetal;
+  };
+
+  // User Data Deletion Flow: Allows users to remove their contributed petal
+  const deletePetal = async (id: number | string): Promise<void> => {
+    setPetals((prev) => prev.filter((p) => p.id !== id));
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('petals').delete().eq('id', id);
+      } catch {
+        console.warn('Petal deletion notice: [REDACTED]');
+      }
+    }
   };
 
   return {
@@ -118,6 +130,7 @@ export function useSupabasePetals() {
     loading,
     error,
     addPetal,
+    deletePetal,
     refreshPetals: fetchPetals,
   };
 }

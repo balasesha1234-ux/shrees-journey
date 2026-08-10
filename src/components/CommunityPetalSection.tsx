@@ -5,9 +5,10 @@ import SpecularButton from './SpecularButton';
 
 interface CommunityPetalSectionProps {
   onAddPetal: (name: string, country: string, message: string) => void;
+  onDeletePetal?: (id: number | string) => void;
 }
 
-export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ onAddPetal }) => {
+export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ onAddPetal, onDeletePetal }) => {
   const [name, setName] = useState('');
   const [country, setCountry] = useState('');
   const [message, setMessage] = useState('');
@@ -143,6 +144,18 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
               >
                 Plant Another Petal 🌱
               </button>
+
+              {onDeletePetal && savedPetalInfo && (
+                <button
+                  onClick={() => {
+                    onDeletePetal(savedPetalInfo.id);
+                    handleResetForm();
+                  }}
+                  className="px-4 py-2 rounded-2xl bg-rose-500/10 border border-rose-400/30 text-xs text-rose-300 hover:bg-rose-500/20 hover:border-rose-400/60 transition-all font-semibold uppercase tracking-wider"
+                >
+                  Delete My Note 🗑️
+                </button>
+              )}
             </div>
           </div>
         ) : (

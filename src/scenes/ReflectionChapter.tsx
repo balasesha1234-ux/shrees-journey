@@ -24,7 +24,7 @@ interface FallingPetal {
 export const ReflectionChapter: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const { petals: dbPetals, loading, error, addPetal: addSupabasePetal, refreshPetals } = useSupabasePetals();
+  const { petals: dbPetals, loading, error, addPetal: addSupabasePetal, deletePetal, refreshPetals } = useSupabasePetals();
   const [petals, setPetals] = useState<FallingPetal[]>([]);
   const [activeUnfoldedPetal, setActiveUnfoldedPetal] = useState<FallingPetal | null>(null);
   const [showToast, setShowToast] = useState<boolean>(false);
@@ -367,7 +367,10 @@ export const ReflectionChapter: React.FC = () => {
       )}
 
       {/* Community Message Component ("Leave Your Petal") */}
-      <CommunityPetalSection onAddPetal={handleAddCommunityPetal} />
+      <CommunityPetalSection
+        onAddPetal={handleAddCommunityPetal}
+        onDeletePetal={deletePetal}
+      />
 
       {/* FEATURE 1: LIVING GARDEN COUNTER */}
       <LivingGardenCounter petals={dbPetals} />
