@@ -24,24 +24,12 @@ export const App: React.FC = () => {
   // Audio manager hook
   const { isPlaying, isMuted, toggleMute } = useAudio();
 
-  // Active scene state: 'opening' | 'experience'
-  const [sceneState, setSceneState] = useState<'opening' | 'experience'>('opening');
   const [isSecretModalOpen, setIsSecretModalOpen] = useState(false);
 
-  const handleTransitionToSky = () => {
-    setSceneState('experience');
-    setTimeout(() => {
-      const skyEl = document.getElementById('sky-scene-container');
-      if (skyEl) {
-        skyEl.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  };
-
-  const handleScrollToTimeline = () => {
-    const timelineEl = document.getElementById('timeline-section');
-    if (timelineEl) {
-      timelineEl.scrollIntoView({ behavior: 'smooth' });
+  const handleScrollToNext = (targetId: string) => {
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -54,7 +42,7 @@ export const App: React.FC = () => {
       <FilmGrain />
 
       {/* Floating Dust & Ambient Light Particles */}
-      <ParticleField count={70} />
+      <ParticleField count={45} />
 
       {/* Floating Ambient Audio Control */}
       <AudioToggle
@@ -66,8 +54,8 @@ export const App: React.FC = () => {
       {/* Memory Curator Narrator Companion */}
       <MemoryCurator />
 
-      {/* Signature Time Compass Instrument (Active during experience) */}
-      {sceneState === 'experience' && <TimeCompass />}
+      {/* Signature Time Compass Instrument */}
+      <TimeCompass />
 
       {/* Secret Chapter & Private Letter Modal */}
       <PrivateEpilogueModal
@@ -75,52 +63,47 @@ export const App: React.FC = () => {
         onClose={() => setIsSecretModalOpen(false)}
       />
 
-      {/* Scenes Container */}
-      <div className="relative z-10 w-full flex-grow">
-        {sceneState === 'opening' && (
-          <OpeningScene
-            onTransitionToSky={handleTransitionToSky}
-            onUserInteractAudio={toggleMute}
-          />
-        )}
+      {/* UNIFIED CONTINUOUS CINEMATIC SCENES FLOW */}
+      <div className="relative z-10 w-full flex flex-col flex-grow">
+        {/* Scene 1: LANDING PAGE HERO SECTION */}
+        <OpeningScene
+          onTransitionToSky={() => handleScrollToNext('sky-scene-container')}
+          onUserInteractAudio={toggleMute}
+        />
 
-        {sceneState === 'experience' && (
-          <div className="relative w-full flex flex-col">
-            {/* Scene 2: Peaceful Cinematic Sky & World Entrance */}
-            <SkyScene onScrollToNext={handleScrollToTimeline} />
+        {/* Scene 2: Peaceful Cinematic Sky & World Entrance */}
+        <SkyScene onScrollToNext={() => handleScrollToNext('timeline-section')} />
 
-            {/* Scene 3: Emotional Interactive Timeline (2023 - 2026) */}
-            <TimelineScene />
+        {/* Scene 3: Emotional Interactive Timeline (2023 - 2026) */}
+        <TimelineScene />
 
-            {/* CINEMATIC MEMORY WALL (Personal floating memory collection) */}
-            <CinematicMemoryWall />
+        {/* CINEMATIC MEMORY WALL (Personal floating memory collection) */}
+        <CinematicMemoryWall />
 
-            {/* A LETTER FROM THE DEVELOPER / CREATOR'S MOTIVE SECTION */}
-            <DeveloperMotiveSection />
+        {/* A LETTER FROM THE DEVELOPER / CREATOR'S MOTIVE SECTION */}
+        <DeveloperMotiveSection />
 
-            {/* HYPERSPEED 3D WARP TUNNEL TRANSITION */}
-            <section className="relative w-full h-[380px] sm:h-[600px] md:h-[750px] my-12 sm:my-16 overflow-hidden flex items-center justify-center border-y border-[#e5c158]/30 shadow-2xl select-none">
-              <Hyperspeed effectOptions={hyperspeedPresets.one} />
+        {/* HYPERSPEED 3D WARP TUNNEL TRANSITION */}
+        <section className="relative w-full h-[380px] sm:h-[600px] md:h-[750px] my-12 sm:my-16 overflow-hidden flex items-center justify-center border-y border-[#e5c158]/30 shadow-2xl select-none">
+          <Hyperspeed effectOptions={hyperspeedPresets.one} />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-[#0B0B0F] pointer-events-none z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-[#0B0B0F] pointer-events-none z-10" />
 
-              {/* DEAD-CENTERED TYPOGRAPHY OVER WARP PORTAL */}
-              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-6 pointer-events-none">
-                <div className="max-w-xl flex flex-col items-center gap-3">
-                  <span className="font-general text-xs font-extrabold uppercase tracking-[0.35em] text-[#e5c158]">
-                    Warping Through Time
-                  </span>
-                  <h3 className="font-general text-3xl sm:text-5xl font-extrabold text-[#f0f0f5] leading-tight drop-shadow-[0_0_35px_rgba(229,193,88,0.6)]">
-                    Entering the Reflection Chapter
-                  </h3>
-                </div>
-              </div>
-            </section>
-
-            {/* Scene 4: REFLECTION CHAPTER (Memory Tree, Petal Form, Living Counter, Global Map) */}
-            <ReflectionChapter />
+          {/* DEAD-CENTERED TYPOGRAPHY OVER WARP PORTAL */}
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-6 pointer-events-none">
+            <div className="max-w-xl flex flex-col items-center gap-3">
+              <span className="font-general text-xs font-extrabold uppercase tracking-[0.35em] text-[#e5c158]">
+                Warping Through Time
+              </span>
+              <h3 className="font-general text-3xl sm:text-5xl font-extrabold text-[#f0f0f5] leading-tight drop-shadow-[0_0_35px_rgba(229,193,88,0.6)]">
+                Entering the Reflection Chapter
+              </h3>
+            </div>
           </div>
-        )}
+        </section>
+
+        {/* Scene 4: REFLECTION CHAPTER (Memory Tree, Petal Form, Living Counter, Global Map) */}
+        <ReflectionChapter />
       </div>
 
       {/* Film End Credits */}
