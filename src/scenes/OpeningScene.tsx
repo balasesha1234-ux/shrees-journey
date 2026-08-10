@@ -29,7 +29,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
     return () => ctx.revert();
   }, []);
 
-  // GridMotion 28-Item Comprehensive Asset Grid
+  // GridMotion 28-Item Comprehensive Diverse Asset Grid
   const gridItems = [
     ASSET_PATHS.timeline.y2023.heroImage,
     <div key="badge-1" className="flex flex-col items-center gap-1 text-[#e5c158] p-2 select-none">
@@ -38,7 +38,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
     </div>,
     ASSET_PATHS.timeline.y2023.gallery1,
     ASSET_PATHS.timeline.y2023.gallery2,
-    ASSET_PATHS.timeline.y2023.landscape,
+    ASSET_PATHS.cinematicMoments.moment1,
     ASSET_PATHS.backgrounds.y2023,
 
     ASSET_PATHS.timeline.y2024.heroImage,
@@ -47,7 +47,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
       <span className="text-[10px] font-bold uppercase tracking-widest">Breakthrough</span>
     </div>,
     ASSET_PATHS.timeline.y2024.gallery1,
-    ASSET_PATHS.timeline.y2024.gallery2,
+    ASSET_PATHS.cinematicMoments.moment2,
     ASSET_PATHS.timeline.y2024.landscape,
     ASSET_PATHS.backgrounds.y2024,
 
@@ -56,9 +56,9 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
       <span className="text-[9px] font-bold uppercase tracking-wider">Family</span>
     </div>,
     ASSET_PATHS.timeline.y2025.heroImage,
-    ASSET_PATHS.timeline.y2025.gallery1,
-    ASSET_PATHS.timeline.y2025.gallery2,
-    ASSET_PATHS.timeline.y2025.landscape,
+    ASSET_PATHS.timeline.y2025.gallery3,
+    ASSET_PATHS.cinematicMoments.moment3,
+    ASSET_PATHS.timeline.y2025.gallery4,
     ASSET_PATHS.backgrounds.y2025,
 
     <div key="badge-4" className="flex flex-col items-center gap-1 text-[#c29be4] p-2 select-none">
@@ -66,18 +66,18 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
       <span className="text-[10px] font-bold uppercase tracking-widest">Gratitude</span>
     </div>,
     ASSET_PATHS.timeline.y2026.heroImage,
-    ASSET_PATHS.timeline.y2026.gallery1,
-    ASSET_PATHS.timeline.y2026.gallery2,
-    ASSET_PATHS.timeline.y2026.landscape,
+    ASSET_PATHS.timeline.y2026.gallery3,
+    ASSET_PATHS.cinematicMoments.moment4,
+    ASSET_PATHS.timeline.y2026.gallery5,
     ASSET_PATHS.backgrounds.y2026,
 
     <div key="badge-5" className="flex flex-col items-center gap-1 text-[#e5c158] p-2 select-none">
       <span className="text-base font-black">5 Million</span>
       <span className="text-[9px] font-bold uppercase tracking-wider">Summit</span>
     </div>,
-    ASSET_PATHS.backgrounds.intro,
-    ASSET_PATHS.ending.treeImage,
-    ASSET_PATHS.timeline.y2023.heroImage,
+    ASSET_PATHS.cinematicMoments.moment5,
+    ASSET_PATHS.cinematicMoments.moment6,
+    ASSET_PATHS.timeline.y2026.gallery6,
   ];
 
   return (
