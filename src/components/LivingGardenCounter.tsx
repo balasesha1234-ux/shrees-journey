@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Sparkles, Heart, Globe } from 'lucide-react';
+import { Sparkles, Heart, Globe, MessageSquare } from 'lucide-react';
 import { type PetalData } from '../hooks/useSupabasePetals';
 
 interface LivingGardenCounterProps {
@@ -19,6 +19,11 @@ export const LivingGardenCounter: React.FC<LivingGardenCounterProps> = ({ petals
     return set.size;
   }, [petals]);
 
+  // Recent 6 public petals for secure live ticker stream
+  const recentPetals = useMemo(() => {
+    return petals.slice(0, 6);
+  }, [petals]);
+
   return (
     <section
       id="living-garden-counter"
@@ -35,7 +40,7 @@ export const LivingGardenCounter: React.FC<LivingGardenCounterProps> = ({ petals
         </span>
       </div>
 
-      {/* ELEGANT MINIMAL COUNTER STATS (NOT A DASHBOARD) */}
+      {/* ELEGANT MINIMAL COUNTER STATS */}
       <div className="relative z-10 max-w-4xl w-full flex flex-col sm:flex-row items-center justify-center gap-12 sm:gap-24 my-6">
         
         {/* STAT 1: REAL PETAL COUNT */}
@@ -69,8 +74,37 @@ export const LivingGardenCounter: React.FC<LivingGardenCounterProps> = ({ petals
 
       </div>
 
+      {/* SECURE RECENT COMMUNITY MEMORIES STREAM TICKER */}
+      {recentPetals.length > 0 && (
+        <div className="relative z-10 max-w-3xl w-full mt-10 p-4 sm:p-6 rounded-3xl bg-[#0c0d12]/90 border border-[#e5c158]/25 backdrop-blur-xl shadow-xl flex flex-col items-center gap-4">
+          <div className="flex items-center gap-2 text-[#e5c158] text-xs font-bold uppercase tracking-[0.3em]">
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Recent Community Notes</span>
+          </div>
+
+          <div className="w-full flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs">
+            {recentPetals.map((item, idx) => (
+              <div
+                key={item.id || idx}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#f0f0f5]/90 shadow-sm"
+              >
+                <span className="font-semibold text-[#e5c158]">{item.author}</span>
+                {item.country && (
+                  <span className="text-[10px] text-[#f0f0f5]/50 bg-white/5 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    {item.country}
+                  </span>
+                )}
+                <span className="text-[#f0f0f5]/70 italic truncate max-w-[180px] sm:max-w-[240px]">
+                  “{item.text}”
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Small Supporting Text */}
-      <p className="relative z-10 font-general italic text-sm sm:text-base text-[#f0f0f5]/70 max-w-md leading-relaxed mt-6 drop-shadow">
+      <p className="relative z-10 font-general italic text-sm sm:text-base text-[#f0f0f5]/70 max-w-md leading-relaxed mt-8 drop-shadow">
         “Every message becomes a part of this journey.”
       </p>
     </section>
