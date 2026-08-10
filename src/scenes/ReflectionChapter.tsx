@@ -22,6 +22,7 @@ interface FallingPetal {
 }
 
 export const ReflectionChapter: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const { petals: dbPetals, error, addPetal: addSupabasePetal, deletePetal, refreshPetals } = useSupabasePetals();
@@ -39,7 +40,7 @@ export const ReflectionChapter: React.FC = () => {
       y: Math.random() * (window.innerHeight * 0.5) + 60,
       vx: Math.random() * 0.4 + 0.2,
       vy: Math.random() * 0.4 + 0.3,
-      size: Math.random() * 8 + 12,
+      size: Math.random() * 8 + 14,
       rotation: Math.random() * Math.PI * 2,
       vRot: (Math.random() - 0.5) * 0.02,
       text: msg.text,
@@ -145,14 +146,14 @@ export const ReflectionChapter: React.FC = () => {
 
         if (p.isStatic) {
           ctx.shadowColor = '#e5c158';
-          ctx.shadowBlur = 18;
-          ctx.fillStyle = 'rgba(244, 63, 94, 0.95)';
+          ctx.shadowBlur = 22;
+          ctx.fillStyle = 'rgba(244, 63, 94, 0.98)';
         } else {
-          ctx.fillStyle = 'rgba(244, 114, 182, 0.75)';
+          ctx.fillStyle = 'rgba(244, 114, 182, 0.8)';
         }
 
         ctx.beginPath();
-        ctx.ellipse(0, 0, p.size * 0.6, p.size, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, p.size * 0.65, p.size, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       });
@@ -169,16 +170,17 @@ export const ReflectionChapter: React.FC = () => {
     };
   }, []);
 
-  // Direct Canvas Touch / Click Interaction to Freeze & Open Petal
-  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  // Universal Click & Touch Hit-Testing (Works ANYWHERE including over headings!)
+  const checkPetalHit = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) return false;
     const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    const clickX = clientX - rect.left;
+    const clickY = clientY - rect.top;
 
+    // Generous touch hit radius (35px) so users can tap falling petals even behind text!
     const found = fallingPetalsRef.current.find(
-      (p) => Math.hypot(p.x - clickX, p.y - clickY) < p.size + 22
+      (p) => Math.hypot(p.x - clickX, p.y - clickY) < p.size + 35
     );
 
     if (found) {
@@ -186,26 +188,19 @@ export const ReflectionChapter: React.FC = () => {
       found.vx = 0;
       found.vy = 0;
       setActiveUnfoldedPetal(found);
+      return true;
     }
+    return false;
   };
 
-  const handleCanvasTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    if (!e.touches[0]) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const touchX = e.touches[0].clientX - rect.left;
-    const touchY = e.touches[0].clientY - rect.top;
+  const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Check if user clicked a petal anywhere in the section
+    checkPetalHit(e.clientX, e.clientY);
+  };
 
-    const found = fallingPetalsRef.current.find(
-      (p) => Math.hypot(p.x - touchX, p.y - touchY) < p.size + 26
-    );
-
-    if (found) {
-      found.isStatic = true;
-      found.vx = 0;
-      found.vy = 0;
-      setActiveUnfoldedPetal(found);
+  const handleContainerTouch = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches[0]) {
+      checkPetalHit(e.touches[0].clientX, e.touches[0].clientY);
     }
   };
 
@@ -262,8 +257,11 @@ export const ReflectionChapter: React.FC = () => {
 
   return (
     <section
+      ref={containerRef}
       id="reflection-chapter-container"
-      className="relative w-full min-h-screen bg-[#0B0B0F] text-[#f0f0f5] font-general select-none py-20 px-6 overflow-hidden flex flex-col justify-between"
+      onClick={handleContainerClick}
+      onTouchStart={handleContainerTouch}
+      className="relative w-full min-h-screen bg-[#0B0B0F] text-[#f0f0f5] font-general select-none py-24 sm:py-32 px-6 sm:px-12 overflow-hidden flex flex-col justify-between"
     >
       {/* ATMOSPHERIC BACKGROUND ILLUMINATION */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/90 via-[#0B0B0F]/60 to-[#0B0B0F] pointer-events-none z-0" />
@@ -272,37 +270,38 @@ export const ReflectionChapter: React.FC = () => {
       {/* INTERACTIVE FULL-SCREEN 2D CANVAS FOR FALLING PETALS */}
       <canvas
         ref={canvasRef}
-        onClick={handleCanvasClick}
-        onTouchStart={handleCanvasTouch}
         className="absolute inset-0 w-full h-full cursor-pointer z-10"
       />
 
-      {/* HEADER CONTENT */}
-      <div className="relative z-20 max-w-4xl mx-auto text-center flex flex-col items-center gap-4 pointer-events-none">
-        <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/90 px-4 py-1.5 rounded-full border border-[#e5c158]/40 backdrop-blur-xl shadow-2xl pointer-events-auto">
+      {/* HEADER CONTENT WITH ELEGANT SPACED INTERFACE */}
+      <div className="relative z-20 max-w-4xl mx-auto text-center flex flex-col items-center gap-6 sm:gap-8">
+        <div className="flex items-center gap-2.5 text-[#e5c158] bg-[#0c0d12]/90 px-5 py-2 rounded-full border border-[#e5c158]/40 backdrop-blur-xl shadow-2xl">
           <Sparkles className="w-4 h-4 animate-spin-slow" />
-          <span className="font-general text-[10px] sm:text-xs font-bold uppercase tracking-[0.35em]">
+          <span className="font-general text-[11px] sm:text-xs font-bold uppercase tracking-[0.35em]">
             The Tree of Gratitude
           </span>
         </div>
 
-        <h2 className="font-general text-4xl sm:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight drop-shadow-[0_0_50px_rgba(229,193,88,0.4)]">
+        <h2 className="font-general text-4xl sm:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight drop-shadow-[0_0_60px_rgba(229,193,88,0.45)] leading-tight">
           Reflection Chapter
         </h2>
 
-        <p className="font-general italic text-base sm:text-xl text-[#f0f0f5]/85 max-w-xl leading-relaxed">
-          “Every petal falling from this tree holds a memory planted by someone whose life was touched by Shree.”
-        </p>
+        {/* ELEGANT SPACED REFLECTION ESSAY QUOTE */}
+        <div className="my-4 sm:my-6 p-6 sm:p-10 rounded-3xl bg-[#0c0d12]/80 border border-[#e5c158]/35 backdrop-blur-2xl shadow-2xl max-w-3xl">
+          <p className="font-serif italic text-base sm:text-2xl text-[#f0f0f5]/90 leading-relaxed sm:leading-loose tracking-wide">
+            “Every petal falling from this tree holds a memory planted by someone whose life was touched by Shree.”
+          </p>
+        </div>
 
-        {/* TAP PETAL TO OPEN INSTRUCTION HEADING */}
-        <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/80 px-4 py-1.5 rounded-full border border-[#e5c158]/30 backdrop-blur-md text-xs font-bold uppercase tracking-[0.25em] my-2 animate-pulse pointer-events-auto shadow-lg">
-          <Sparkles className="w-3.5 h-3.5 text-[#e5c158]" />
-          <span>Tap any falling petal on screen to make it static & read the memory 🌸</span>
+        {/* TAP PETAL INACTION INSTRUCTION BADGE */}
+        <div className="flex items-center gap-2.5 text-[#e5c158] bg-[#0c0d12]/90 px-5 py-2 rounded-full border border-[#e5c158]/40 backdrop-blur-xl text-xs sm:text-sm font-bold uppercase tracking-[0.25em] my-2 animate-pulse shadow-xl">
+          <Sparkles className="w-4 h-4 text-[#e5c158]" />
+          <span>Tap any falling petal anywhere on screen to make it static & read the memory 🌸</span>
         </div>
 
         {/* Supabase Error State Notice */}
         {error && (
-          <div className="mt-3 px-4 py-2 rounded-2xl bg-rose-500/10 border border-rose-400/30 text-rose-200 text-xs flex items-center gap-2 shadow-lg animate-fade-in pointer-events-auto">
+          <div className="mt-3 px-4 py-2 rounded-2xl bg-rose-500/10 border border-rose-400/30 text-rose-200 text-xs flex items-center gap-2 shadow-lg animate-fade-in">
             <AlertCircle className="w-4 h-4 text-rose-300 shrink-0" />
             <span>{error}</span>
             <button
@@ -316,29 +315,35 @@ export const ReflectionChapter: React.FC = () => {
         )}
       </div>
 
-      {/* FALLING PETAL INTERACTION LIST / TREE NODES */}
-      <div className="relative z-20 max-w-5xl mx-auto w-full my-8 flex flex-wrap items-center justify-center gap-3">
+      {/* FALLING PETAL INTERACTION LIST / TREE NODES WITH SPACED GAP */}
+      <div className="relative z-20 max-w-5xl mx-auto w-full my-12 sm:my-16 flex flex-wrap items-center justify-center gap-3.5 sm:gap-4">
         {fallingPetalsRef.current.slice(0, 12).map((p) => (
           <button
             key={p.id}
-            onClick={() => handlePetalClick(p)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePetalClick(p);
+            }}
             data-cursor-hover
-            className="group px-4 py-2 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/40 hover:border-[#e5c158] backdrop-blur-xl shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 text-xs font-semibold text-[#e5c158]"
+            className="group px-4 py-2.5 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/40 hover:border-[#e5c158] backdrop-blur-xl shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#e5c158]"
           >
             <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400/70 group-hover:scale-110 transition-transform" />
-            <span className="truncate max-w-[120px] sm:max-w-[160px] text-[#f0f0f5]">{p.author}</span>
-            <span className="text-[10px] text-[#e5c158]/70">🌸 Unfold</span>
+            <span className="truncate max-w-[120px] sm:max-w-[170px] text-[#f0f0f5]">{p.author}</span>
+            <span className="text-[10px] sm:text-xs text-[#e5c158]/70 font-bold uppercase tracking-wider">🌸 Unfold</span>
           </button>
         ))}
       </div>
 
       {/* INTERACTIVE SEND LOVE TO SHREE FEATURE */}
-      <div className="relative z-20 flex flex-col items-center gap-3 my-4">
+      <div className="relative z-20 flex flex-col items-center gap-4 my-8 sm:my-12">
         <button
-          onClick={handleSendLove}
-          className="group px-6 py-3 rounded-full bg-gradient-to-r from-rose-500/20 via-rose-400/10 to-rose-500/20 border-2 border-rose-400/50 hover:border-rose-300 text-rose-200 text-xs sm:text-sm font-bold uppercase tracking-widest backdrop-blur-2xl shadow-[0_0_40px_rgba(244,63,94,0.3)] hover:shadow-[0_0_60px_rgba(244,63,94,0.6)] transition-all duration-300 active:scale-95 flex items-center gap-2.5"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSendLove();
+          }}
+          className="group px-8 py-4 rounded-full bg-gradient-to-r from-rose-500/20 via-rose-400/10 to-rose-500/20 border-2 border-rose-400/50 hover:border-rose-300 text-rose-200 text-xs sm:text-base font-bold uppercase tracking-widest backdrop-blur-2xl shadow-[0_0_40px_rgba(244,63,94,0.3)] hover:shadow-[0_0_60px_rgba(244,63,94,0.6)] transition-all duration-300 active:scale-95 flex items-center gap-3"
         >
-          <Heart className="w-4 h-4 text-rose-400 fill-rose-400 group-hover:scale-125 transition-transform" />
+          <Heart className="w-5 h-5 text-rose-400 fill-rose-400 group-hover:scale-125 transition-transform" />
           <span>Send Love to Shree ({loveCount.toLocaleString()}) 💖</span>
         </button>
 
@@ -365,7 +370,7 @@ export const ReflectionChapter: React.FC = () => {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-lg w-full p-6 sm:p-10 rounded-3xl bg-[#0c0d12] border-2 border-[#e5c158]/60 shadow-[0_0_90px_rgba(229,193,88,0.35)] flex flex-col items-center text-center gap-6 cursor-default backdrop-blur-3xl animate-fade-in"
+            className="relative max-w-lg w-full p-8 sm:p-12 rounded-3xl bg-[#0c0d12] border-2 border-[#e5c158]/60 shadow-[0_0_90px_rgba(229,193,88,0.35)] flex flex-col items-center text-center gap-6 cursor-default backdrop-blur-3xl animate-fade-in"
           >
             <button
               onClick={handleCloseModal}
@@ -382,14 +387,14 @@ export const ReflectionChapter: React.FC = () => {
               Unfolded Petal Memory 🌸
             </span>
 
-            <p className="font-serif italic text-lg sm:text-2xl text-[#f0f0f5] leading-relaxed">
+            <p className="font-serif italic text-lg sm:text-2xl text-[#f0f0f5] leading-relaxed sm:leading-loose tracking-wide">
               “{activeUnfoldedPetal.text}”
             </p>
 
-            <div className="flex flex-col gap-1 text-xs font-semibold text-[#e5c158]/90 uppercase tracking-widest">
+            <div className="flex flex-col gap-1.5 text-xs sm:text-sm font-semibold text-[#e5c158]/90 uppercase tracking-widest">
               <span>— {activeUnfoldedPetal.author}</span>
               {activeUnfoldedPetal.country && (
-                <span className="text-[10px] text-[#f0f0f5]/50">{activeUnfoldedPetal.country}</span>
+                <span className="text-[11px] text-[#f0f0f5]/50">{activeUnfoldedPetal.country}</span>
               )}
             </div>
 
@@ -399,7 +404,7 @@ export const ReflectionChapter: React.FC = () => {
               lineColor="#e5c158"
               baseColor="#0c0d12"
               onClick={handleCloseModal}
-              className="mt-2"
+              className="mt-4"
             >
               <span>Release Petal to Wind ✨</span>
             </SpecularButton>
