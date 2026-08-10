@@ -1,32 +1,43 @@
-# React + TypeScript + Vite
+# Shree's Journey (v4.0) — Interactive Tribute Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A 3D cinematic interactive web experience honoring Shree's 5 Million celebration milestone.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🔒 Security Audit & Secret Safety Pass
 
-## React Compiler
+> [!WARNING]
+> **Secret Rotation Warning**: If any API keys, credentials, or tokens were previously committed to Git history in earlier versions, **rotate those secrets immediately** in your service provider dashboard (e.g., Supabase, Vercel, AWS). Old values remain in Git commit history even after being untracked.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Environment Setup
 
-## Expanding the Oxlint configuration
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+2. Fill in your environment credentials:
+   ```env
+   VITE_SUPABASE_URL=https://your-project-id.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-supabase-anon-key-here
+   ```
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+3. Ensure `.env` is **never committed** to Git (enforced in `.gitignore`).
+
+---
+
+## 🚀 Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start local dev server
+npm run dev
+
+# TypeScript type check
+npx tsc --noEmit
+
+# Production build
+npm run build
 ```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
