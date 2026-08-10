@@ -128,7 +128,6 @@ export const MEMORY_MOMENTS: MemoryMoment[] = [
 export const CinematicMemoryWall: React.FC = () => {
   const [activeMoment, setActiveMoment] = useState<MemoryMoment | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [selectedMobileId, setSelectedMobileId] = useState<string | null>(null);
   const [selectedEra, setSelectedEra] = useState<string>('all');
 
   const heroMoment = MEMORY_MOMENTS.find((m) => m.isHero) || MEMORY_MOMENTS[0];
@@ -150,17 +149,9 @@ export const CinematicMemoryWall: React.FC = () => {
     { top: '74%', right: '4%', rotate: '4deg', animClass: 'animate-float-b' },   // Bottom-Right
   ];
 
-  // Touch tap handler for mobile & tablet compatibility
+  // Touch tap handler for mobile & desktop compatibility
   const handleCardTap = (moment: MemoryMoment) => {
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      if (selectedMobileId === moment.id) {
-        setActiveMoment(moment);
-      } else {
-        setSelectedMobileId(moment.id);
-      }
-    } else {
-      setActiveMoment(moment);
-    }
+    setActiveMoment(moment);
   };
 
   return (
@@ -357,9 +348,7 @@ export const CinematicMemoryWall: React.FC = () => {
           {/* MOBILE HERO CARD */}
           <div
             onClick={() => handleCardTap(heroMoment)}
-            className={`snap-center shrink-0 w-[280px] h-[360px] animate-float-hero relative rounded-3xl p-2.5 bg-[#0c0d12] border-2 border-[#e5c158]/60 shadow-[0_0_40px_rgba(229,193,88,0.35)] transition-all duration-300 active:scale-[0.98] ${
-              selectedMobileId === heroMoment.id ? 'border-[#e5c158] shadow-[0_0_55px_rgba(229,193,88,0.6)]' : ''
-            }`}
+            className="snap-center shrink-0 w-[280px] h-[360px] animate-float-hero relative rounded-3xl p-2.5 bg-[#0c0d12] border-2 border-[#e5c158]/60 shadow-[0_0_40px_rgba(229,193,88,0.35)] transition-all duration-300 active:scale-[0.98]"
           >
             <div className="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/60 text-[#e5c158] font-general text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">
               ⭐ Main Memory
@@ -378,14 +367,13 @@ export const CinematicMemoryWall: React.FC = () => {
               <span className="truncate max-w-[160px]">{heroMoment.title}</span>
               <div className="flex items-center gap-1 bg-[#0c0d12]/90 px-3 py-1 rounded-full border border-[#e5c158]/50 text-[10px]">
                 <ZoomIn className="w-3.5 h-3.5" />
-                <span>{selectedMobileId === heroMoment.id ? 'View' : 'Tap'}</span>
+                <span>Tap</span>
               </div>
             </div>
           </div>
 
           {/* SURROUNDING MEMORIES CARDS */}
           {surroundingMoments.map((moment, idx) => {
-            const isSelected = selectedMobileId === moment.id;
             const animClass = idx % 2 === 0 ? 'animate-float-a' : 'animate-float-b';
             const isFilteredOut = selectedEra !== 'all' && moment.year !== selectedEra;
 
@@ -395,7 +383,7 @@ export const CinematicMemoryWall: React.FC = () => {
                 onClick={() => handleCardTap(moment)}
                 className={`snap-center shrink-0 w-[240px] h-[340px] ${animClass} relative rounded-3xl p-2 bg-[#0c0d12] border border-[#e5c158]/40 shadow-xl cursor-pointer transition-all duration-300 active:scale-[0.98] flex flex-col justify-between ${
                   isFilteredOut ? 'opacity-40 grayscale' : 'opacity-100'
-                } ${isSelected ? 'scale-[1.02] border-[#e5c158] shadow-[0_0_35px_rgba(229,193,88,0.5)]' : ''}`}
+                }`}
               >
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
                   <img
@@ -410,7 +398,7 @@ export const CinematicMemoryWall: React.FC = () => {
                 <div className="p-2.5 flex items-center justify-between text-[11px] font-bold text-[#e5c158] uppercase tracking-wider">
                   <span className="truncate max-w-[140px]">{moment.title}</span>
                   <span className="text-[9px] opacity-80 shrink-0 ml-1">
-                    {isSelected ? 'View' : 'Tap'}
+                    Tap
                   </span>
                 </div>
               </div>

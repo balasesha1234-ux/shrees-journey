@@ -371,6 +371,33 @@ export const TimelineScene: React.FC = () => {
                           ))}
                         </div>
                       )}
+
+                      {/* MOBILE INTERACTIVE PHOTO CARDS GALLERY */}
+                      <div className="md:hidden grid grid-cols-2 gap-3 mt-4">
+                        {spread.driftItems.slice(0, 4).map((item, itemIdx) => (
+                          <button
+                            key={itemIdx}
+                            onClick={() =>
+                              setSelectedDriftItem({
+                                item,
+                                year: spread.year,
+                                tag: spread.tag,
+                                quote: spread.quote,
+                              })
+                            }
+                            className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#e5c158]/30 shadow-lg active:scale-95 transition-transform"
+                          >
+                            <img
+                              src={item.image}
+                              alt={item.title}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2">
+                              <span className="text-[10px] font-bold text-[#e5c158] truncate">{item.title}</span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     {/* MOBILE ATMOSPHERIC BACKGROUND DRIFTWALL (NON-CLICKABLE BEHIND TEXT) */}

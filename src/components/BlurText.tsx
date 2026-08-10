@@ -20,15 +20,23 @@ export const BlurText: React.FC<BlurTextProps> = ({
   style = {},
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [inView, setInView] = useState(false);
+  
+  // Guarantee text is immediately visible on mobile devices (screen width < 768px)
+  const isMobile = typeof window !== 'undefined' && (window.innerWidth < 768 || 'ontouchstart' in window);
+  const [inView, setInView] = useState<boolean>(isMobile);
 
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
 
   useEffect(() => {
-    // Bulletproof fallback: Guarantee text is visible on all devices after max 350ms
+    if (isMobile) {
+      setInView(true);
+      if (onAnimationComplete) onAnimationComplete();
+      return;
+    }
+
     const fallbackTimer = setTimeout(() => {
       setInView(true);
-    }, 350);
+    }, 150);
 
     const el = containerRef.current;
     if (!el) return () => clearTimeout(fallbackTimer);
@@ -43,7 +51,7 @@ export const BlurText: React.FC<BlurTextProps> = ({
           }
         });
       },
-      { threshold: 0.01, rootMargin: '120px' }
+      { threshold: 0.01, rootMargin: '150px' }
     );
 
     observer.observe(el);
@@ -51,17 +59,17 @@ export const BlurText: React.FC<BlurTextProps> = ({
       clearTimeout(fallbackTimer);
       observer.disconnect();
     };
-  }, []);
+  }, [isMobile, onAnimationComplete]);
 
   useEffect(() => {
-    if (inView && onAnimationComplete) {
-      const totalDuration = elements.length * delay + 500;
+    if (!isMobile && inView && onAnimationComplete) {
+      const totalDuration = elements.length * delay + 400;
       const timer = setTimeout(() => {
         onAnimationComplete();
       }, totalDuration);
       return () => clearTimeout(timer);
     }
-  }, [inView, elements.length, delay, onAnimationComplete]);
+  }, [inView, elements.length, delay, onAnimationComplete, isMobile]);
 
   return (
     <div
@@ -70,17 +78,17 @@ export const BlurText: React.FC<BlurTextProps> = ({
       style={style}
     >
       {elements.map((item, idx) => {
-        const itemDelay = idx * delay;
-        const translateY = direction === 'top' ? '-12px' : '12px';
+        const itemDelay = isMobile ? 0 : idx * delay;
+        const translateY = direction === 'top' ? '-10px' : '10px';
 
         return (
           <span
             key={idx}
-            className="inline-block transition-all duration-500 ease-out"
+            className="inline-block transition-all duration-300 ease-out"
             style={{
               opacity: inView ? 1 : 0,
-              filter: inView ? 'blur(0px)' : 'blur(8px)',
-              transform: inView ? 'translateY(0)' : `translateY(${translateY})`,
+              filter: inView || isMobile ? 'none' : 'blur(8px)',
+              transform: inView || isMobile ? 'translateY(0)' : `translateY(${translateY})`,
               transitionDelay: `${itemDelay}ms`,
             }}
           >

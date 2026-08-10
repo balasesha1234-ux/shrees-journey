@@ -103,7 +103,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
           </span>
         </div>
 
-        <h1 className="font-general text-5xl sm:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight leading-none drop-shadow-[0_0_60px_rgba(229,193,88,0.5)]">
+        <h1 className="font-general text-4xl sm:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight leading-tight sm:leading-none drop-shadow-[0_0_60px_rgba(229,193,88,0.5)]">
           SHREE'S JOURNEY
         </h1>
 

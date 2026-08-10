@@ -212,8 +212,8 @@ export const ReflectionChapter: React.FC = () => {
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />
 
         {/* Box Instruction Badge */}
-        <div className="relative z-10 flex items-center gap-2.5 text-[#e5c158] bg-[#050507]/90 px-5 py-2 rounded-full border border-[#e5c158]/40 text-xs sm:text-sm font-bold uppercase tracking-[0.25em] shadow-2xl animate-pulse">
-          <Sparkles className="w-4 h-4 text-[#e5c158]" />
+        <div className="relative z-10 flex items-center gap-2 text-[#e5c158] bg-[#050507]/90 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full border border-[#e5c158]/40 text-[10px] sm:text-sm font-bold uppercase tracking-[0.12em] sm:tracking-[0.25em] shadow-2xl animate-pulse text-center max-w-[92%]">
+          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#e5c158] shrink-0" />
           <span>Tap any floating memory petal below to freeze & unfold 🌸</span>
         </div>
 
