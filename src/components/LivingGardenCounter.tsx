@@ -9,11 +9,19 @@ interface LivingGardenCounterProps {
 export const LivingGardenCounter: React.FC<LivingGardenCounterProps> = ({ petals }) => {
   const totalPetals = petals.length;
 
+  const indianStates = new Set([
+    'andhra pradesh','arunachal pradesh','assam','bihar','chhattisgarh','goa','gujarat','haryana','himachal pradesh','jharkhand','karnataka','kerala','madhya pradesh','maharashtra','manipur','meghalaya','mizoram','nagaland','odisha','punjab','rajasthan','sikkim','tamil nadu','telangana','tripura','uttar pradesh','uttarakhand','west bengal','delhi','puducherry','jammu and kashmir','ladakh']
+  );
+  const normalizeCountry = (c) => {
+    const lower = c.trim().toLowerCase();
+    if (indianStates.has(lower)) return 'india';
+    return lower;
+  };
   const uniqueCountriesCount = useMemo(() => {
     const set = new Set<string>();
     petals.forEach((p) => {
       if (p.country && p.country.trim() && p.country.trim().toLowerCase() !== 'global') {
-        set.add(p.country.trim().toLowerCase());
+        set.add(normalizeCountry(p.country));
       }
     });
     return set.size;
@@ -91,7 +99,7 @@ export const LivingGardenCounter: React.FC<LivingGardenCounterProps> = ({ petals
                 <span className="font-semibold text-[#e5c158]">{item.author}</span>
                 {item.country && (
                   <span className="text-[10px] text-[#f0f0f5]/50 bg-white/5 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    {item.country}
+                    {indianStates.has(item.country.trim().toLowerCase()) ? 'India' : item.country}
                   </span>
                 )}
                 <span className="text-[#f0f0f5]/70 italic truncate max-w-[180px] sm:max-w-[240px]">
