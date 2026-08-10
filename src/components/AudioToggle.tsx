@@ -13,7 +13,7 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({ isMuted, isPlaying, on
       onClick={onToggle}
       aria-label={isMuted ? 'Unmute ambient score' : 'Mute ambient score'}
       data-cursor-hover
-      className="fixed bottom-6 right-6 z-[9995] group flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#0c0d12]/80 backdrop-blur-md border border-[#e5c158]/20 hover:border-[#e5c158]/60 transition-all duration-300 shadow-2xl hover:shadow-[0_0_20px_rgba(229,193,88,0.2)]"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9995] group flex items-center gap-2 sm:gap-3 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-[#0c0d12]/90 backdrop-blur-xl border border-[#e5c158]/30 hover:border-[#e5c158]/70 transition-all duration-300 shadow-2xl hover:shadow-[0_0_25px_rgba(229,193,88,0.3)]"
     >
       <div className="relative flex items-center justify-center w-5 h-5 text-[#e5c158]">
         {isMuted ? (
@@ -39,7 +39,7 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({ isMuted, isPlaying, on
         ))}
       </div>
 
-      <span className="font-sans text-[11px] font-medium tracking-widest uppercase text-[#f0f0f5]/70 group-hover:text-[#f0f0f5] transition-colors duration-300">
+      <span className="hidden sm:inline-block font-sans text-[11px] font-medium tracking-widest uppercase text-[#f0f0f5]/70 group-hover:text-[#f0f0f5] transition-colors duration-300">
         {isMuted ? 'Sound Off' : 'Ambient Score'}
       </span>
     </button>

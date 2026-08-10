@@ -99,7 +99,7 @@ export const App: React.FC = () => {
             <DeveloperMotiveSection />
 
             {/* HYPERSPEED 3D WARP TUNNEL TRANSITION */}
-            <section className="relative w-full h-[600px] md:h-[750px] my-16 overflow-hidden flex items-center justify-center border-y border-[#e5c158]/30 shadow-2xl select-none">
+            <section className="relative w-full h-[380px] sm:h-[600px] md:h-[750px] my-12 sm:my-16 overflow-hidden flex items-center justify-center border-y border-[#e5c158]/30 shadow-2xl select-none">
               <Hyperspeed effectOptions={hyperspeedPresets.one} />
 
               <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-[#0B0B0F] pointer-events-none z-10" />

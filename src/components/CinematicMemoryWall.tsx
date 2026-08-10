@@ -340,40 +340,50 @@ export const CinematicMemoryWall: React.FC = () => {
 
       </div>
 
-      {/* INTENTIONAL RESPONSIVE COMPOSITION (MOBILE & SMALL TABLET WITH EXPANDED MEMORY GRID) */}
-      <div className="relative z-10 w-full max-w-2xl md:hidden flex flex-col gap-6 my-2">
+      {/* INTENTIONAL RESPONSIVE COMPOSITION (MOBILE FLOATING HORIZONTAL SNAP CAROUSEL) */}
+      <div className="relative z-10 w-full md:hidden flex flex-col gap-6 my-4 px-2">
         
-        {/* PROMINENT MOBILE HERO CARD */}
-        <div
-          onClick={() => handleCardTap(heroMoment)}
-          className={`animate-float-hero relative w-full h-80 sm:h-96 rounded-3xl p-2.5 bg-[#0c0d12] border-2 border-[#e5c158]/50 shadow-[0_0_35px_rgba(229,193,88,0.3)] transition-all duration-300 ${
-            selectedMobileId === heroMoment.id ? 'scale-[1.02] border-[#e5c158]' : ''
-          }`}
-        >
-          <div className="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/60 text-[#e5c158] font-general text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">
-            ⭐ Main Memory
-          </div>
-          <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
-            <img
-              src={heroMoment.image}
-              alt={heroMoment.title}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-contain"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-transparent to-transparent opacity-75" />
-          </div>
-          <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-general text-xs font-bold uppercase tracking-wider text-[#e5c158]">
-            <span>{heroMoment.title}</span>
-            <div className="flex items-center gap-1 bg-[#0c0d12]/90 px-3 py-1 rounded-full border border-[#e5c158]/50 text-[10px]">
-              <ZoomIn className="w-3.5 h-3.5" />
-              <span>{selectedMobileId === heroMoment.id ? 'Tap again to view' : 'Tap to select'}</span>
-            </div>
-          </div>
+        <div className="flex items-center justify-between px-2 text-xs font-bold text-[#e5c158] uppercase tracking-widest">
+          <span className="flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#e5c158] animate-pulse" />
+            <span>Swipe Memories ✦</span>
+          </span>
+          <span className="text-[10px] text-[#f0f0f5]/50">Tap card to expand</span>
         </div>
 
-        {/* SURROUNDING MEMORIES GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* HORIZONTAL SNAP CAROUSEL WITH FLOATING ANIMATIONS */}
+        <div className="w-full flex gap-4 overflow-x-auto snap-x snap-mandatory py-4 px-2 custom-scrollbar">
+          
+          {/* MOBILE HERO CARD */}
+          <div
+            onClick={() => handleCardTap(heroMoment)}
+            className={`snap-center shrink-0 w-[280px] h-[360px] animate-float-hero relative rounded-3xl p-2.5 bg-[#0c0d12] border-2 border-[#e5c158]/60 shadow-[0_0_40px_rgba(229,193,88,0.35)] transition-all duration-300 active:scale-[0.98] ${
+              selectedMobileId === heroMoment.id ? 'border-[#e5c158] shadow-[0_0_55px_rgba(229,193,88,0.6)]' : ''
+            }`}
+          >
+            <div className="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/60 text-[#e5c158] font-general text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">
+              ⭐ Main Memory
+            </div>
+            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
+              <img
+                src={heroMoment.image}
+                alt={heroMoment.title}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-contain"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-transparent to-transparent opacity-80" />
+            </div>
+            <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-general text-xs font-bold uppercase tracking-wider text-[#e5c158]">
+              <span className="truncate max-w-[160px]">{heroMoment.title}</span>
+              <div className="flex items-center gap-1 bg-[#0c0d12]/90 px-3 py-1 rounded-full border border-[#e5c158]/50 text-[10px]">
+                <ZoomIn className="w-3.5 h-3.5" />
+                <span>{selectedMobileId === heroMoment.id ? 'View' : 'Tap'}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* SURROUNDING MEMORIES CARDS */}
           {surroundingMoments.map((moment, idx) => {
             const isSelected = selectedMobileId === moment.id;
             const animClass = idx % 2 === 0 ? 'animate-float-a' : 'animate-float-b';
@@ -383,9 +393,9 @@ export const CinematicMemoryWall: React.FC = () => {
               <div
                 key={moment.id}
                 onClick={() => handleCardTap(moment)}
-                className={`${animClass} relative w-full h-64 sm:h-72 rounded-3xl p-2 bg-[#0c0d12] border border-[#e5c158]/30 shadow-xl cursor-pointer transition-all duration-300 flex flex-col justify-between ${
+                className={`snap-center shrink-0 w-[240px] h-[340px] ${animClass} relative rounded-3xl p-2 bg-[#0c0d12] border border-[#e5c158]/40 shadow-xl cursor-pointer transition-all duration-300 active:scale-[0.98] flex flex-col justify-between ${
                   isFilteredOut ? 'opacity-40 grayscale' : 'opacity-100'
-                } ${isSelected ? 'scale-[1.02] border-[#e5c158] shadow-[0_0_25px_rgba(229,193,88,0.4)]' : ''}`}
+                } ${isSelected ? 'scale-[1.02] border-[#e5c158] shadow-[0_0_35px_rgba(229,193,88,0.5)]' : ''}`}
               >
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
                   <img
@@ -395,19 +405,18 @@ export const CinematicMemoryWall: React.FC = () => {
                     decoding="async"
                     className="w-full h-full object-contain"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-transparent to-transparent opacity-70" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-transparent to-transparent opacity-75" />
                 </div>
                 <div className="p-2.5 flex items-center justify-between text-[11px] font-bold text-[#e5c158] uppercase tracking-wider">
-                  <span className="truncate">{moment.title}</span>
+                  <span className="truncate max-w-[140px]">{moment.title}</span>
                   <span className="text-[9px] opacity-80 shrink-0 ml-1">
-                    {isSelected ? 'Tap to view' : 'Tap'}
+                    {isSelected ? 'View' : 'Tap'}
                   </span>
                 </div>
               </div>
             );
           })}
         </div>
-
       </div>
 
       {/* LIGHTBOX EXPANDED PRESENTATION MODAL */}
