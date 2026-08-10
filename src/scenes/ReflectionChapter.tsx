@@ -43,7 +43,7 @@ export const ReflectionChapter: React.FC = () => {
       xPercent: (i * 29 + 10) % 78 + 8, // Distributed evenly across box width
       yPercent: (i * 37 + 12) % 65 + 12, // Distributed across box height
       animClass: animClasses[i % animClasses.length],
-      rotation: (Math.random() - 0.5) * 30,
+      rotation: (Math.random() - 0.5) * 20,
       text: msg.text,
       author: msg.author,
       country: msg.country,
@@ -174,7 +174,7 @@ export const ReflectionChapter: React.FC = () => {
         <div className="flex items-center gap-2.5 text-[#e5c158] bg-[#0c0d12]/90 px-5 py-2 rounded-full border border-[#e5c158]/40 backdrop-blur-xl shadow-2xl">
           <Sparkles className="w-4 h-4 animate-spin-slow" />
           <span className="font-general text-[11px] sm:text-xs font-bold uppercase tracking-[0.35em]">
-            The Tree of Gratitude ({fallingPetals.length} Secret Petals)
+            The Tree of Gratitude ({fallingPetals.length} Memory Petals)
           </span>
         </div>
 
@@ -185,7 +185,7 @@ export const ReflectionChapter: React.FC = () => {
         {/* ELEGANT SPACED REFLECTION ESSAY QUOTE */}
         <div className="my-4 sm:my-6 p-6 sm:p-10 rounded-3xl bg-[#0c0d12]/80 border border-[#e5c158]/35 backdrop-blur-2xl shadow-2xl max-w-3xl">
           <p className="font-serif italic text-base sm:text-2xl text-[#f0f0f5]/90 leading-relaxed sm:leading-loose tracking-wide">
-            “Every petal floating inside this garden holds a secret memory from someone touched by Shree. Tap any petal to unfold who wrote it.”
+            “Every petal falling inside this garden holds a real memory planted by someone whose life was touched by Shree.”
           </p>
         </div>
 
@@ -214,10 +214,10 @@ export const ReflectionChapter: React.FC = () => {
         {/* Box Instruction Badge */}
         <div className="relative z-10 flex items-center gap-2.5 text-[#e5c158] bg-[#050507]/90 px-5 py-2 rounded-full border border-[#e5c158]/40 text-xs sm:text-sm font-bold uppercase tracking-[0.25em] shadow-2xl animate-pulse">
           <Sparkles className="w-4 h-4 text-[#e5c158]" />
-          <span>Tap any floating cherry blossom petal below to reveal the author & memory 🌸</span>
+          <span>Tap any floating memory petal below to freeze & unfold 🌸</span>
         </div>
 
-        {/* 1-TO-1 SILKY SMOOTH GPU ORGANIC PETALS (NO NAMES ON FLOATING PETALS) */}
+        {/* 1-TO-1 SLEEK LUXURY FLOATING GOLD-PILL PETAL NODES */}
         <div className="absolute inset-0 z-10 w-full h-full pointer-events-none">
           {fallingPetals.map((p) => (
             <button
@@ -229,21 +229,22 @@ export const ReflectionChapter: React.FC = () => {
                 top: `${p.yPercent}%`,
                 animationPlayState: p.isStatic ? 'paused' : 'running',
               }}
-              className={`absolute pointer-events-auto group w-11 h-14 sm:w-14 sm:h-16 rounded-[45%_10%_45%_45%] flex flex-col items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer mobile-gpu-light ${p.animClass} ${
+              className={`absolute pointer-events-auto group px-4 py-2.5 rounded-full transition-all duration-300 active:scale-95 cursor-pointer shadow-xl mobile-gpu-light ${p.animClass} ${
                 p.isStatic
-                  ? 'bg-gradient-to-br from-rose-500 to-rose-700 text-white border-2 border-[#e5c158] shadow-[0_0_40px_#e5c158] scale-125 z-30'
-                  : 'bg-gradient-to-br from-rose-400/90 via-pink-500/85 to-rose-600/90 border border-pink-200/40 shadow-[0_0_20px_rgba(244,114,182,0.6)] hover:scale-125 hover:shadow-[0_0_35px_rgba(244,114,182,0.9)]'
+                  ? 'bg-[#0c0d12] text-white border-2 border-[#e5c158] shadow-[0_0_35px_#e5c158] scale-110 z-30'
+                  : 'bg-[#0c0d12]/90 text-[#e5c158] border border-[#e5c158]/40 hover:border-[#e5c158] hover:scale-105 backdrop-blur-xl'
               }`}
             >
-              <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${p.isStatic ? 'text-amber-300 fill-amber-300' : 'text-white fill-white/90'} group-hover:scale-125 transition-transform`} />
-              <span className="text-[9px] font-bold text-white/90 uppercase tracking-widest mt-0.5">🌸</span>
+              <Heart className={`w-3.5 h-3.5 ${p.isStatic ? 'text-amber-300 fill-amber-300' : 'text-rose-400 fill-rose-400/80'} group-hover:scale-110 transition-transform`} />
+              <span className="truncate max-w-[120px] sm:max-w-[170px] text-[#f0f0f5] font-semibold">{p.author}</span>
+              <span className="text-[10px] sm:text-xs text-[#e5c158]/80 font-bold uppercase tracking-wider">🌸 Unfold</span>
             </button>
           ))}
         </div>
 
         {/* Bottom Box Counter Tag */}
         <div className="relative z-10 text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#e5c158]/70 bg-[#050507]/70 px-4 py-1 rounded-full border border-[#e5c158]/20">
-          Floating {fallingPetals.length} Secret Memory Petals
+          Floating {fallingPetals.length} Memory Petals
         </div>
       </div>
 
@@ -272,7 +273,7 @@ export const ReflectionChapter: React.FC = () => {
         </div>
       )}
 
-      {/* UNFOLDED PETAL MODAL - REVEALS AUTHOR & MEMORY TEXT ON TAP */}
+      {/* UNFOLDED PETAL MODAL */}
       {activeUnfoldedPetal && (
         <div
           onClick={handleCloseModal}
