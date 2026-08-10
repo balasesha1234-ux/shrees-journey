@@ -164,43 +164,47 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           <article
             key={item.year}
             id={`year-section-${item.year}`}
-            className="relative w-full p-6 sm:p-8 rounded-[32px] bg-[#0c0d12]/95 border-2 border-[#e5c158]/35 shadow-[0_0_50px_rgba(229,193,88,0.2)] backdrop-blur-2xl flex flex-col gap-6 overflow-hidden transition-all duration-300 active:border-[#e5c158]/70"
+            className="relative w-full p-6 sm:p-8 rounded-[32px] bg-black/60 border-2 border-[#e5c158]/40 shadow-[0_0_60px_rgba(229,193,88,0.25)] backdrop-blur-xl flex flex-col gap-6 overflow-hidden transition-all duration-300 active:border-[#e5c158]"
           >
-            {/* Cool Chapter Background Atmosphere Image */}
-            <div className="absolute inset-0 z-0 opacity-25 pointer-events-none overflow-hidden rounded-[32px]">
-              <img src={item.bgImage} alt="" className="w-full h-full object-cover filter brightness-75 scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-b from-[#0c0d12]/90 via-[#0c0d12]/80 to-[#0c0d12]" />
+            {/* VIBRANT CHAPTER BACKGROUND PHOTO */}
+            <div className="absolute inset-0 z-0 opacity-55 pointer-events-none overflow-hidden rounded-[32px]">
+              <img
+                src={item.bgImage}
+                alt={`${item.year} Background`}
+                className="w-full h-full object-cover filter brightness-110 contrast-110 scale-105 mix-blend-overlay"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#0c0d12]/85 via-[#0c0d12]/75 to-[#0c0d12]" />
             </div>
 
             {/* Giant Background Watermark Number */}
-            <div className="absolute right-[-1rem] top-[-1.5rem] pointer-events-none select-none font-black text-[9rem] text-white/[0.04] leading-none z-0">
+            <div className="absolute right-[-1rem] top-[-1.5rem] pointer-events-none select-none font-black text-[9.5rem] text-white/[0.06] leading-none z-0">
               {item.year}
             </div>
 
             {/* Top Badge & Header */}
-            <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4">
+            <div className="relative z-10 flex items-center justify-between border-b border-white/15 pb-4">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#e5c158]" />
                 <span className="text-2xl font-black text-[#e5c158] tracking-tight">{item.year}</span>
               </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#e5c158] bg-[#e5c158]/10 px-3.5 py-1.5 rounded-full border border-[#e5c158]/30 shadow-inner">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#e5c158] bg-[#e5c158]/15 px-3.5 py-1.5 rounded-full border border-[#e5c158]/40 shadow-inner">
                 {item.badge}
               </span>
             </div>
 
             {/* Headline & Quote */}
             <div className="relative z-10 flex flex-col gap-3">
-              <h3 className="text-xl sm:text-2xl font-black text-[#f0f0f5] leading-snug tracking-tight animate-fade-in">
+              <h3 className="text-xl sm:text-2xl font-black text-[#f0f0f5] leading-snug tracking-tight">
                 {item.headline}
               </h3>
 
-              <p className="font-serif italic text-sm text-[#e5c158]/95 border-l-2 border-[#e5c158] pl-3 py-0.5 leading-relaxed">
+              <p className="font-serif italic text-sm text-[#e5c158] border-l-2 border-[#e5c158] pl-3 py-0.5 leading-relaxed drop-shadow">
                 {item.quote}
               </p>
             </div>
 
             {/* Bullet Points */}
-            <ul className="relative z-10 flex flex-col gap-2.5 text-xs text-[#f0f0f5]/85 font-medium leading-relaxed">
+            <ul className="relative z-10 flex flex-col gap-2.5 text-xs text-[#f0f0f5]/90 font-medium leading-relaxed">
               {item.bullets.map((b, i) => (
                 <li key={i} className="flex items-start gap-2.5">
                   <span className="text-[#e5c158] font-bold text-sm shrink-0">✦</span>
@@ -214,7 +218,7 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
               {item.photos.map((src, i) => (
                 <div
                   key={i}
-                  className="group shrink-0 w-40 h-52 rounded-2xl overflow-hidden border-2 border-white/15 shadow-xl snap-center bg-black/50 transition-all active:scale-95"
+                  className="group shrink-0 w-40 h-52 rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl snap-center bg-black/60 transition-all active:scale-95"
                 >
                   <img
                     src={src}
@@ -240,27 +244,21 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
         </div>
 
         {/* Mobile Specular Era Selector Bar */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 z-20 max-w-full">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 z-30 max-w-full touch-auto">
           {['all', '2023', '2024', '2025', '2026'].map((era) => {
             const isSelected = selectedEra === era;
             return (
-              <SpecularButton
+              <button
                 key={era}
-                size="sm"
-                radius={20}
-                lineColor={isSelected ? '#ffffff' : '#e5c158'}
-                baseColor={isSelected ? '#e5c158' : '#0c0d12'}
                 onClick={() => setSelectedEra(era)}
-                className={`transition-all duration-300 ${
+                className={`px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 ${
                   isSelected
-                    ? '!bg-gradient-to-r !from-[#e5c158] !via-[#ffd700] !to-[#b89530] !text-[#0c0d12] font-black shadow-[0_0_20px_rgba(229,193,88,0.7)] scale-105'
-                    : 'hover:scale-105'
+                    ? 'bg-gradient-to-r from-[#e5c158] via-[#ffd700] to-[#b89530] text-[#0c0d12] shadow-[0_0_20px_rgba(229,193,88,0.7)] scale-105 border-2 border-white'
+                    : 'bg-[#0c0d12] border-2 border-[#e5c158]/40 text-[#f0f0f5]/90 hover:border-[#e5c158]'
                 }`}
               >
-                <span className={`text-[10px] font-extrabold uppercase tracking-widest ${isSelected ? 'text-[#0c0d12]' : 'text-[#f0f0f5]/90'}`}>
-                  {era === 'all' ? 'All Eras ✦' : `${era} Era 🌸`}
-                </span>
-              </SpecularButton>
+                {era === 'all' ? 'All Eras ✦' : `${era} Era 🌸`}
+              </button>
             );
           })}
         </div>
@@ -271,12 +269,12 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
             <div
               key={m.id}
               onClick={() => setActiveMoment(m)}
-              className="relative rounded-2xl overflow-hidden border border-[#e5c158]/30 bg-[#0c0d12] shadow-xl p-1.5 flex flex-col gap-1.5 active:scale-95 transition-transform"
+              className="relative rounded-2xl overflow-hidden border-2 border-[#e5c158]/40 bg-[#0c0d12] shadow-xl p-1.5 flex flex-col gap-1.5 active:scale-95 transition-transform cursor-pointer"
             >
               <div className="w-full h-40 rounded-xl overflow-hidden bg-black/50">
                 <img src={m.img} alt={m.title} className="w-full h-full object-cover" />
               </div>
-              <span className="text-[11px] font-bold text-[#e5c158] truncate px-1">{m.title}</span>
+              <span className="text-[11px] font-extrabold text-[#e5c158] truncate px-1">{m.title}</span>
             </div>
           ))}
         </div>
@@ -284,12 +282,12 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
 
       {/* 4. MOBILE DEVELOPER MOTIVE */}
       <section className="w-full py-12 px-4 flex flex-col items-center text-center gap-6 border-b border-[#e5c158]/15">
-        <div className="p-6 rounded-3xl bg-[#0c0d12] border border-[#e5c158]/40 shadow-2xl flex flex-col items-center gap-4 w-full">
-          <Compass className="w-8 h-8 text-[#e5c158]" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#e5c158]">
+        <div className="p-6 sm:p-8 rounded-3xl bg-[#0c0d12] border-2 border-[#e5c158]/50 shadow-[0_0_50px_rgba(229,193,88,0.2)] flex flex-col items-center gap-4 w-full">
+          <Compass className="w-9 h-9 text-[#e5c158] animate-spin-slow" />
+          <span className="text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#e5c158]">
             Behind The Journey
           </span>
-          <p className="font-serif italic text-sm text-[#f0f0f5]/90">
+          <p className="font-serif italic text-base text-[#f0f0f5] leading-relaxed">
             “I created this website to honor a journey of consistency, passion, and spiritual light.”
           </p>
 
@@ -300,12 +298,12 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
               lineColor="#e5c158"
               baseColor="#0c0d12"
               onClick={() => setDeveloperMotiveOpen(true)}
-              className="w-full justify-center py-3 text-xs font-bold uppercase tracking-widest mt-2"
+              className="w-full justify-center py-3.5 text-xs font-extrabold uppercase tracking-widest mt-2 shadow-[0_0_20px_rgba(229,193,88,0.4)]"
             >
               <span>Read Motive ✦</span>
             </SpecularButton>
           ) : (
-            <div className="text-xs text-[#f0f0f5]/80 text-left leading-relaxed flex flex-col gap-3 pt-2 border-t border-white/10">
+            <div className="text-xs text-[#f0f0f5]/90 text-left leading-relaxed flex flex-col gap-3.5 pt-4 border-t border-white/15 w-full animate-fade-in">
               <p>
                 Seeing someone dedicate years of unyielding effort to inspire millions was a profound reminder of what determination can accomplish.
               </p>
@@ -317,38 +315,52 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
         </div>
       </section>
 
-      {/* 5. MOBILE REFLECTION GARDEN WITH INTERACTIVE FLOATING PETALS BOX */}
+      {/* 5. MOBILE REFLECTION GARDEN WITH ANIMATED FLOATING MEMORY PETALS */}
       <section id="mobile-garden" className="relative w-full py-16 px-4 flex flex-col items-center gap-8">
         <div className="flex flex-col items-center text-center gap-2">
-          <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12] px-4 py-1 rounded-full border border-[#e5c158]/30">
+          <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12] px-4 py-1.5 rounded-full border border-[#e5c158]/30 shadow-lg">
             <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
             <span className="text-[10px] font-bold uppercase tracking-widest">Reflection Chapter</span>
           </div>
           <h2 className="text-3xl font-black text-[#f0f0f5]">Living Garden</h2>
         </div>
 
-        {/* Mobile Floating Memory Petals Sanctuary Box */}
-        <div className="relative z-10 w-full h-[360px] rounded-3xl bg-[#0c0d12]/95 border-2 border-[#e5c158]/50 shadow-[0_0_60px_rgba(229,193,88,0.25)] overflow-hidden p-4 flex flex-col items-center justify-between">
-          <div className="relative z-10 flex items-center gap-2 text-[#e5c158] bg-[#050507]/90 px-3.5 py-1.5 rounded-full border border-[#e5c158]/40 text-[10px] font-bold uppercase tracking-widest text-center shadow-lg">
-            <Sparkles className="w-3.5 h-3.5 text-[#e5c158]" />
-            <span>Tap any petal below to unfold memory 🌸</span>
+        {/* Mobile Floating Memory Petals Box with Organic Float Animation */}
+        <div className="relative z-10 w-full h-[380px] rounded-[32px] bg-black/80 border-2 border-[#e5c158]/60 shadow-[0_0_60px_rgba(229,193,88,0.3)] overflow-hidden p-5 flex flex-col items-center justify-between backdrop-blur-xl">
+          <div className="relative z-10 flex items-center gap-2 text-[#e5c158] bg-[#050507]/90 px-4 py-2 rounded-full border border-[#e5c158]/50 text-[10px] font-extrabold uppercase tracking-widest text-center shadow-xl">
+            <Sparkles className="w-4 h-4 text-[#e5c158] animate-spin-slow" />
+            <span>Tap floating petals to unfold memory 🌸</span>
           </div>
 
-          {/* Floating Memory Petals Grid */}
-          <div className="relative w-full h-56 flex flex-wrap items-center justify-center gap-4 p-2">
-            {dbPetals.slice(0, 8).map((p, idx) => (
-              <button
-                key={p.id || idx}
-                onClick={() => setActivePetalModal(p)}
-                className="w-10 h-14 rounded-[50%_0_50%_50%] bg-gradient-to-br from-rose-300/90 via-pink-400/95 to-rose-400/90 border-2 border-[#e5c158] shadow-[0_0_20px_rgba(244,63,94,0.5)] flex items-center justify-center active:scale-125 transition-transform animate-pulse"
-              >
-                <Heart className="w-4 h-4 text-white fill-white" />
-              </button>
-            ))}
+          {/* Floating Memory Petals Box Container */}
+          <div className="relative w-full h-60 overflow-hidden flex items-center justify-center">
+            {dbPetals.slice(0, 10).map((p, idx) => {
+              const offsets = [
+                { top: '10%', left: '15%', delay: '0s' },
+                { top: '25%', left: '70%', delay: '1.2s' },
+                { top: '50%', left: '30%', delay: '2.5s' },
+                { top: '65%', left: '80%', delay: '0.8s' },
+                { top: '15%', left: '45%', delay: '1.8s' },
+                { top: '75%', left: '18%', delay: '2.1s' },
+                { top: '40%', left: '60%', delay: '3.0s' },
+                { top: '80%', left: '50%', delay: '1.5s' },
+              ];
+              const pos = offsets[idx % offsets.length];
+              return (
+                <button
+                  key={p.id || idx}
+                  onClick={() => setActivePetalModal(p)}
+                  style={{ top: pos.top, left: pos.left, animationDelay: pos.delay }}
+                  className="absolute z-20 w-11 h-16 rounded-[50%_0_50%_50%] bg-gradient-to-br from-rose-300 via-pink-400 to-rose-500 border-2 border-[#e5c158] shadow-[0_0_25px_rgba(244,63,94,0.7)] flex items-center justify-center active:scale-125 transition-transform animate-bounce"
+                >
+                  <Heart className="w-4 h-4 text-white fill-white" />
+                </button>
+              );
+            })}
           </div>
 
-          <div className="relative z-10 text-[10px] font-bold uppercase tracking-widest text-[#e5c158]/80 bg-[#050507]/80 px-3 py-1 rounded-full border border-[#e5c158]/20">
-            {dbPetals.length} Memory Petals Floating
+          <div className="relative z-10 text-[10px] font-extrabold uppercase tracking-widest text-[#e5c158] bg-[#050507]/90 px-4 py-1.5 rounded-full border border-[#e5c158]/30 shadow-md">
+            🌸 {dbPetals.length} Memory Petals Floating
           </div>
         </div>
 

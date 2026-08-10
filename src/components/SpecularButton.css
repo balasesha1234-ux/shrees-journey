@@ -17,7 +17,8 @@
   text-transform: uppercase;
   line-height: 1;
   color: var(--sb-text-color);
-  background: color-mix(in srgb, var(--sb-tint) calc(var(--sb-tint-opacity) * 100%), transparent);
+  background: #0c0d12;
+  border: 1.5px solid rgba(229, 193, 88, 0.5);
   border-radius: var(--sb-radius);
   backdrop-filter: blur(var(--sb-blur));
   -webkit-backdrop-filter: blur(var(--sb-blur));

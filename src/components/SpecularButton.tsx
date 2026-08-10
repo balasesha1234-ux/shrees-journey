@@ -115,19 +115,21 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
   const fxRef = useRef<HTMLSpanElement | null>(null);
   const propsRef = useRef<Record<string, any>>({});
 
-  propsRef.current = {
-    radius,
-    lineColor,
-    baseColor,
-    intensity,
-    shineSize,
-    shineFade,
-    thickness,
-    speed,
-    followMouse,
-    proximity,
-    autoAnimate,
-  };
+    const isMobileViewport = typeof window !== 'undefined' && (window.innerWidth < 768 || 'ontouchstart' in window);
+
+    propsRef.current = {
+      radius,
+      lineColor,
+      baseColor,
+      intensity,
+      shineSize,
+      shineFade,
+      thickness,
+      speed,
+      followMouse,
+      proximity,
+      autoAnimate: isMobileViewport ? true : autoAnimate,
+    };
 
   useEffect(() => {
     const btn = btnRef.current;

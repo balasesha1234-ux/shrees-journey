@@ -7,7 +7,6 @@ import { CustomCursor } from './components/CustomCursor';
 import { FilmGrain } from './components/FilmGrain';
 import { ParticleField } from './components/ParticleField';
 import { AudioToggle } from './components/AudioToggle';
-import { TimeCompass } from './components/TimeCompass';
 import { MemoryCurator } from './components/MemoryCurator';
 import { PrivateEpilogueModal } from './components/PrivateEpilogueModal';
 import { FilmCredits } from './components/FilmCredits';
@@ -81,9 +80,6 @@ export const App: React.FC = () => {
 
       {/* Memory Curator Narrator Companion */}
       <MemoryCurator />
-
-      {/* Signature Time Compass Instrument */}
-      <TimeCompass />
 
       {/* Secret Chapter & Private Letter Modal */}
       <PrivateEpilogueModal
