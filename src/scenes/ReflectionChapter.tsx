@@ -217,7 +217,7 @@ export const ReflectionChapter: React.FC = () => {
           <span>Tap any floating memory petal below to freeze & unfold 🌸</span>
         </div>
 
-        {/* 1-TO-1 SLEEK LUXURY FLOATING GOLD-PILL PETAL NODES */}
+        {/* 1-TO-1 PURE LUXURY GOLDEN-BORDER FLOATING PETAL NODES (NO AUTHOR TYPOGRAPHY) */}
         <div className="absolute inset-0 z-10 w-full h-full pointer-events-none">
           {fallingPetals.map((p) => (
             <button
@@ -229,15 +229,16 @@ export const ReflectionChapter: React.FC = () => {
                 top: `${p.yPercent}%`,
                 animationPlayState: p.isStatic ? 'paused' : 'running',
               }}
-              className={`absolute pointer-events-auto group px-4 py-2.5 rounded-full transition-all duration-300 active:scale-95 cursor-pointer shadow-xl mobile-gpu-light ${p.animClass} ${
+              className={`absolute pointer-events-auto group px-3.5 py-2 rounded-full transition-all duration-300 active:scale-95 cursor-pointer shadow-xl mobile-gpu-light ${p.animClass} ${
                 p.isStatic
-                  ? 'bg-[#0c0d12] text-white border-2 border-[#e5c158] shadow-[0_0_35px_#e5c158] scale-110 z-30'
-                  : 'bg-[#0c0d12]/90 text-[#e5c158] border border-[#e5c158]/40 hover:border-[#e5c158] hover:scale-105 backdrop-blur-xl'
+                  ? 'bg-[#0c0d12] text-[#e5c158] border-2 border-[#e5c158] shadow-[0_0_35px_#e5c158] scale-125 z-30'
+                  : 'bg-[#0c0d12]/90 text-[#e5c158] border-2 border-[#e5c158]/60 hover:border-[#e5c158] hover:scale-115 backdrop-blur-xl'
               }`}
             >
-              <Heart className={`w-3.5 h-3.5 ${p.isStatic ? 'text-amber-300 fill-amber-300' : 'text-rose-400 fill-rose-400/80'} group-hover:scale-110 transition-transform`} />
-              <span className="truncate max-w-[120px] sm:max-w-[170px] text-[#f0f0f5] font-semibold">{p.author}</span>
-              <span className="text-[10px] sm:text-xs text-[#e5c158]/80 font-bold uppercase tracking-wider">🌸 Unfold</span>
+              <div className="flex items-center gap-1.5">
+                <Heart className={`w-3.5 h-3.5 ${p.isStatic ? 'text-amber-300 fill-amber-300' : 'text-rose-400 fill-rose-400'} group-hover:scale-125 transition-transform`} />
+                <span className="text-xs font-bold text-[#e5c158]">🌸</span>
+              </div>
             </button>
           ))}
         </div>
