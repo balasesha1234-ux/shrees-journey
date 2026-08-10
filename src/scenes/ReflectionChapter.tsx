@@ -19,6 +19,20 @@ interface FallingPetal {
 
 export const ReflectionChapter: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerBoxRef = useRef<HTMLDivElement | null>(null);
+  const physicsRefs = useRef<{
+    [id: string]: {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      swaySpeed: number;
+      swayRange: number;
+      phase: number;
+      rotation: number;
+      rotationSpeed: number;
+    }
+  }>({});
 
   const { petals: dbPetals, error, addPetal: addSupabasePetal, deletePetal, refreshPetals } = useSupabasePetals();
   const [activeUnfoldedPetal, setActiveUnfoldedPetal] = useState<FallingPetal | null>(null);
@@ -111,6 +125,83 @@ export const ReflectionChapter: React.FC = () => {
       cancelAnimationFrame(animId);
     };
   }, []);
+
+  // HIGH-PERFORMANCE DIRECT DOM RANDOM FLOATING & BOUNCING PHYSICS ENGINE
+  useEffect(() => {
+    let animId: number;
+
+    const updatePhysics = () => {
+      const container = containerBoxRef.current;
+      if (!container) return;
+
+      const elements = container.querySelectorAll('.petal-node') as NodeListOf<HTMLButtonElement>;
+      elements.forEach((el) => {
+        const id = el.getAttribute('data-petal-id');
+        if (!id) return;
+
+        const isStatic = el.getAttribute('data-static') === 'true';
+        if (isStatic) return;
+
+        // Initialize state if not present
+        if (!physicsRefs.current[id]) {
+          physicsRefs.current[id] = {
+            x: parseFloat(el.getAttribute('data-init-x') || '50'),
+            y: parseFloat(el.getAttribute('data-init-y') || '50'),
+            vx: (Math.random() - 0.5) * 0.08, // Slow drifting velocity
+            vy: (Math.random() - 0.5) * 0.08,
+            swaySpeed: 0.01 + Math.random() * 0.02,
+            swayRange: 5 + Math.random() * 10,
+            phase: Math.random() * Math.PI * 2,
+            rotation: (Math.random() - 0.5) * 45,
+            rotationSpeed: (Math.random() - 0.5) * 0.15,
+          };
+        }
+
+        const state = physicsRefs.current[id];
+
+        // Apply velocities
+        state.x += state.vx;
+        state.y += state.vy;
+        state.phase += state.swaySpeed;
+        state.rotation += state.rotationSpeed;
+
+        // Keep strictly inside the boundary of the sanctuary box
+        const xMin = 6;
+        const xMax = 90;
+        const yMin = 15;
+        const yMax = 82;
+
+        if (state.x < xMin) {
+          state.x = xMin;
+          state.vx = Math.abs(state.vx);
+        } else if (state.x > xMax) {
+          state.x = xMax;
+          state.vx = -Math.abs(state.vx);
+        }
+
+        if (state.y < yMin) {
+          state.y = yMin;
+          state.vy = Math.abs(state.vy);
+        } else if (state.y > yMax) {
+          state.y = yMax;
+          state.vy = -Math.abs(state.vy);
+        }
+
+        // Sway coordinates organic
+        const swayX = Math.sin(state.phase) * state.swayRange;
+        const swayY = Math.cos(state.phase * 0.85) * (state.swayRange * 0.7);
+
+        el.style.left = `${state.x}%`;
+        el.style.top = `${state.y}%`;
+        el.style.transform = `translate3d(${swayX}px, ${swayY}px, 0) rotate(${state.rotation}deg)`;
+      });
+
+      animId = requestAnimationFrame(updatePhysics);
+    };
+
+    animId = requestAnimationFrame(updatePhysics);
+    return () => cancelAnimationFrame(animId);
+  }, [fallingPetals]);
 
   const handlePetalTap = (p: FallingPetal) => {
     // Highlight & freeze selected petal static
@@ -218,22 +309,25 @@ export const ReflectionChapter: React.FC = () => {
         </div>
 
         {/* 1-TO-1 PURE LUXURY GOLDEN-BORDER FLOATING PETAL NODES (NO AUTHOR TYPOGRAPHY) */}
-        <div className="absolute inset-0 z-10 w-full h-full pointer-events-none">
+        <div ref={containerBoxRef} className="absolute inset-0 z-10 w-full h-full pointer-events-none">
           {fallingPetals.map((p) => (
             <button
               key={p.id}
               onClick={() => handlePetalTap(p)}
               data-cursor-hover
+              data-petal-id={p.id}
+              data-init-x={p.xPercent}
+              data-init-y={p.yPercent}
+              data-static={p.isStatic ? 'true' : 'false'}
               style={{
                 left: `${p.xPercent}%`,
                 top: `${p.yPercent}%`,
-                animationPlayState: p.isStatic ? 'paused' : 'running',
               }}
-              className={`absolute pointer-events-auto group px-3.5 py-2 rounded-full transition-all duration-300 active:scale-95 cursor-pointer shadow-xl mobile-gpu-light ${p.animClass} ${
+              className={`absolute pointer-events-auto group px-3.5 py-2 rounded-full transition-shadow duration-300 active:scale-95 cursor-pointer shadow-xl mobile-gpu-light ${
                 p.isStatic
                   ? 'bg-[#0c0d12] text-[#e5c158] border-2 border-[#e5c158] shadow-[0_0_35px_#e5c158] scale-125 z-30'
                   : 'bg-[#0c0d12]/90 text-[#e5c158] border-2 border-[#e5c158]/60 hover:border-[#e5c158] hover:scale-115 backdrop-blur-xl'
-              }`}
+              } petal-node`}
             >
               <div className="flex items-center gap-1.5">
                 <Heart className={`w-3.5 h-3.5 ${p.isStatic ? 'text-amber-300 fill-amber-300' : 'text-rose-400 fill-rose-400'} group-hover:scale-125 transition-transform`} />
