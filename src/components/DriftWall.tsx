@@ -172,8 +172,25 @@ export const DriftWall: React.FC<DriftWallProps> = ({
     let animId: number;
     let lastTime = performance.now();
     let offsetY = 0;
+    let isVisible = true;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.05 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
 
     const animate = (now: number) => {
+      if (!isVisible) {
+        animId = requestAnimationFrame(animate);
+        return;
+      }
+
       const delta = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
@@ -198,7 +215,10 @@ export const DriftWall: React.FC<DriftWallProps> = ({
     };
 
     animId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animId);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(animId);
+    };
   }, [speed, direction, pauseOnHover, isHovered, singleBlockHeight, tilt, turn, roll, depth]);
 
   return (

@@ -373,9 +373,32 @@ export const TimelineScene: React.FC = () => {
                       )}
                     </div>
 
-                    {/* 3D DriftWall Media Frame */}
-                    <div className={`lg:col-span-7 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
-                      <div className="animate-reveal relative w-full h-[380px] sm:h-[500px] md:h-[620px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                    {/* MOBILE ATMOSPHERIC BACKGROUND DRIFTWALL (NON-CLICKABLE BEHIND TEXT) */}
+                    <div className="md:hidden absolute inset-0 pointer-events-none opacity-20 filter blur-[2px] scale-110 z-0 overflow-hidden rounded-3xl">
+                      <DriftWall
+                        items={spread.driftItems}
+                        columns={3}
+                        tileWidth={110}
+                        tileHeight={120}
+                        gap={6}
+                        tilt={15}
+                        turn={-10}
+                        perspective={1200}
+                        depth={200}
+                        speed={30}
+                        direction="down"
+                        dim={0.5}
+                        overlayColor="#0B0B0F"
+                        radius={16}
+                        roll={-5}
+                        pauseOnHover={false}
+                        grayscale={false}
+                      />
+                    </div>
+
+                    {/* DESKTOP INTERACTIVE 3D DRIFTWALL MEDIA FRAME */}
+                    <div className={`hidden md:block lg:col-span-7 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
+                      <div className="animate-reveal relative w-full h-[500px] md:h-[620px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
                         <DriftWall
                           items={spread.driftItems}
                           columns={5}
