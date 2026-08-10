@@ -217,6 +217,22 @@ export const ReflectionChapter: React.FC = () => {
     return () => cancelAnimationFrame(animId);
   }, [fallingPetals]);
 
+  const handlePetalHoverEnter = (p: FallingPetal) => {
+    // Temporarily freeze petal while hovered (if not already the active clicked petal)
+    setFallingPetals((prev) =>
+      prev.map((item) => (item.id === p.id ? { ...item, isStatic: true } : item))
+    );
+  };
+
+  const handlePetalHoverLeave = (p: FallingPetal) => {
+    // Unfreeze only if this petal is not the actively opened one
+    if (activeUnfoldedPetal?.id !== p.id) {
+      setFallingPetals((prev) =>
+        prev.map((item) => (item.id === p.id ? { ...item, isStatic: false } : item))
+      );
+    }
+  };
+
   const handlePetalTap = (p: FallingPetal) => {
     // Highlight & freeze selected petal static
     setFallingPetals((prev) =>
@@ -328,6 +344,8 @@ export const ReflectionChapter: React.FC = () => {
             <button
               key={p.id}
               onClick={() => handlePetalTap(p)}
+              onMouseEnter={() => handlePetalHoverEnter(p)}
+              onMouseLeave={() => handlePetalHoverLeave(p)}
               data-cursor-hover
               data-petal-id={p.id}
               data-init-x={p.xPercent}
