@@ -126,13 +126,16 @@ export const ReflectionChapter: React.FC = () => {
     };
   }, []);
 
-  // HIGH-PERFORMANCE DIRECT DOM RANDOM FLOATING & BOUNCING PHYSICS ENGINE
+  // HIGH-PERFORMANCE GPU ACCELERATED RANDOM FLOATING & BOUNCING PHYSICS ENGINE
   useEffect(() => {
     let animId: number;
 
     const updatePhysics = () => {
       const container = containerBoxRef.current;
       if (!container) return;
+
+      const boxWidth = container.clientWidth || 800;
+      const boxHeight = container.clientHeight || 500;
 
       const elements = container.querySelectorAll('.petal-node') as NodeListOf<HTMLButtonElement>;
       elements.forEach((el) => {
@@ -142,18 +145,24 @@ export const ReflectionChapter: React.FC = () => {
         const isStatic = el.getAttribute('data-static') === 'true';
         if (isStatic) return;
 
+        const initXPercent = parseFloat(el.getAttribute('data-init-x') || '50');
+        const initYPercent = parseFloat(el.getAttribute('data-init-y') || '50');
+
+        const initX = (initXPercent / 100) * boxWidth;
+        const initY = (initYPercent / 100) * boxHeight;
+
         // Initialize state if not present
         if (!physicsRefs.current[id]) {
           physicsRefs.current[id] = {
-            x: parseFloat(el.getAttribute('data-init-x') || '50'),
-            y: parseFloat(el.getAttribute('data-init-y') || '50'),
-            vx: (Math.random() - 0.5) * 0.08, // Slow drifting velocity
-            vy: (Math.random() - 0.5) * 0.08,
+            x: initX,
+            y: initY,
+            vx: (Math.random() - 0.5) * 0.9, // Pixels per frame drift speed
+            vy: (Math.random() - 0.5) * 0.9,
             swaySpeed: 0.01 + Math.random() * 0.02,
-            swayRange: 5 + Math.random() * 10,
+            swayRange: 6 + Math.random() * 12,
             phase: Math.random() * Math.PI * 2,
-            rotation: (Math.random() - 0.5) * 45,
-            rotationSpeed: (Math.random() - 0.5) * 0.15,
+            rotation: (Math.random() - 0.5) * 360,
+            rotationSpeed: (Math.random() - 0.5) * 0.25,
           };
         }
 
@@ -165,11 +174,13 @@ export const ReflectionChapter: React.FC = () => {
         state.phase += state.swaySpeed;
         state.rotation += state.rotationSpeed;
 
-        // Keep strictly inside the boundary of the sanctuary box
-        const xMin = 6;
-        const xMax = 90;
-        const yMin = 15;
-        const yMax = 82;
+        // Keep strictly inside the boundary of the sanctuary box in pixels
+        const paddingX = 40;
+        const paddingY = 40;
+        const xMin = paddingX;
+        const xMax = boxWidth - paddingX;
+        const yMin = paddingY;
+        const yMax = boxHeight - paddingY;
 
         if (state.x < xMin) {
           state.x = xMin;
@@ -187,13 +198,16 @@ export const ReflectionChapter: React.FC = () => {
           state.vy = -Math.abs(state.vy);
         }
 
+        // Calculate offset from initial position
+        const dx = state.x - initX;
+        const dy = state.y - initY;
+
         // Sway coordinates organic
         const swayX = Math.sin(state.phase) * state.swayRange;
         const swayY = Math.cos(state.phase * 0.85) * (state.swayRange * 0.7);
 
-        el.style.left = `${state.x}%`;
-        el.style.top = `${state.y}%`;
-        el.style.transform = `translate3d(${swayX}px, ${swayY}px, 0) rotate(${state.rotation}deg)`;
+        // Apply pure 3D transforms offloaded to GPU
+        el.style.transform = `translate3d(${dx + swayX}px, ${dy + swayY}px, 0) rotate(${state.rotation}deg)`;
       });
 
       animId = requestAnimationFrame(updatePhysics);
@@ -308,7 +322,7 @@ export const ReflectionChapter: React.FC = () => {
           <span>Tap any floating memory petal below to freeze & unfold 🌸</span>
         </div>
 
-        {/* 1-TO-1 PURE LUXURY GOLDEN-BORDER FLOATING PETAL NODES (NO AUTHOR TYPOGRAPHY) */}
+        {/* 1-TO-1 PURE LUXURY CHERRY BLOSSOM ORGANIC PETAL NODES */}
         <div ref={containerBoxRef} className="absolute inset-0 z-10 w-full h-full pointer-events-none">
           {fallingPetals.map((p) => (
             <button
@@ -323,16 +337,14 @@ export const ReflectionChapter: React.FC = () => {
                 left: `${p.xPercent}%`,
                 top: `${p.yPercent}%`,
               }}
-              className={`absolute pointer-events-auto group px-3.5 py-2 rounded-full transition-shadow duration-300 active:scale-95 cursor-pointer shadow-xl mobile-gpu-light ${
+              className={`absolute pointer-events-auto group w-8 h-12 rounded-[50%_0_50%_50%] transition-shadow duration-300 active:scale-95 cursor-pointer flex items-center justify-center ${
                 p.isStatic
-                  ? 'bg-[#0c0d12] text-[#e5c158] border-2 border-[#e5c158] shadow-[0_0_35px_#e5c158] scale-125 z-30'
-                  : 'bg-[#0c0d12]/90 text-[#e5c158] border-2 border-[#e5c158]/60 hover:border-[#e5c158] hover:scale-115 backdrop-blur-xl'
+                  ? 'bg-gradient-to-br from-[#e5c158] via-[#ffd700] to-[#b89530] border-2 border-white shadow-[0_0_35px_#e5c158] scale-130 z-30'
+                  : 'bg-gradient-to-br from-rose-300/90 via-pink-400/95 to-rose-400/90 border-2 border-[#e5c158]/70 hover:border-white shadow-[0_0_20px_rgba(244,63,94,0.45)] hover:scale-115'
               } petal-node`}
             >
-              <div className="flex items-center gap-1.5">
-                <Heart className={`w-3.5 h-3.5 ${p.isStatic ? 'text-amber-300 fill-amber-300' : 'text-rose-400 fill-rose-400'} group-hover:scale-125 transition-transform`} />
-                <span className="text-xs font-bold text-[#e5c158]">🌸</span>
-              </div>
+              {/* Central Glowing Heart Essence inside Petal */}
+              <Heart className={`w-3.5 h-3.5 ${p.isStatic ? 'text-[#0c0d12] fill-[#0c0d12]' : 'text-white/80 fill-white/80 group-hover:scale-125'} transition-transform`} />
             </button>
           ))}
         </div>
