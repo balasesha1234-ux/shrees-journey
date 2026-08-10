@@ -7,7 +7,6 @@ import DriftWall from '../components/DriftWall';
 import type { DriftWallItem } from '../components/DriftWall';
 import BlurText from '../components/BlurText';
 import MagicBento from '../components/MagicBento';
-import OptionWheel from '../components/OptionWheel';
 import GradualBlur from '../components/GradualBlur';
 import DotField from '../components/DotField';
 import SpecularButton from '../components/SpecularButton';
@@ -150,7 +149,6 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
 
 export const TimelineScene: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [activeYearIdx, setActiveYearIdx] = useState<number>(0);
   const [selectedDriftItem, setSelectedDriftItem] = useState<{
     item: DriftWallItem;
     year: string;
@@ -160,7 +158,7 @@ export const TimelineScene: React.FC = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      MAGAZINE_SPREADS.forEach((item, idx) => {
+      MAGAZINE_SPREADS.forEach((item) => {
         const sectionEl = document.getElementById(`year-section-${item.year}`);
         if (sectionEl) {
           // Reveal animation per section
@@ -182,28 +180,12 @@ export const TimelineScene: React.FC = () => {
               },
             }
           );
-
-          // ScrollTrigger to sync OptionWheel active year based on scroll position
-          ScrollTrigger.create({
-            trigger: sectionEl,
-            start: 'top 50%',
-            end: 'bottom 50%',
-            onEnter: () => setActiveYearIdx(idx),
-            onEnterBack: () => setActiveYearIdx(idx),
-          });
         }
       });
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
-
-  const handleYearChange = (_index: number, yearItem: string) => {
-    const targetEl = document.getElementById(`year-section-${yearItem}`);
-    if (targetEl) {
-      targetEl.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   return (
     <section
@@ -229,30 +211,7 @@ export const TimelineScene: React.FC = () => {
         />
       </div>
 
-      {/* 3D OPTION WHEEL PINNED ROTARY NAVIGATION (DESKTOP ONLY) */}
-      <div className="fixed left-3 sm:left-8 top-1/2 -translate-y-1/2 z-40 hidden md:block w-52 h-[480px] pointer-events-auto filter drop-shadow-[0_0_50px_rgba(0,0,0,0.95)]">
-        <OptionWheel
-          items={['2023', '2024', '2025', '2026']}
-          defaultSelected={0}
-          selected={activeYearIdx}
-          textColor="#8e8e93"
-          activeColor="#e5c158"
-          side="left"
-          fontSize={3.2}
-          spacing={1.45}
-          curve={1.3}
-          tilt={8}
-          blur={1.5}
-          fade={0.28}
-          smoothing={180}
-          inset={36}
-          loop={false}
-          draggable
-          onChange={handleYearChange}
-        />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16 pl-4 sm:pl-6 md:pl-56 lg:pl-64 flex flex-col gap-28 sm:gap-40 md:gap-56 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16 pr-4 sm:pr-6 md:pr-48 lg:pr-56 flex flex-col gap-28 sm:gap-40 md:gap-56 relative z-10">
         
         {MAGAZINE_SPREADS.map((spread, spreadIdx) => {
           const isEven = spreadIdx % 2 === 0;
