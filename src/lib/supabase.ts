@@ -7,6 +7,7 @@ export interface PetalRow {
   id?: number | string;
   name: string;
   country?: string;
+  location?: string;
   message: string;
   created_at?: string;
 }

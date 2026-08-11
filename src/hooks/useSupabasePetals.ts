@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured, type PetalRow } from '../lib/supabase';
+import { parseLocationAndCountry } from '../utils/countryHelper';
 
 export interface PetalData {
   id: number | string;
   text: string;
   author: string;
   country?: string;
+  location?: string;
   created_at?: string;
 }
-
-import { extractPureCountry } from '../utils/countryHelper';
 
 export function useSupabasePetals() {
   const [petals, setPetals] = useState<PetalData[]>([]);
@@ -26,11 +26,27 @@ export function useSupabasePetals() {
       setLoading(true);
       setError(null);
 
-      // Explicit field filtering - fetch ONLY public petal display fields
-      const { data, error: dbError } = await supabase
+      // Try selecting with location field, fallback to without location if column not yet added
+      let data: PetalRow[] | null = null;
+      let dbError: unknown = null;
+
+      const resWithLoc = await supabase
         .from('petals')
-        .select('id, name, country, message, created_at')
+        .select('id, name, country, location, message, created_at')
         .order('created_at', { ascending: false });
+
+      if (resWithLoc.error) {
+        // Fallback query if location column doesn't exist yet in Supabase schema
+        const resFallback = await supabase
+          .from('petals')
+          .select('id, name, country, message, created_at')
+          .order('created_at', { ascending: false });
+
+        data = resFallback.data as PetalRow[] | null;
+        dbError = resFallback.error;
+      } else {
+        data = resWithLoc.data as PetalRow[] | null;
+      }
 
       if (dbError) {
         console.warn('Supabase fetch notice: [REDACTED_ERROR_DETAILS]');
@@ -40,13 +56,17 @@ export function useSupabasePetals() {
       }
 
       if (data && data.length > 0) {
-        const fetchedPetals: PetalData[] = data.map((row: PetalRow, idx: number) => ({
-          id: row.id || `sp-${idx}`,
-          text: row.message,
-          author: row.name || 'A Grateful Friend',
-          country: row.country || 'Global',
-          created_at: row.created_at,
-        }));
+        const fetchedPetals: PetalData[] = data.map((row: PetalRow, idx: number) => {
+          const parsed = parseLocationAndCountry(row.country, row.location);
+          return {
+            id: row.id || `sp-${idx}`,
+            text: row.message,
+            author: row.name || 'A Grateful Friend',
+            country: parsed.country,
+            location: parsed.location || undefined,
+            created_at: row.created_at,
+          };
+        });
         setPetals(fetchedPetals);
       } else {
         setPetals([]);
@@ -64,13 +84,19 @@ export function useSupabasePetals() {
     fetchPetals();
   }, [fetchPetals]);
 
-  const addPetal = async (name: string, country: string, message: string): Promise<PetalData> => {
-    const pureCountry = extractPureCountry(country);
+  const addPetal = async (
+    name: string,
+    country: string,
+    message: string,
+    location?: string
+  ): Promise<PetalData> => {
+    const parsed = parseLocationAndCountry(country, location);
     const newPetal: PetalData = {
       id: Date.now(),
       text: message,
       author: name || 'A Grateful Friend',
-      country: pureCountry,
+      country: parsed.country,
+      location: parsed.location || undefined,
       created_at: new Date().toISOString(),
     };
 
@@ -80,22 +106,35 @@ export function useSupabasePetals() {
 
     if (isSupabaseConfigured && supabase) {
       try {
-        const { data, error: insertError } = await supabase
-          .from('petals')
-          .insert([
-            {
-              name: name.trim() || 'A Grateful Friend',
-              country: pureCountry,
-              message: message.trim(),
-              created_at: new Date().toISOString(),
-            },
-          ])
-          .select('id, name, country, message, created_at');
+        const insertPayload: Record<string, unknown> = {
+          name: name.trim() || 'A Grateful Friend',
+          country: parsed.country,
+          message: message.trim(),
+          created_at: new Date().toISOString(),
+        };
 
-        if (insertError) {
+        if (parsed.location) {
+          insertPayload.location = parsed.location;
+        }
+
+        let insertRes = await supabase
+          .from('petals')
+          .insert([insertPayload])
+          .select('id, name, country, location, message, created_at');
+
+        // Fallback insert without location if column is not yet present on DB
+        if (insertRes.error && insertPayload.location) {
+          delete insertPayload.location;
+          insertRes = await supabase
+            .from('petals')
+            .insert([insertPayload])
+            .select('id, name, country, message, created_at');
+        }
+
+        if (insertRes.error) {
           console.warn('Supabase insert notice: [REDACTED_ERROR_DETAILS]');
-        } else if (data && data[0]) {
-          const insertedRow = data[0];
+        } else if (insertRes.data && insertRes.data[0]) {
+          const insertedRow = insertRes.data[0];
           setPetals((prev) =>
             prev.map((p) =>
               p.id === newPetal.id

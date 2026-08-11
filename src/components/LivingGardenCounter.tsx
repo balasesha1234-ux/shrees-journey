@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Sparkles, Heart, Globe } from 'lucide-react';
 import { type PetalData } from '../hooks/useSupabasePetals';
-import { parseCanonicalCountry } from '../utils/countryHelper';
+import { parseCanonicalCountryKey } from '../utils/countryHelper';
 
 interface LivingGardenCounterProps {
   petals: PetalData[];
@@ -13,9 +13,9 @@ export const LivingGardenCounter: React.FC<LivingGardenCounterProps> = ({ petals
   const uniqueCountriesCount = useMemo(() => {
     const set = new Set<string>();
     petals.forEach((p) => {
-      if (p.country) {
-        const canonical = parseCanonicalCountry(p.country);
-        if (canonical) set.add(canonical);
+      const canonicalKey = parseCanonicalCountryKey(p.country, p.location);
+      if (canonicalKey) {
+        set.add(canonicalKey);
       }
     });
     return set.size;

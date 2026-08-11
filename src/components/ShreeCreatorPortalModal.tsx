@@ -132,7 +132,7 @@ export const ShreeCreatorPortalModal: React.FC<ShreeCreatorPortalModalProps> = (
     return filteredPetals.map((petal, index) => ({
       image: carouselBackgrounds[index % carouselBackgrounds.length],
       author: petal.author,
-      country: petal.country || 'Global Family',
+      country: petal.location ? `${petal.location}, ${petal.country || 'India'}` : (petal.country || 'Global Family'),
       text: petal.text,
       date: petal.created_at
         ? new Date(petal.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
@@ -405,7 +405,7 @@ export const ShreeCreatorPortalModal: React.FC<ShreeCreatorPortalModalProps> = (
                         <div className="flex items-center gap-2 text-[#f0f0f5]/60 text-[11px]">
                           {petal.country && (
                             <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 uppercase tracking-wider">
-                              📍 {petal.country}
+                              📍 {petal.location ? `${petal.location}, ${petal.country}` : petal.country}
                             </span>
                           )}
                         </div>
@@ -425,7 +425,7 @@ export const ShreeCreatorPortalModal: React.FC<ShreeCreatorPortalModalProps> = (
                           <span>{petal.author}</span>
                           {petal.country && (
                             <span className="text-[10px] text-white/50 font-normal">
-                              ({petal.country})
+                              ({petal.location ? `${petal.location}, ${petal.country}` : petal.country})
                             </span>
                           )}
                         </div>

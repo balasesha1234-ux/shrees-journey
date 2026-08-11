@@ -1,26 +1,5 @@
 const COUNTRY_ALIAS_MAP: Record<string, string> = {
-  // USA & States/Cities
-  'usa': 'United States',
-  'us': 'United States',
-  'united states': 'United States',
-  'united states of america': 'United States',
-  'america': 'United States',
-  'california': 'United States',
-  'texas': 'United States',
-  'new york': 'United States',
-  'florida': 'United States',
-  'washington': 'United States',
-  'illinois': 'United States',
-  
-  // UK & Regions
-  'uk': 'United Kingdom',
-  'united kingdom': 'United Kingdom',
-  'england': 'United Kingdom',
-  'scotland': 'United Kingdom',
-  'wales': 'United Kingdom',
-  'london': 'United Kingdom',
-
-  // India & States & Major Cities
+  // India & States & Cities
   'india': 'India',
   'bharat': 'India',
   'in': 'India',
@@ -45,6 +24,33 @@ const COUNTRY_ALIAS_MAP: Record<string, string> = {
   'west bengal': 'India',
   'goa': 'India',
   'haryana': 'India',
+  'kadapa': 'India',
+  'kancheepuram': 'India',
+  'kanchipuram': 'India',
+  'vizianagaram': 'India',
+  'konada': 'India',
+  'andhra pradesh': 'India',
+
+  // USA & States/Cities
+  'usa': 'United States',
+  'us': 'United States',
+  'united states': 'United States',
+  'united states of america': 'United States',
+  'america': 'United States',
+  'california': 'United States',
+  'texas': 'United States',
+  'new york': 'United States',
+  'florida': 'United States',
+  'washington': 'United States',
+  'illinois': 'United States',
+
+  // UK & Regions
+  'uk': 'United Kingdom',
+  'united kingdom': 'United Kingdom',
+  'england': 'United Kingdom',
+  'scotland': 'United Kingdom',
+  'wales': 'United Kingdom',
+  'london': 'United Kingdom',
 
   // UAE
   'uae': 'United Arab Emirates',
@@ -65,7 +71,7 @@ const COUNTRY_ALIAS_MAP: Record<string, string> = {
   'sydney': 'Australia',
   'melbourne': 'Australia',
 
-  // Germany & Europe
+  // Germany, Japan, France, Singapore, etc.
   'germany': 'Germany',
   'de': 'Germany',
   'berlin': 'Germany',
@@ -79,36 +85,145 @@ const COUNTRY_ALIAS_MAP: Record<string, string> = {
   'sg': 'Singapore',
 };
 
+const KNOWN_INDIA_SUB_LOCATIONS = new Set([
+  'west bengal', 'kadapa', 'vizianagaram', 'konada', 'kancheepuram', 'kanchipuram',
+  'mumbai', 'delhi', 'bengaluru', 'bangalore', 'hyderabad', 'chennai', 'kolkata',
+  'pune', 'ahmedabad', 'maharashtra', 'karnataka', 'tamil nadu', 'telangana',
+  'kerala', 'gujarat', 'punjab', 'rajasthan', 'uttar pradesh', 'goa', 'haryana', 'andhra pradesh'
+]);
+
+export interface ParsedLocationResult {
+  country: string;
+  location: string | null;
+}
+
 /**
- * Extracts a clean, capitalized, canonical Country name from any raw location input.
- * E.g., "Mumbai, India" -> "India", "California, USA" -> "United States"
+ * Normalizes raw country & location inputs (or legacy string) into structured country & location.
+ */
+export const parseLocationAndCountry = (
+  rawCountry?: string | null,
+  rawLocation?: string | null
+): ParsedLocationResult => {
+  const c = (rawCountry || '').trim();
+  const l = (rawLocation || '').trim();
+
+  if (!c && !l) {
+    return { country: 'Global', location: null };
+  }
+
+  // If separate country and location fields are provided
+  if (c && l) {
+    const canonical = getCanonicalCountryName(c);
+    return {
+      country: canonical,
+      location: cleanLocationString(l),
+    };
+  }
+
+  const targetStr = c || l;
+  const lowerStr = targetStr.toLowerCase();
+
+  if (lowerStr === 'global' || lowerStr === 'global family' || lowerStr === 'earth') {
+    return { country: 'Global', location: null };
+  }
+
+  // Split by common delimiters (comma, slash)
+  const parts = targetStr.split(/[,/]+/).map((p) => p.trim()).filter(Boolean);
+
+  if (parts.length === 1) {
+    const single = parts[0];
+    const singleLower = single.toLowerCase();
+
+    if (KNOWN_INDIA_SUB_LOCATIONS.has(singleLower)) {
+      if (singleLower === 'india' || singleLower === 'in' || singleLower === 'bharat') {
+        return { country: 'India', location: null };
+      }
+      const canonicalSub = single.split(/\s+/).map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+      return { country: 'India', location: canonicalSub };
+    }
+
+    return { country: getCanonicalCountryName(single), location: null };
+  }
+
+  // Multi-part string e.g. "india,vizianagaram,konada" or "INDIA / KANCHEEPURAM"
+  let foundCountry: string | null = null;
+  const locationParts: string[] = [];
+
+  for (const part of parts) {
+    const partLower = part.toLowerCase();
+    if (!foundCountry && (COUNTRY_ALIAS_MAP[partLower] || isCountryName(partLower))) {
+      foundCountry = getCanonicalCountryName(part);
+    } else {
+      const formattedPart = part
+        .split(/\s+/)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ');
+      locationParts.push(formattedPart);
+    }
+  }
+
+  const finalCountry = foundCountry || getCanonicalCountryName(parts[0]);
+  const finalLocation = locationParts.length > 0 ? locationParts.join(', ') : null;
+
+  return {
+    country: finalCountry,
+    location: finalLocation,
+  };
+};
+
+/**
+ * Extracts pure canonical country name
  */
 export const extractPureCountry = (raw: string): string => {
+  return parseLocationAndCountry(raw).country;
+};
+
+/**
+ * Returns canonical capitalized Country name (e.g. "India", "United States", "Global")
+ */
+export const getCanonicalCountryName = (raw: string): string => {
   if (!raw || !raw.trim()) return 'Global';
-  const cleaned = raw.trim();
-  const lower = cleaned.toLowerCase();
-  
+  const trimmed = raw.trim();
+  const lower = trimmed.toLowerCase();
+
   if (lower === 'global' || lower === 'global family' || lower === 'earth') {
     return 'Global';
   }
 
-  // If input contains comma/slash (e.g. "Mumbai, India" or "California, USA"), take the last part
-  const parts = lower.split(/[,/-]+/);
-  const candidate = parts[parts.length - 1].trim();
-
-  if (COUNTRY_ALIAS_MAP[candidate]) {
-    return COUNTRY_ALIAS_MAP[candidate];
-  }
   if (COUNTRY_ALIAS_MAP[lower]) {
     return COUNTRY_ALIAS_MAP[lower];
   }
 
-  // Capitalize candidate words
-  const words = candidate.split(/\s+/).map((w) => w.charAt(0).toUpperCase() + w.slice(1));
-  return words.join(' ');
+  return trimmed
+    .split(/\s+/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+};
+
+/**
+ * Returns canonical key for unique country counting.
+ * E.g., "India", "india", "INDIA", "India, Vizianagaram" -> "india"
+ */
+export const parseCanonicalCountryKey = (rawCountry?: string | null, rawLocation?: string | null): string | null => {
+  const { country } = parseLocationAndCountry(rawCountry, rawLocation);
+  if (!country || country === 'Global') return null;
+  return country.toLowerCase().trim();
 };
 
 export const parseCanonicalCountry = (raw: string): string => {
-  const pure = extractPureCountry(raw);
-  return pure === 'Global' ? '' : pure.toLowerCase();
+  const key = parseCanonicalCountryKey(raw);
+  return key || '';
+};
+
+const isCountryName = (lower: string): boolean => {
+  return ['india', 'in', 'bharat', 'usa', 'us', 'uk', 'canada', 'australia', 'germany', 'japan', 'france', 'singapore', 'uae'].includes(lower);
+};
+
+const cleanLocationString = (loc: string): string | null => {
+  if (!loc || !loc.trim()) return null;
+  return loc
+    .trim()
+    .split(/[\s,]+/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
 };
