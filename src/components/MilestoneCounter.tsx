@@ -41,37 +41,63 @@ export const MilestoneCounter: React.FC<MilestoneCounterProps> = ({
     return Math.floor(num).toLocaleString();
   };
 
+  const hasAnimated = useRef(false);
+
+  const startCountUp = () => {
+    if (hasAnimated.current) return;
+    hasAnimated.current = true;
+
+    const counterObj = { val: 0 };
+    gsap.to(counterObj, {
+      val: targetValue,
+      duration: 2.2,
+      ease: 'power2.out',
+      onUpdate: () => {
+        if (numberRef.current) {
+          const isDone = counterObj.val >= targetValue - 10;
+          numberRef.current.innerText = formatNumber(counterObj.val, isDone);
+        }
+      },
+      onComplete: () => {
+        if (numberRef.current) {
+          numberRef.current.innerText = formatNumber(targetValue, true);
+        }
+      },
+    });
+  };
+
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    const counterObj = { val: 0 };
+    // Initialize displayed number immediately
+    if (numberRef.current) {
+      numberRef.current.innerText = formatNumber(0, false);
+    }
 
-    const ctx = gsap.context(() => {
-      gsap.to(counterObj, {
-        val: targetValue,
-        duration: 2.4,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-        onUpdate: () => {
-          if (numberRef.current) {
-            const isDone = counterObj.val >= targetValue - 10;
-            numberRef.current.innerText = formatNumber(counterObj.val, isDone);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            startCountUp();
+            observer.disconnect();
           }
-        },
-        onComplete: () => {
-          if (numberRef.current) {
-            numberRef.current.innerText = formatNumber(targetValue, true);
-          }
-        },
-      });
-    }, el);
+        });
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
 
-    return () => ctx.revert();
+    observer.observe(el);
+
+    // Backup safety fallback to guarantee animation starts even if observer is bypassed
+    const safetyTimer = setTimeout(() => {
+      startCountUp();
+    }, 600);
+
+    return () => {
+      clearTimeout(safetyTimer);
+      observer.disconnect();
+    };
   }, [targetValue]);
 
   return (

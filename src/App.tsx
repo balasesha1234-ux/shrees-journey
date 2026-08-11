@@ -70,6 +70,7 @@ export const App: React.FC = () => {
         <MobileExperience
           onUserInteractAudio={toggleMute}
           onOpenSecretModal={() => setIsSecretModalOpen(true)}
+          onOpenShareModal={() => setIsShareModalOpen(true)}
         />
 
         <ShareTributeModal

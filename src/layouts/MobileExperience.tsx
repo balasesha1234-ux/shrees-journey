@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Calendar, Heart, Compass, Image, X, Lock } from 'lucide-react';
+import { Sparkles, Calendar, Heart, Compass, Image, X, Lock, Share2 } from 'lucide-react';
 import SpecularButton from '../components/SpecularButton';
 import CommunityPetalSection from '../components/CommunityPetalSection';
 import LivingGardenCounter from '../components/LivingGardenCounter';
@@ -14,11 +14,13 @@ import { useSupabasePetals } from '../hooks/useSupabasePetals';
 interface MobileExperienceProps {
   onUserInteractAudio?: () => void;
   onOpenSecretModal?: () => void;
+  onOpenShareModal?: () => void;
 }
 
 export const MobileExperience: React.FC<MobileExperienceProps> = ({
   onUserInteractAudio,
   onOpenSecretModal,
+  onOpenShareModal,
 }) => {
   const [selectedEra, setSelectedEra] = useState<string>('all');
   const [activeMoment, setActiveMoment] = useState<any | null>(null);
@@ -268,7 +270,7 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           className="font-serif italic text-base sm:text-xl text-[#f0f0f5]/90 max-w-sm mt-4 leading-relaxed justify-center text-center"
         />
 
-        <div className="mt-10 flex flex-col items-center gap-4 w-full max-w-xs z-20">
+        <div className="mt-10 flex flex-col items-center gap-3.5 w-full max-w-xs z-20">
           <SpecularButton
             size="lg"
             radius={22}
@@ -283,6 +285,21 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           >
             <Sparkles className="w-4 h-4 text-[#e5c158]" />
             <span>Begin Experience ✦</span>
+          </SpecularButton>
+
+          <SpecularButton
+            size="lg"
+            radius={22}
+            lineColor="#e5c158"
+            baseColor="#0c0d12"
+            onClick={() => {
+              if (onOpenShareModal) onOpenShareModal();
+              setIsShareModalOpen(true);
+            }}
+            className="w-full justify-center py-3.5 text-xs font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_30px_rgba(229,193,88,0.3)] active:scale-95"
+          >
+            <Share2 className="w-4 h-4 text-[#e5c158]" />
+            <span>Share Tribute 🌸</span>
           </SpecularButton>
         </div>
       </section>
