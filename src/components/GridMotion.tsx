@@ -70,8 +70,9 @@ export const GridMotion: React.FC<GridMotionProps> = ({
                 rowRefs.current[rowIndex] = el;
               }}
             >
-              {[...Array(7)].map((_, itemIndex) => {
-                const content = combinedItems[rowIndex * 7 + itemIndex];
+              {[...Array(9)].map((_, itemIndex) => {
+                const itemIdx = (rowIndex * 9 + itemIndex) % combinedItems.length;
+                const content = combinedItems[itemIdx];
                 const isImage =
                   typeof content === 'string' && (content.startsWith('http') || content.startsWith('/'));
 
