@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, Calendar, Heart, Compass, Image, X, Lock } from 'lucide-react';
 import SpecularButton from '../components/SpecularButton';
 import CommunityPetalSection from '../components/CommunityPetalSection';
@@ -23,7 +23,132 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
   const [heartBurst, setHeartBurst] = useState<boolean>(false);
   const [developerMotiveOpen, setDeveloperMotiveOpen] = useState<boolean>(false);
 
+  const mobilePetalBoxRef = useRef<HTMLDivElement | null>(null);
+  const mobilePhysicsRef = useRef<Record<string, {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    phaseX: number;
+    phaseY: number;
+    phaseRot: number;
+    speedX: number;
+    speedY: number;
+    speedRot: number;
+    swayAmpX: number;
+    swayAmpY: number;
+    rotAmp: number;
+    baseRot: number;
+  }>>({});
+
   const { petals: dbPetals, addPetal, deletePetal } = useSupabasePetals();
+
+  // HIGH-PERFORMANCE ORGANIC 2D FLOATING PETALS ANIMATION ENGINE FOR MOBILE
+  useEffect(() => {
+    let animId: number;
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) return;
+
+    let lastTime = performance.now();
+
+    const animateMobilePetals = (time: number) => {
+      animId = requestAnimationFrame(animateMobilePetals);
+
+      const dt = Math.min((time - lastTime) / 1000, 0.05);
+      lastTime = time;
+
+      const container = mobilePetalBoxRef.current;
+      if (!container) return;
+
+      const containerWidth = container.clientWidth || 300;
+      const containerHeight = container.clientHeight || 220;
+
+      const petalWidth = 44;
+      const petalHeight = 64;
+
+      const minX = petalWidth / 2 + 8;
+      const maxX = containerWidth - petalWidth / 2 - 8;
+      const minY = petalHeight / 2 + 8;
+      const maxY = containerHeight - petalHeight / 2 - 8;
+
+      const petalNodes = container.querySelectorAll('.mobile-petal-node') as NodeListOf<HTMLButtonElement>;
+
+      petalNodes.forEach((node, index) => {
+        const id = node.getAttribute('data-petal-id') || `mobile-petal-${index}`;
+
+        if (!mobilePhysicsRef.current[id]) {
+          const cols = 4;
+          const col = index % cols;
+          const row = Math.floor(index / cols);
+
+          const startX = minX + (col / (cols - 1 || 1)) * Math.max(maxX - minX, 1);
+          const startY = minY + (row / 2.5) * Math.max(maxY - minY, 1);
+
+          mobilePhysicsRef.current[id] = {
+            x: startX + (Math.random() - 0.5) * 15,
+            y: startY + (Math.random() - 0.5) * 15,
+            vx: (Math.random() - 0.5) * 14,
+            vy: (Math.random() - 0.5) * 14,
+            phaseX: Math.random() * Math.PI * 2,
+            phaseY: Math.random() * Math.PI * 2,
+            phaseRot: Math.random() * Math.PI * 2,
+            speedX: 0.4 + Math.random() * 0.5,
+            speedY: 0.3 + Math.random() * 0.6,
+            speedRot: 0.2 + Math.random() * 0.4,
+            swayAmpX: 12 + Math.random() * 16,
+            swayAmpY: 10 + Math.random() * 14,
+            rotAmp: 14 + Math.random() * 10,
+            baseRot: (Math.random() - 0.5) * 20,
+          };
+        }
+
+        const state = mobilePhysicsRef.current[id];
+
+        state.phaseX += state.speedX * dt;
+        state.phaseY += state.speedY * dt;
+        state.phaseRot += state.speedRot * dt;
+
+        state.x += state.vx * dt;
+        state.y += state.vy * dt;
+
+        const swayX = Math.sin(state.phaseX) * state.swayAmpX + Math.sin(state.phaseX * 2.3) * (state.swayAmpX * 0.4);
+        const swayY = Math.cos(state.phaseY) * state.swayAmpY + Math.cos(state.phaseY * 1.7) * (state.swayAmpY * 0.3);
+
+        const currentX = state.x + swayX;
+        const currentY = state.y + swayY;
+
+        if (currentX < minX) {
+          state.x = minX - swayX;
+          state.vx = Math.abs(state.vx) * 0.8 + 4;
+        } else if (currentX > maxX) {
+          state.x = maxX - swayX;
+          state.vx = -Math.abs(state.vx) * 0.8 - 4;
+        }
+
+        if (currentY < minY) {
+          state.y = minY - swayY;
+          state.vy = Math.abs(state.vy) * 0.8 + 4;
+        } else if (currentY > maxY) {
+          state.y = maxY - swayY;
+          state.vy = -Math.abs(state.vy) * 0.8 - 4;
+        }
+
+        const rot = state.baseRot + Math.sin(state.phaseRot) * state.rotAmp + Math.sin(state.phaseX * 1.5) * 5;
+
+        node.style.transform = `translate3d(${currentX - petalWidth / 2}px, ${currentY - petalHeight / 2}px, 0) rotate(${rot}deg)`;
+      });
+    };
+
+    animId = requestAnimationFrame(animateMobilePetals);
+
+    return () => {
+      cancelAnimationFrame(animId);
+    };
+  }, []);
 
   const timelineYears = [
     {
@@ -325,7 +450,7 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           <h2 className="text-3xl font-black text-[#f0f0f5]">Living Garden</h2>
         </div>
 
-        {/* Mobile Floating Memory Petals Box with Organic Float Animation */}
+        {/* Mobile Floating Memory Petals Box with Organic 2D Float Animation */}
         <div className="relative z-10 w-full h-[380px] rounded-[32px] bg-black/80 border-2 border-[#e5c158]/60 shadow-[0_0_60px_rgba(229,193,88,0.3)] overflow-hidden p-5 flex flex-col items-center justify-between backdrop-blur-xl">
           <div className="relative z-10 flex items-center gap-2 text-[#e5c158] bg-[#050507]/90 px-4 py-2 rounded-full border border-[#e5c158]/50 text-[10px] font-extrabold uppercase tracking-widest text-center shadow-xl">
             <Sparkles className="w-4 h-4 text-[#e5c158] animate-spin-slow" />
@@ -333,30 +458,18 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           </div>
 
           {/* Floating Memory Petals Box Container */}
-          <div className="relative w-full h-60 overflow-hidden flex items-center justify-center">
-            {dbPetals.slice(0, 10).map((p, idx) => {
-              const offsets = [
-                { top: '10%', left: '15%', delay: '0s' },
-                { top: '25%', left: '70%', delay: '1.2s' },
-                { top: '50%', left: '30%', delay: '2.5s' },
-                { top: '65%', left: '80%', delay: '0.8s' },
-                { top: '15%', left: '45%', delay: '1.8s' },
-                { top: '75%', left: '18%', delay: '2.1s' },
-                { top: '40%', left: '60%', delay: '3.0s' },
-                { top: '80%', left: '50%', delay: '1.5s' },
-              ];
-              const pos = offsets[idx % offsets.length];
-              return (
-                <button
-                  key={p.id || idx}
-                  onClick={() => setActivePetalModal(p)}
-                  style={{ top: pos.top, left: pos.left, animationDelay: pos.delay }}
-                  className="absolute z-20 w-11 h-16 rounded-[50%_0_50%_50%] bg-gradient-to-br from-rose-300 via-pink-400 to-rose-500 border-2 border-[#e5c158] shadow-[0_0_25px_rgba(244,63,94,0.7)] flex items-center justify-center active:scale-125 transition-transform animate-bounce"
-                >
-                  <Heart className="w-4 h-4 text-white fill-white" />
-                </button>
-              );
-            })}
+          <div ref={mobilePetalBoxRef} className="relative w-full h-60 overflow-hidden">
+            {dbPetals.slice(0, 10).map((p, idx) => (
+              <button
+                key={p.id || idx}
+                data-petal-id={p.id || idx}
+                onClick={() => setActivePetalModal(p)}
+                aria-label={`Unfold memory petal by ${p.author}`}
+                className="mobile-petal-node absolute top-0 left-0 z-20 w-11 h-16 rounded-[50%_0_50%_50%] bg-gradient-to-br from-rose-300 via-pink-400 to-rose-500 border-2 border-[#e5c158] shadow-[0_0_25px_rgba(244,63,94,0.7)] flex items-center justify-center active:scale-125 transition-transform will-change-transform"
+              >
+                <Heart className="w-4 h-4 text-white fill-white pointer-events-none" />
+              </button>
+            ))}
           </div>
 
           <div className="relative z-10 text-[10px] font-extrabold uppercase tracking-widest text-[#e5c158] bg-[#050507]/90 px-4 py-1.5 rounded-full border border-[#e5c158]/30 shadow-md">
