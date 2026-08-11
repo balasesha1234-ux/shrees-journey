@@ -136,53 +136,64 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
     const fx = fxRef.current;
     if (!btn || !fx) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
-    const gl = renderer.gl;
-    gl.clearColor(0, 0, 0, 0);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    // On mobile devices, skip WebGL canvas creation to prevent canvas white box artifacts
+    const isMobileDevice = window.innerWidth < 768;
+    if (isMobileDevice) return;
 
-    const geometry = new Triangle(gl);
-    if ((geometry.attributes as any).uv) delete (geometry.attributes as any).uv;
+    let renderer: Renderer | null = null;
+    let ro: ResizeObserver | null = null;
 
-    const program = new Program(gl, {
-      vertex: VERT,
-      fragment: FRAG,
-      uniforms: {
-        uCenter: { value: [0, 0] },
-        uHalfSize: { value: [1, 1] },
-        uRadius: { value: 0 },
-        uAngle: { value: 2.4 },
-        uPx: { value: dpr },
-        uLineColor: { value: [1, 1, 1] },
-        uBaseColor: { value: [0.32, 0.32, 0.32] },
-        uIntensity: { value: 1 },
-        uShineSize: { value: 0.17 },
-        uShineFade: { value: 0.7 },
-        uThickness: { value: 1 },
-        uBaseWidth: { value: dpr },
-      },
-    });
+    try {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
+      const gl = renderer.gl;
+      if (!gl) return;
 
-    const mesh = new Mesh(gl, { geometry, program });
-    fx.appendChild(gl.canvas);
+      gl.clearColor(0, 0, 0, 0);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-    const sizeRef = { w: 1, h: 1 };
-    const resize = () => {
-      const rect = btn.getBoundingClientRect();
-      const w = rect.width;
-      const h = rect.height;
-      sizeRef.w = w;
-      sizeRef.h = h;
-      renderer.setSize(w + PAD * 2, h + PAD * 2);
-      program.uniforms.uCenter.value = [(PAD + w / 2) * dpr, (PAD + h / 2) * dpr];
-      program.uniforms.uHalfSize.value = [(w / 2) * dpr, (h / 2) * dpr];
-    };
+      const geometry = new Triangle(gl);
+      if ((geometry.attributes as any).uv) delete (geometry.attributes as any).uv;
 
-    const ro = new ResizeObserver(resize);
-    ro.observe(btn);
-    resize();
+      const program = new Program(gl, {
+        vertex: VERT,
+        fragment: FRAG,
+        uniforms: {
+          uCenter: { value: [0, 0] },
+          uHalfSize: { value: [1, 1] },
+          uRadius: { value: 0 },
+          uAngle: { value: 2.4 },
+          uPx: { value: dpr },
+          uLineColor: { value: [1, 1, 1] },
+          uBaseColor: { value: [0.32, 0.32, 0.32] },
+          uIntensity: { value: 1 },
+          uShineSize: { value: 0.17 },
+          uShineFade: { value: 0.7 },
+          uThickness: { value: 1 },
+          uBaseWidth: { value: dpr },
+        },
+      });
+
+      const mesh = new Mesh(gl, { geometry, program });
+      fx.appendChild(gl.canvas);
+
+      const sizeRef = { w: 1, h: 1 };
+      const resize = () => {
+        if (!btn || !renderer) return;
+        const rect = btn.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+        sizeRef.w = w;
+        sizeRef.h = h;
+        renderer.setSize(w + PAD * 2, h + PAD * 2);
+        program.uniforms.uCenter.value = [(PAD + w / 2) * dpr, (PAD + h / 2) * dpr];
+        program.uniforms.uHalfSize.value = [(w / 2) * dpr, (h / 2) * dpr];
+      };
+
+      ro = new ResizeObserver(resize);
+      ro.observe(btn);
+      resize();
 
     let pointerAngle: number | null = null;
     let proximityT = 0;
@@ -240,17 +251,25 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
       program.uniforms.uShineSize.value = (p.shineSize * Math.PI) / 180;
       program.uniforms.uShineFade.value = (p.shineFade * Math.PI) / 180;
       program.uniforms.uThickness.value = p.thickness * dpr;
-      renderer.render({ scene: mesh });
+      if (renderer) renderer.render({ scene: mesh });
     };
     raf = requestAnimationFrame(update);
 
     return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+      if (ro) ro.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
-      if (gl.canvas.parentNode === fx) fx.removeChild(gl.canvas);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      try {
+        if (renderer && renderer.gl && renderer.gl.canvas && renderer.gl.canvas.parentNode === fx) {
+          fx.removeChild(renderer.gl.canvas);
+        }
+      } catch {
+        // Safe cleanup fallback
+      }
     };
+  } catch {
+    // Graceful WebGL fallback if context fails on mobile
+  }
   }, []);
 
   return (
