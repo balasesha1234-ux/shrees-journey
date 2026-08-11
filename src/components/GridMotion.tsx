@@ -19,36 +19,32 @@ export const GridMotion: React.FC<GridMotionProps> = ({
   const combinedItems = items.length > 0 ? items.slice(0, totalItems) : defaultItems;
 
   useEffect(() => {
-    let ticking = false;
+    let mouseX = 0;
+    let targetMouseX = 0;
+    let baseOffset = 0;
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const maxMoveAmount = 180;
-          const mouseRatio = e.clientX / window.innerWidth;
-
-          rowRefs.current.forEach((row, index) => {
-            if (row) {
-              const direction = index % 2 === 0 ? 1 : -1;
-              const moveAmount = (mouseRatio * maxMoveAmount - maxMoveAmount / 2) * direction;
-
-              gsap.to(row, {
-                x: moveAmount,
-                duration: 1.2,
-                ease: 'power2.out',
-                overwrite: 'auto',
-              });
-            }
-          });
-          ticking = false;
-        });
-        ticking = true;
-      }
+      targetMouseX = (e.clientX / window.innerWidth - 0.5) * 160;
     };
 
+    const updateMotion = () => {
+      baseOffset += 0.4; // Continuous smooth ambient drift
+      mouseX += (targetMouseX - mouseX) * 0.06; // Smooth lerp mouse follow
+
+      rowRefs.current.forEach((row, index) => {
+        if (row) {
+          const direction = index % 2 === 0 ? 1 : -1;
+          const totalX = (baseOffset + mouseX) * direction;
+          gsap.set(row, { x: totalX % 450 });
+        }
+      });
+    };
+
+    gsap.ticker.add(updateMotion);
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     return () => {
+      gsap.ticker.remove(updateMotion);
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
