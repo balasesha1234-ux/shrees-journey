@@ -16,4 +16,22 @@ export default defineConfig({
       '@': fileURLToPath ? new URL('./src', import.meta.url).pathname : './src',
     },
   },
+  build: {
+    target: 'esnext',
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) return 'vendor-react';
+            if (id.includes('gsap') || id.includes('lenis')) return 'vendor-animation';
+            if (id.includes('lucide-react') || id.includes('ogl')) return 'vendor-ui';
+            if (id.includes('@supabase')) return 'vendor-supabase';
+            return 'vendor-libs';
+          }
+        },
+      },
+    },
+  },
 });

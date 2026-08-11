@@ -1,34 +1,38 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function useLenis() {
   useEffect(() => {
-    // Disable Lenis JS smooth scroll interception on mobile touch devices for butter-smooth native touch scrolling
-    const isMobileTouch = window.innerWidth < 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isMobileTouch) return;
+    // Disable Lenis smooth scroll interception ONLY on mobile phones for native touch feel
+    const isSmallMobile = window.innerWidth < 768;
+    if (isSmallMobile) return;
 
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.95,
+      wheelMultiplier: 0.9,
       touchMultiplier: 1.0,
       infinite: false,
     });
 
-    let rafId: number;
+    lenis.on('scroll', ScrollTrigger.update);
 
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
+    const updateLenis = (time: number) => {
+      lenis.raf(time * 1000);
+    };
 
-    rafId = requestAnimationFrame(raf);
+    gsap.ticker.add(updateLenis);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(updateLenis);
       lenis.destroy();
     };
   }, []);
