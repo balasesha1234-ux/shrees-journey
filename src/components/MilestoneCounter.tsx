@@ -23,14 +23,20 @@ export const MilestoneCounter: React.FC<MilestoneCounterProps> = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const numberRef = useRef<HTMLSpanElement | null>(null);
 
-  const formatNumber = (num: number): string => {
-    if (num >= 1000000) {
+  const formatNumber = (num: number, isComplete: boolean = false): string => {
+    if (targetValue >= 1000000) {
       const millions = num / 1000000;
-      return millions % 1 === 0 ? `${millions.toFixed(0)}M` : `${millions.toFixed(1)}M`;
+      if (isComplete) {
+        return millions % 1 === 0 ? `${millions.toFixed(0)}M` : `${millions.toFixed(1)}M`;
+      }
+      return `${millions.toFixed(2)}M`;
     }
-    if (num >= 1000) {
+    if (targetValue >= 1000) {
       const thousands = num / 1000;
-      return thousands % 1 === 0 ? `${thousands.toFixed(0)}K` : `${thousands.toFixed(1)}K`;
+      if (isComplete) {
+        return `${thousands.toFixed(0)}K`;
+      }
+      return `${thousands.toFixed(1)}K`;
     }
     return Math.floor(num).toLocaleString();
   };
@@ -44,8 +50,8 @@ export const MilestoneCounter: React.FC<MilestoneCounterProps> = ({
     const ctx = gsap.context(() => {
       gsap.to(counterObj, {
         val: targetValue,
-        duration: 2.2,
-        ease: 'power3.out',
+        duration: 2.4,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: el,
           start: 'top 85%',
@@ -53,7 +59,13 @@ export const MilestoneCounter: React.FC<MilestoneCounterProps> = ({
         },
         onUpdate: () => {
           if (numberRef.current) {
-            numberRef.current.innerText = formatNumber(counterObj.val);
+            const isDone = counterObj.val >= targetValue - 10;
+            numberRef.current.innerText = formatNumber(counterObj.val, isDone);
+          }
+        },
+        onComplete: () => {
+          if (numberRef.current) {
+            numberRef.current.innerText = formatNumber(targetValue, true);
           }
         },
       });

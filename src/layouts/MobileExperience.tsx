@@ -7,6 +7,7 @@ import FilmCredits from '../components/FilmCredits';
 import MilestoneCounter from '../components/MilestoneCounter';
 import ShareTributeModal from '../components/ShareTributeModal';
 import CelebrationBurst from '../components/CelebrationBurst';
+import BlurText from '../components/BlurText';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import { useSupabasePetals } from '../hooks/useSupabasePetals';
 
@@ -251,13 +252,21 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
         id="mobile-hero"
         className="relative w-full min-h-[85dvh] flex flex-col items-center justify-center text-center px-6 py-12 border-b border-[#e5c158]/20 bg-[radial-gradient(ellipse_at_top,rgba(229,193,88,0.2),transparent_70%)]"
       >
-        <h1 className="text-4xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight leading-tight drop-shadow-[0_0_50px_rgba(229,193,88,0.6)]">
-          SHREE'S JOURNEY
-        </h1>
+        <BlurText
+          text="SHREE'S JOURNEY"
+          delay={90}
+          animateBy="words"
+          direction="top"
+          className="text-4xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight leading-tight drop-shadow-[0_0_50px_rgba(229,193,88,0.6)] justify-center text-center"
+        />
 
-        <p className="font-serif italic text-base sm:text-xl text-[#f0f0f5]/90 max-w-sm mt-4 leading-relaxed">
-          “Some journeys are not measured by time... but by the hearts they touch.”
-        </p>
+        <BlurText
+          text="“Some journeys are not measured by time... but by the hearts they touch.”"
+          delay={60}
+          animateBy="words"
+          direction="bottom"
+          className="font-serif italic text-base sm:text-xl text-[#f0f0f5]/90 max-w-sm mt-4 leading-relaxed justify-center text-center"
+        />
 
         <div className="mt-10 flex flex-col items-center gap-4 w-full max-w-xs z-20">
           <SpecularButton

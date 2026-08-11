@@ -6,7 +6,6 @@ import { MobileExperience } from './layouts/MobileExperience';
 import { CustomCursor } from './components/CustomCursor';
 import { FilmGrain } from './components/FilmGrain';
 import { ParticleField } from './components/ParticleField';
-import { AudioToggle } from './components/AudioToggle';
 import { MemoryCurator } from './components/MemoryCurator';
 import { PrivateEpilogueModal } from './components/PrivateEpilogueModal';
 import { FilmCredits } from './components/FilmCredits';
@@ -20,17 +19,21 @@ import { ReflectionChapter } from './scenes/ReflectionChapter';
 import { ViewModeToggle } from './components/ViewModeToggle';
 import StardustCursor from './components/StardustCursor';
 import AudioController from './components/AudioController';
+import ShareTributeModal from './components/ShareTributeModal';
+import SpecularButton from './components/SpecularButton';
+import { Share2 } from 'lucide-react';
 
 export const App: React.FC = () => {
   // Smooth scroll instance
   useLenis();
 
   // Audio manager hook
-  const { isPlaying, isMuted, toggleMute } = useAudio();
+  const { toggleMute } = useAudio();
   const autoMobile = useIsMobile(768);
 
   const [viewMode, setViewMode] = useState<'auto' | 'mobile' | 'desktop'>('auto');
   const [isSecretModalOpen, setIsSecretModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const isMobile = viewMode === 'auto' ? autoMobile : viewMode === 'mobile';
 
@@ -46,12 +49,32 @@ export const App: React.FC = () => {
       <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white">
         <FilmGrain />
         <ParticleField count={20} />
-        <AudioToggle isMuted={isMuted} isPlaying={isPlaying} onToggle={toggleMute} />
+        
+        {/* Top Left Floating Share Button on Mobile */}
+        <div className="fixed top-5 left-5 z-50">
+          <SpecularButton
+            size="sm"
+            radius={18}
+            lineColor="#e5c158"
+            baseColor="#0c0d12"
+            onClick={() => setIsShareModalOpen(true)}
+            className="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.3)]"
+          >
+            <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
+            <span>Share 🌸</span>
+          </SpecularButton>
+        </div>
+
         <ViewModeToggle viewMode={viewMode} onChangeViewMode={setViewMode} />
         
         <MobileExperience
           onUserInteractAudio={toggleMute}
           onOpenSecretModal={() => setIsSecretModalOpen(true)}
+        />
+
+        <ShareTributeModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
         />
 
         <PrivateEpilogueModal
@@ -73,21 +96,35 @@ export const App: React.FC = () => {
       {/* Floating Audio Controller with Sound Wave Equalizer */}
       <AudioController />
 
+      {/* Floating Share Tribute Button (Top-Left Desktop) */}
+      <div className="fixed top-6 left-6 z-50 hidden md:block">
+        <SpecularButton
+          size="sm"
+          radius={20}
+          lineColor="#e5c158"
+          baseColor="#0c0d12"
+          onClick={() => setIsShareModalOpen(true)}
+          className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.3)]"
+        >
+          <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
+          <span>Share Tribute 🌸</span>
+        </SpecularButton>
+      </div>
+
       {/* Atmospheric Film Grain Overlay */}
       <FilmGrain />
 
       {/* Floating Dust & Ambient Light Particles */}
       <ParticleField count={45} />
 
-      {/* Floating Ambient Audio Control */}
-      <AudioToggle
-        isMuted={isMuted}
-        isPlaying={isPlaying}
-        onToggle={toggleMute}
-      />
-
       {/* Memory Curator Narrator Companion */}
       <MemoryCurator />
+
+      {/* Share Tribute Story Modal */}
+      <ShareTributeModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+      />
 
       {/* Secret Chapter & Private Letter Modal */}
       <PrivateEpilogueModal

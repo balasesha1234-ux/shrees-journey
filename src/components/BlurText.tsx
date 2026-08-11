@@ -28,42 +28,28 @@ export const BlurText: React.FC<BlurTextProps> = ({
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
 
   useEffect(() => {
-    if (isMobile) {
-      setInView(true);
-      if (onAnimationComplete) onAnimationComplete();
-      return;
-    }
-
-    const fallbackTimer = setTimeout(() => {
-      setInView(true);
-    }, 150);
-
     const el = containerRef.current;
-    if (!el) return () => clearTimeout(fallbackTimer);
+    if (!el) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setInView(true);
-            clearTimeout(fallbackTimer);
             observer.disconnect();
           }
         });
       },
-      { threshold: 0.01, rootMargin: '150px' }
+      { threshold: 0.05, rootMargin: '100px' }
     );
 
     observer.observe(el);
-    return () => {
-      clearTimeout(fallbackTimer);
-      observer.disconnect();
-    };
-  }, [isMobile, onAnimationComplete]);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (!isMobile && inView && onAnimationComplete) {
-      const totalDuration = elements.length * delay + 400;
+    if (inView && onAnimationComplete) {
+      const totalDuration = elements.length * (isMobile ? 30 : delay) + 400;
       const timer = setTimeout(() => {
         onAnimationComplete();
       }, totalDuration);
@@ -78,17 +64,17 @@ export const BlurText: React.FC<BlurTextProps> = ({
       style={style}
     >
       {elements.map((item, idx) => {
-        const itemDelay = isMobile ? 0 : idx * delay;
-        const translateY = direction === 'top' ? '-10px' : '10px';
+        const itemDelay = isMobile ? idx * 35 : idx * delay;
+        const translateY = direction === 'top' ? '-12px' : '12px';
 
         return (
           <span
             key={idx}
-            className="inline-block transition-all duration-300 ease-out"
+            className="inline-block transition-all duration-500 ease-out will-change-transform"
             style={{
-              opacity: inView || isMobile ? 1 : 0,
-              filter: inView || isMobile ? 'none' : 'blur(8px)',
-              transform: inView || isMobile ? 'translateY(0)' : `translateY(${translateY})`,
+              opacity: inView ? 1 : 0,
+              filter: inView ? 'none' : isMobile ? 'none' : 'blur(8px)',
+              transform: inView ? 'translate3d(0,0,0)' : `translate3d(0,${translateY},0)`,
               transitionDelay: `${itemDelay}ms`,
             }}
           >

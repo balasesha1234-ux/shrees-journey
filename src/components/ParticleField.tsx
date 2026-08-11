@@ -26,13 +26,16 @@ export const ParticleField: React.FC<{ count?: number }> = ({ count }) => {
     const isMobile = window.innerWidth < 768;
     const activeCount = count ?? (isMobile ? 25 : 45);
 
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    let width = (canvas.width = window.innerWidth * dpr);
+    let height = (canvas.height = window.innerHeight * dpr);
+    ctx.scale(dpr, dpr);
 
     const handleResize = () => {
       if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      width = canvas.width = window.innerWidth * dpr;
+      height = canvas.height = window.innerHeight * dpr;
+      ctx.scale(dpr, dpr);
     };
 
     window.addEventListener('resize', handleResize);

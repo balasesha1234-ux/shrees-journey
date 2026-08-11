@@ -76,8 +76,6 @@ export const StardustCursor: React.FC = () => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `${p.color}${p.alpha})`;
-        ctx.shadowColor = 'rgba(229, 193, 88, 0.8)';
-        ctx.shadowBlur = 6;
         ctx.fill();
       }
 

@@ -4,6 +4,7 @@ import { ASSET_PATHS } from '../utils/assetPaths';
 import { GridMotion } from '../components/GridMotion';
 import SpecularButton from '../components/SpecularButton';
 import ElasticSlider from '../components/ElasticSlider';
+import BlurText from '../components/BlurText';
 import { Sparkles, Heart } from 'lucide-react';
 
 interface OpeningSceneProps {
@@ -103,13 +104,21 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
           </span>
         </div>
 
-        <h1 className="font-general text-4xl sm:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight leading-tight sm:leading-none drop-shadow-[0_0_60px_rgba(229,193,88,0.5)]">
-          SHREE'S JOURNEY
-        </h1>
+        <BlurText
+          text="SHREE'S JOURNEY"
+          delay={120}
+          animateBy="words"
+          direction="top"
+          className="font-general text-4xl sm:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight leading-tight sm:leading-none drop-shadow-[0_0_60px_rgba(229,193,88,0.5)] justify-center text-center"
+        />
 
-        <p className="font-general italic text-base sm:text-2xl text-[#f0f0f5]/90 max-w-2xl leading-relaxed mt-2 drop-shadow-lg">
-          “Some journeys are not measured by time... but by the hearts they touch.”
-        </p>
+        <BlurText
+          text="“Some journeys are not measured by time... but by the hearts they touch.”"
+          delay={90}
+          animateBy="words"
+          direction="bottom"
+          className="font-general italic text-base sm:text-2xl text-[#f0f0f5]/90 max-w-2xl leading-relaxed mt-2 drop-shadow-lg justify-center text-center"
+        />
 
         <div className="flex flex-col sm:flex-row items-center gap-6 mt-4">
           <SpecularButton
