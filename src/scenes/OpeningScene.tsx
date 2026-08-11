@@ -30,49 +30,8 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
     return () => ctx.revert();
   }, []);
 
-  // GridMotion Pure High-Resolution Photo Wall Asset Array
-  const gridItems = [
-    ASSET_PATHS.timeline.y2023.heroImage,
-    ASSET_PATHS.timeline.y2023.gallery1,
-    ASSET_PATHS.timeline.y2023.gallery2,
-    ASSET_PATHS.timeline.y2023.landscape,
-    ASSET_PATHS.backgrounds.y2023,
-
-    ASSET_PATHS.timeline.y2024.heroImage,
-    ASSET_PATHS.timeline.y2024.gallery1,
-    ASSET_PATHS.timeline.y2024.gallery2,
-    ASSET_PATHS.timeline.y2024.landscape,
-    ASSET_PATHS.backgrounds.y2024,
-
-    ASSET_PATHS.timeline.y2025.heroImage,
-    ASSET_PATHS.timeline.y2025.gallery1,
-    ASSET_PATHS.timeline.y2025.gallery2,
-    ASSET_PATHS.timeline.y2025.landscape,
-    ASSET_PATHS.backgrounds.y2025,
-
-    ASSET_PATHS.timeline.y2026.heroImage,
-    ASSET_PATHS.timeline.y2026.gallery1,
-    ASSET_PATHS.timeline.y2026.gallery2,
-    ASSET_PATHS.timeline.y2026.landscape,
-    ASSET_PATHS.backgrounds.y2026,
-
-    ASSET_PATHS.backgrounds.intro,
-    ASSET_PATHS.ending.treeImage,
-    ASSET_PATHS.timeline.y2023.heroImage,
-    ASSET_PATHS.timeline.y2024.heroImage,
-    ASSET_PATHS.timeline.y2025.heroImage,
-    ASSET_PATHS.timeline.y2026.heroImage,
-    ASSET_PATHS.backgrounds.y2023,
-    ASSET_PATHS.backgrounds.y2024,
-    ASSET_PATHS.backgrounds.y2025,
-    ASSET_PATHS.backgrounds.y2026,
-    ASSET_PATHS.timeline.y2023.landscape,
-    ASSET_PATHS.timeline.y2024.landscape,
-    ASSET_PATHS.timeline.y2025.landscape,
-    ASSET_PATHS.timeline.y2026.landscape,
-    ASSET_PATHS.ending.treeImage,
-    ASSET_PATHS.backgrounds.intro,
-  ];
+  // GridMotion Pure High-Resolution Serial Photo Collection Array
+  const gridItems = [...ASSET_PATHS.serial, ...ASSET_PATHS.serial.slice(0, 3)];
 
   return (
     <section

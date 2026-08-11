@@ -90,6 +90,41 @@ export const ASSET_PATHS = {
     moment5: '/assets/moments/moment5.jpg',
     moment6: '/assets/moments/moment6.jpg',
   },
+  serial: [
+    '/assets/serial/1s.jpg',
+    '/assets/serial/2s.jpg',
+    '/assets/serial/3s.jpg',
+    '/assets/serial/4s.jpg',
+    '/assets/serial/5s.jpg',
+    '/assets/serial/6s.jpg',
+    '/assets/serial/7s.jpg',
+    '/assets/serial/8s.jpg',
+    '/assets/serial/9s.jpg',
+    '/assets/serial/10s.jpg',
+    '/assets/serial/11s.jpg',
+    '/assets/serial/12s old.jpg',
+    '/assets/serial/13s old.jpg',
+    '/assets/serial/14s old.jpg',
+    '/assets/serial/15s old.jpg',
+    '/assets/serial/16s old.jpg',
+    '/assets/serial/17s mid.jpg',
+    '/assets/serial/18s mid.jpg',
+    '/assets/serial/19s mid.jpg',
+    '/assets/serial/20s mid.jpg',
+    '/assets/serial/21s.jpg',
+    '/assets/serial/22s.jpg',
+    '/assets/serial/23s.jpg',
+    '/assets/serial/24s.jpg',
+    '/assets/serial/25s.jpg',
+    '/assets/serial/26s.jpg',
+    '/assets/serial/27s.jpg',
+    '/assets/serial/28s.jpg',
+    '/assets/serial/29s.jpg',
+    '/assets/serial/30s.jpg',
+    '/assets/serial/31s.jpg',
+    '/assets/serial/32s.jpg',
+    '/assets/serial/33s.jpg',
+  ],
   audio: {
     ambientMusic: '/assets/audio/ambient.mp3',
     backgroundMusic: '/assets/audio/background.mp3',
@@ -144,7 +179,41 @@ export const ASSET_FOCAL_POINTS: Record<string, FocalPoint> = {
   '/assets/guide/guide.png': { x: 50, y: 30 },
   '/assets/ending/tree.jpg': { x: 50, y: 50 },
 
-  // Grid Motion Root Images
+  // Grid Motion & Serial Images (/assets/serial/ & root)
+  '/assets/serial/1s.jpg': { x: 50, y: 20 },
+  '/assets/serial/2s.jpg': { x: 50, y: 22 },
+  '/assets/serial/3s.jpg': { x: 50, y: 18 },
+  '/assets/serial/4s.jpg': { x: 50, y: 25 },
+  '/assets/serial/5s.jpg': { x: 50, y: 20 },
+  '/assets/serial/6s.jpg': { x: 50, y: 22 },
+  '/assets/serial/7s.jpg': { x: 50, y: 20 },
+  '/assets/serial/8s.jpg': { x: 50, y: 25 },
+  '/assets/serial/9s.jpg': { x: 50, y: 20 },
+  '/assets/serial/10s.jpg': { x: 50, y: 22 },
+  '/assets/serial/11s.jpg': { x: 50, y: 20 },
+  '/assets/serial/12s old.jpg': { x: 50, y: 25 },
+  '/assets/serial/13s old.jpg': { x: 50, y: 20 },
+  '/assets/serial/14s old.jpg': { x: 50, y: 22 },
+  '/assets/serial/15s old.jpg': { x: 50, y: 20 },
+  '/assets/serial/16s old.jpg': { x: 50, y: 25 },
+  '/assets/serial/17s mid.jpg': { x: 50, y: 20 },
+  '/assets/serial/18s mid.jpg': { x: 50, y: 22 },
+  '/assets/serial/19s mid.jpg': { x: 50, y: 20 },
+  '/assets/serial/20s mid.jpg': { x: 50, y: 25 },
+  '/assets/serial/21s.jpg': { x: 50, y: 20 },
+  '/assets/serial/22s.jpg': { x: 50, y: 22 },
+  '/assets/serial/23s.jpg': { x: 50, y: 20 },
+  '/assets/serial/24s.jpg': { x: 50, y: 25 },
+  '/assets/serial/25s.jpg': { x: 50, y: 20 },
+  '/assets/serial/26s.jpg': { x: 50, y: 22 },
+  '/assets/serial/27s.jpg': { x: 50, y: 20 },
+  '/assets/serial/28s.jpg': { x: 50, y: 22 },
+  '/assets/serial/29s.jpg': { x: 50, y: 20 },
+  '/assets/serial/30s.jpg': { x: 50, y: 25 },
+  '/assets/serial/31s.jpg': { x: 50, y: 20 },
+  '/assets/serial/32s.jpg': { x: 50, y: 22 },
+  '/assets/serial/33s.jpg': { x: 50, y: 20 },
+
   '/1s.jpg': { x: 50, y: 20 },
   '/2s.jpg': { x: 50, y: 22 },
   '/3s.jpg': { x: 50, y: 18 },
@@ -188,6 +257,30 @@ export const getAssetFocalPoint = (src?: string | null, customFocalPoint?: Focal
   // Exact match lookup
   if (ASSET_FOCAL_POINTS[src]) {
     return ASSET_FOCAL_POINTS[src];
+  }
+
+  const decodedPath = decodeURIComponent(src).split('?')[0];
+  if (ASSET_FOCAL_POINTS[decodedPath]) {
+    return ASSET_FOCAL_POINTS[decodedPath];
+  }
+
+  // Normalized path match lookup
+  const cleanPath = src.split('?')[0];
+  if (ASSET_FOCAL_POINTS[cleanPath]) {
+    return ASSET_FOCAL_POINTS[cleanPath];
+  }
+
+  // If path is missing /assets/serial/, try adding it
+  const serialPath = cleanPath.startsWith('/assets/serial/')
+    ? cleanPath
+    : `/assets/serial${cleanPath.startsWith('/') ? cleanPath : '/' + cleanPath}`;
+  if (ASSET_FOCAL_POINTS[serialPath]) {
+    return ASSET_FOCAL_POINTS[serialPath];
+  }
+
+  const decodedSerialPath = decodeURIComponent(serialPath);
+  if (ASSET_FOCAL_POINTS[decodedSerialPath]) {
+    return ASSET_FOCAL_POINTS[decodedSerialPath];
   }
 
   const lower = src.toLowerCase();

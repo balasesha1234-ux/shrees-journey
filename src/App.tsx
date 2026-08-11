@@ -62,7 +62,7 @@ export const App: React.FC = () => {
             lineColor="#e5c158"
             baseColor="#0c0d12"
             onClick={() => setIsShareModalOpen(true)}
-            className="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.4)]"
+            className="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#e5c158] hover:shadow-[0_0_20px_rgba(229,193,88,0.35)]"
           >
             <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
             <span>Share 🌸</span>
@@ -107,7 +107,7 @@ export const App: React.FC = () => {
             lineColor="#e5c158"
             baseColor="#0c0d12"
             onClick={() => setIsShareModalOpen(true)}
-            className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.3)]"
+            className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#e5c158] hover:shadow-[0_0_20px_rgba(229,193,88,0.35)]"
           >
             <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
             <span>Share Tribute 🌸</span>
@@ -121,7 +121,7 @@ export const App: React.FC = () => {
             lineColor="#e5c158"
             baseColor="#0c0d12"
             onClick={() => setIsVipPortalOpen(true)}
-            className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.35)]"
+            className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#e5c158] hover:shadow-[0_0_20px_rgba(229,193,88,0.35)]"
           >
             <Crown className="w-3.5 h-3.5 text-[#e5c158]" />
             <span>VIP Sanctuary 👑</span>

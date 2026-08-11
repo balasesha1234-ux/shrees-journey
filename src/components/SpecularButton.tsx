@@ -145,13 +145,13 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
 
     try {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
+      renderer = new Renderer({ alpha: true, premultipliedAlpha: false, antialias: true, dpr });
       const gl = renderer.gl;
       if (!gl) return;
 
       gl.clearColor(0, 0, 0, 0);
       gl.enable(gl.BLEND);
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
       const geometry = new Triangle(gl);
       if ((geometry.attributes as any).uv) delete (geometry.attributes as any).uv;
@@ -251,7 +251,10 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
       program.uniforms.uShineSize.value = (p.shineSize * Math.PI) / 180;
       program.uniforms.uShineFade.value = (p.shineFade * Math.PI) / 180;
       program.uniforms.uThickness.value = p.thickness * dpr;
-      if (renderer) renderer.render({ scene: mesh });
+      if (renderer && renderer.gl) {
+        renderer.gl.clear(renderer.gl.COLOR_BUFFER_BIT);
+        renderer.render({ scene: mesh });
+      }
     };
     raf = requestAnimationFrame(update);
 

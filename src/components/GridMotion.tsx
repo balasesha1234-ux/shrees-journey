@@ -80,7 +80,7 @@ export const GridMotion: React.FC<GridMotionProps> = ({
                         <div
                           className="row__item-img"
                           style={{
-                            backgroundImage: `url(${content})`,
+                            backgroundImage: `url("${encodeURI(content as string)}")`,
                             ...getAssetBackgroundPositionStyle(content as string),
                           }}
                         />
