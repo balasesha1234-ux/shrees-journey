@@ -20,8 +20,10 @@ import { ViewModeToggle } from './components/ViewModeToggle';
 import StardustCursor from './components/StardustCursor';
 import AudioController from './components/AudioController';
 import ShareTributeModal from './components/ShareTributeModal';
+import ShreeCreatorPortalModal from './components/ShreeCreatorPortalModal';
 import SpecularButton from './components/SpecularButton';
-import { Share2 } from 'lucide-react';
+import { Share2, Crown } from 'lucide-react';
+import { useSupabasePetals } from './hooks/useSupabasePetals';
 
 export const App: React.FC = () => {
   // Smooth scroll instance
@@ -30,10 +32,12 @@ export const App: React.FC = () => {
   // Audio manager hook
   const { toggleMute } = useAudio();
   const autoMobile = useIsMobile(768);
+  const { petals } = useSupabasePetals();
 
   const [viewMode, setViewMode] = useState<'auto' | 'mobile' | 'desktop'>('auto');
   const [isSecretModalOpen, setIsSecretModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isVipPortalOpen, setIsVipPortalOpen] = useState(false);
 
   const isMobile = viewMode === 'auto' ? autoMobile : viewMode === 'mobile';
 
@@ -111,6 +115,18 @@ export const App: React.FC = () => {
         </div>
 
         <div className="pointer-events-auto flex items-center gap-3">
+          <SpecularButton
+            size="sm"
+            radius={20}
+            lineColor="#e5c158"
+            baseColor="#0c0d12"
+            onClick={() => setIsVipPortalOpen(true)}
+            className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.35)]"
+          >
+            <Crown className="w-3.5 h-3.5 text-[#e5c158]" />
+            <span>VIP Sanctuary 👑</span>
+          </SpecularButton>
+
           <AudioController />
         </div>
       </div>
@@ -128,6 +144,13 @@ export const App: React.FC = () => {
       <ShareTributeModal
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
+      />
+
+      {/* Shree's VIP Creator Sanctuary Portal */}
+      <ShreeCreatorPortalModal
+        isOpen={isVipPortalOpen}
+        onClose={() => setIsVipPortalOpen(false)}
+        petals={petals}
       />
 
       {/* Secret Chapter & Private Letter Modal */}

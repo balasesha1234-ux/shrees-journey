@@ -14,7 +14,7 @@ export const GridMotion: React.FC<GridMotionProps> = ({
   const gridRef = useRef<HTMLDivElement | null>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const totalItems = 28;
+  const totalItems = 36;
   const defaultItems = Array.from({ length: totalItems }, (_, index) => `Item ${index + 1}`);
   const combinedItems = items.length > 0 ? items.slice(0, totalItems) : defaultItems;
 
