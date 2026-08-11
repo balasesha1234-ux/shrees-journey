@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Star, Sparkles, CheckCircle2 } from 'lucide-react';
 import SpecularButton from './SpecularButton';
 import CelebrationBurst from './CelebrationBurst';
+import { useSupabaseStars } from '../hooks/useSupabaseStars';
 
 interface StarBlessingCounterProps {
   className?: string;
@@ -16,23 +17,13 @@ interface FloatingStarParticle {
 }
 
 export const StarBlessingCounter: React.FC<StarBlessingCounterProps> = ({ className = '' }) => {
-  const [starCount, setStarCount] = useState<number>(0);
-  const [userStars, setUserStars] = useState<number>(0);
+  const { globalStarCount, userStars, maxUserStars, isLimitReached, lightStar } = useSupabaseStars();
   const [isSparkling, setIsSparkling] = useState<boolean>(false);
   const [burstTrigger, setBurstTrigger] = useState<boolean>(false);
   const [floatingStars, setFloatingStars] = useState<FloatingStarParticle[]>([]);
 
-  const MAX_USER_STARS = 5;
-
-  useEffect(() => {
-    const savedCount = localStorage.getItem('shree_star_count_v2');
-    const savedUserStars = localStorage.getItem('shree_user_stars');
-    if (savedCount) setStarCount(parseInt(savedCount, 10));
-    if (savedUserStars) setUserStars(parseInt(savedUserStars, 10));
-  }, []);
-
-  const handleLightStar = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (userStars >= MAX_USER_STARS) return;
+  const handleLightStar = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isLimitReached) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
@@ -52,21 +43,13 @@ export const StarBlessingCounter: React.FC<StarBlessingCounterProps> = ({ classN
       setFloatingStars((prev) => prev.filter((s) => !newParticles.includes(s)));
     }, 1200);
 
-    const nextCount = starCount + 1;
-    const nextUserStars = userStars + 1;
-
-    setStarCount(nextCount);
-    setUserStars(nextUserStars);
-    setIsSparkling(true);
-    setBurstTrigger(true);
-
-    setTimeout(() => setIsSparkling(false), 600);
-
-    localStorage.setItem('shree_star_count_v2', nextCount.toString());
-    localStorage.setItem('shree_user_stars', nextUserStars.toString());
+    const success = await lightStar();
+    if (success) {
+      setIsSparkling(true);
+      setBurstTrigger(true);
+      setTimeout(() => setIsSparkling(false), 600);
+    }
   };
-
-  const isLimitReached = userStars >= MAX_USER_STARS;
 
   return (
     <div className={`relative flex flex-col items-center text-center gap-4 p-6 sm:p-8 rounded-[36px] bg-[#0c0d12]/95 border-2 border-[#e5c158]/50 backdrop-blur-2xl shadow-[0_0_80px_rgba(229,193,88,0.3)] transition-all overflow-hidden ${className}`}>
@@ -88,7 +71,7 @@ export const StarBlessingCounter: React.FC<StarBlessingCounterProps> = ({ classN
         <div className="flex items-center gap-3">
           <Star className={`w-8 h-8 sm:w-10 sm:h-10 text-[#e5c158] fill-[#e5c158] transition-transform duration-300 ${isSparkling ? 'scale-135 rotate-45 drop-shadow-[0_0_35px_rgba(255,215,0,1)]' : 'animate-pulse'}`} />
           <span className="font-general text-4xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f7e6a7] to-[#e5c158] tracking-tight drop-shadow-[0_0_30px_rgba(229,193,88,0.6)]">
-            {starCount.toLocaleString()}
+            {globalStarCount.toLocaleString()}
           </span>
         </div>
         <p className="font-general text-xs sm:text-sm text-[#f0f0f5]/80 mt-1">
@@ -99,7 +82,7 @@ export const StarBlessingCounter: React.FC<StarBlessingCounterProps> = ({ classN
       {/* User Progress Indicator (Max 5 Stars) */}
       <div className="flex flex-col items-center gap-2 z-10 my-1">
         <div className="flex items-center gap-1.5">
-          {Array.from({ length: MAX_USER_STARS }).map((_, idx) => (
+          {Array.from({ length: maxUserStars }).map((_, idx) => (
             <Star
               key={idx}
               className={`w-5 h-5 transition-all duration-300 ${
@@ -111,7 +94,7 @@ export const StarBlessingCounter: React.FC<StarBlessingCounterProps> = ({ classN
           ))}
         </div>
         <span className="text-[11px] font-bold text-[#e5c158] uppercase tracking-widest bg-[#e5c158]/10 px-3 py-0.5 rounded-full border border-[#e5c158]/30">
-          Your Stars: {userStars} / {MAX_USER_STARS} ⭐
+          Your Stars: {userStars} / {maxUserStars} ⭐
         </span>
       </div>
 
