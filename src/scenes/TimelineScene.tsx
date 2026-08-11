@@ -232,7 +232,7 @@ export const TimelineScene: React.FC = () => {
             <article
               key={spread.year}
               id={`year-section-${spread.year}`}
-              className="relative scroll-mt-24"
+              className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-16 sm:my-24 scroll-mt-24"
             >
               {/* GRADUAL BLUR CINEMATIC FOCUS REVEAL */}
               <GradualBlur

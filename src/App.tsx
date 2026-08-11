@@ -94,22 +94,25 @@ export const App: React.FC = () => {
       {/* Stardust Sparkle Particle Trail on Desktop */}
       <StardustCursor />
 
-      {/* Floating Audio Controller with Sound Wave Equalizer */}
-      <AudioController />
+      {/* Centered Max-Width Wrapper for Top Fixed Controls on Ultra-Wide Desktop Monitors */}
+      <div className="fixed top-6 inset-x-0 max-w-[1800px] mx-auto px-6 z-50 pointer-events-none hidden md:flex items-center justify-between">
+        <div className="pointer-events-auto">
+          <SpecularButton
+            size="sm"
+            radius={20}
+            lineColor="#e5c158"
+            baseColor="#0c0d12"
+            onClick={() => setIsShareModalOpen(true)}
+            className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.3)]"
+          >
+            <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
+            <span>Share Tribute 🌸</span>
+          </SpecularButton>
+        </div>
 
-      {/* Floating Share Tribute Button (Top-Left Desktop) */}
-      <div className="fixed top-6 left-6 z-50 hidden md:block">
-        <SpecularButton
-          size="sm"
-          radius={20}
-          lineColor="#e5c158"
-          baseColor="#0c0d12"
-          onClick={() => setIsShareModalOpen(true)}
-          className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.3)]"
-        >
-          <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
-          <span>Share Tribute 🌸</span>
-        </SpecularButton>
+        <div className="pointer-events-auto flex items-center gap-3">
+          <AudioController />
+        </div>
       </div>
 
       {/* Atmospheric Film Grain Overlay */}

@@ -27,15 +27,17 @@
 }
 
 .gridMotion-container {
-  gap: 1rem;
+  gap: 1.25rem;
   flex: none;
   position: relative;
-  width: 150vw;
-  height: 150vh;
+  width: 240vw;
+  height: 220vh;
+  left: -20vw;
+  top: -10vh;
   display: grid;
   grid-template-rows: repeat(4, 1fr);
   grid-template-columns: 100%;
-  transform: rotate(-15deg);
+  transform: rotate(-14deg) scale(1.1);
   transform-origin: center center;
   z-index: 2;
 }

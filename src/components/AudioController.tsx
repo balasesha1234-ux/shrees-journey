@@ -35,7 +35,7 @@ export const AudioController: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-6 right-6 z-50 flex items-center gap-3 select-none">
+    <div className="relative md:static flex items-center gap-3 select-none">
       <button
         onClick={toggleAudio}
         aria-label={isPlaying ? 'Pause Background Soundtrack' : 'Play Background Soundtrack'}
