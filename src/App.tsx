@@ -18,6 +18,8 @@ import { SkyScene } from './scenes/SkyScene';
 import { TimelineScene } from './scenes/TimelineScene';
 import { ReflectionChapter } from './scenes/ReflectionChapter';
 import { ViewModeToggle } from './components/ViewModeToggle';
+import StardustCursor from './components/StardustCursor';
+import AudioController from './components/AudioController';
 
 export const App: React.FC = () => {
   // Smooth scroll instance
@@ -64,6 +66,12 @@ export const App: React.FC = () => {
     <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white flex flex-col justify-between">
       {/* Luxury Magnetic Custom Cursor */}
       <CustomCursor />
+
+      {/* Stardust Sparkle Particle Trail on Desktop */}
+      <StardustCursor />
+
+      {/* Floating Audio Controller with Sound Wave Equalizer */}
+      <AudioController />
 
       {/* Atmospheric Film Grain Overlay */}
       <FilmGrain />

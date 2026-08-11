@@ -10,6 +10,7 @@ import MagicBento from '../components/MagicBento';
 import GradualBlur from '../components/GradualBlur';
 import DotField from '../components/DotField';
 import SpecularButton from '../components/SpecularButton';
+import MilestoneCounter from '../components/MilestoneCounter';
 import { Calendar, Sparkles, TrendingUp, X } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -341,6 +342,41 @@ export const TimelineScene: React.FC = () => {
                           ))}
                         </div>
                       )}
+
+                      {/* ANIMATED MILESTONE COUNTER FOR 2023 (500K), 2024 (2.5M), 2025 (4M), 2026 (5M) */}
+                      <div className="animate-reveal w-full mt-2">
+                        <MilestoneCounter
+                          targetValue={
+                            spread.year === '2023'
+                              ? 500000
+                              : spread.year === '2024'
+                              ? 2500000
+                              : spread.year === '2025'
+                              ? 4000000
+                              : 5000000
+                          }
+                          label={
+                            spread.year === '2023'
+                              ? '500K Subscribers'
+                              : spread.year === '2024'
+                              ? '2.5M Subscribers'
+                              : spread.year === '2025'
+                              ? '4.0M Family Impact'
+                              : '5.0M Summit Milestone'
+                          }
+                          subtitle={`${spread.year} Milestone Reached`}
+                          badgeText={`${spread.year} Milestone`}
+                          badgeColor={
+                            spread.year === '2023'
+                              ? '#f59e0b'
+                              : spread.year === '2024'
+                              ? '#72a5cf'
+                              : spread.year === '2025'
+                              ? '#c29be4'
+                              : '#e5c158'
+                          }
+                        />
+                      </div>
 
                       {/* MOBILE INTERACTIVE PHOTO CARDS GALLERY */}
                       <div className="md:hidden grid grid-cols-2 gap-3 mt-4">

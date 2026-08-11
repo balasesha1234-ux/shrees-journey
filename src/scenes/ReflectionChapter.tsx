@@ -5,6 +5,8 @@ import SpecularButton from '../components/SpecularButton';
 import LivingGardenCounter from '../components/LivingGardenCounter';
 import { useSupabasePetals } from '../hooks/useSupabasePetals';
 
+import CelebrationBurst from '../components/CelebrationBurst';
+
 interface FallingPetal {
   id: number | string;
   xPercent: number; // 6% to 90%
@@ -40,6 +42,7 @@ export const ReflectionChapter: React.FC = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [loveCount, setLoveCount] = useState<number>(5000000);
   const [heartBurst, setHeartBurst] = useState<boolean>(false);
+  const [celebrationBurst, setCelebrationBurst] = useState<boolean>(false);
   const [fallingPetals, setFallingPetals] = useState<FallingPetal[]>([]);
 
   // Synchronize falling petals strictly 1-to-1 with genuine database petals containing real messages
@@ -258,6 +261,7 @@ export const ReflectionChapter: React.FC = () => {
   const handleSendLove = () => {
     setLoveCount((prev) => prev + 1);
     setHeartBurst(true);
+    setCelebrationBurst(true);
     setTimeout(() => setHeartBurst(false), 1600);
   };
 
@@ -378,15 +382,22 @@ export const ReflectionChapter: React.FC = () => {
         </div>
       </div>
 
+      {/* FULL-SCREEN CELEBRATION BURST ON LOVE CLICK */}
+      <CelebrationBurst trigger={celebrationBurst} onComplete={() => setCelebrationBurst(false)} />
+
       {/* INTERACTIVE SEND LOVE TO SHREE FEATURE */}
       <div className="relative z-20 flex flex-col items-center gap-4 my-6 sm:my-10">
-        <button
+        <SpecularButton
+          size="lg"
+          radius={28}
+          lineColor="#f43f5e"
+          baseColor="#0c0d12"
           onClick={handleSendLove}
-          className="group px-8 py-4 rounded-full bg-gradient-to-r from-rose-500/20 via-rose-400/10 to-rose-500/20 border-2 border-rose-400/50 hover:border-rose-300 text-rose-200 text-xs sm:text-base font-bold uppercase tracking-widest backdrop-blur-2xl shadow-[0_0_40px_rgba(244,63,94,0.3)] hover:shadow-[0_0_60px_rgba(244,63,94,0.6)] transition-all duration-300 active:scale-95 flex items-center gap-3"
+          className="px-8 py-4 text-[#f0f0f5]"
         >
-          <Heart className="w-5 h-5 text-rose-400 fill-rose-400 group-hover:scale-125 transition-transform" />
+          <Heart className="w-5 h-5 text-rose-400 fill-rose-400" />
           <span>Send Love to Shree ({loveCount.toLocaleString()}) 💖</span>
-        </button>
+        </SpecularButton>
 
         {heartBurst && (
           <div className="animate-fade-in text-xs font-bold text-rose-300 uppercase tracking-widest">

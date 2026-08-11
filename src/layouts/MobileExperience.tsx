@@ -4,6 +4,9 @@ import SpecularButton from '../components/SpecularButton';
 import CommunityPetalSection from '../components/CommunityPetalSection';
 import LivingGardenCounter from '../components/LivingGardenCounter';
 import FilmCredits from '../components/FilmCredits';
+import MilestoneCounter from '../components/MilestoneCounter';
+import ShareTributeModal from '../components/ShareTributeModal';
+import CelebrationBurst from '../components/CelebrationBurst';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import { useSupabasePetals } from '../hooks/useSupabasePetals';
 
@@ -21,6 +24,8 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
   const [activePetalModal, setActivePetalModal] = useState<any | null>(null);
   const [loveCount, setLoveCount] = useState<number>(5000000);
   const [heartBurst, setHeartBurst] = useState<boolean>(false);
+  const [celebrationBurst, setCelebrationBurst] = useState<boolean>(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
   const [developerMotiveOpen, setDeveloperMotiveOpen] = useState<boolean>(false);
 
   const mobilePetalBoxRef = useRef<HTMLDivElement | null>(null);
@@ -338,6 +343,41 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
               ))}
             </ul>
 
+            {/* ANIMATED MILESTONE COUNTER FOR MOBILE */}
+            <div className="relative z-10 w-full mt-2">
+              <MilestoneCounter
+                targetValue={
+                  item.year === '2023'
+                    ? 500000
+                    : item.year === '2024'
+                    ? 2500000
+                    : item.year === '2025'
+                    ? 4000000
+                    : 5000000
+                }
+                label={
+                  item.year === '2023'
+                    ? '500K Subscribers'
+                    : item.year === '2024'
+                    ? '2.5M Subscribers'
+                    : item.year === '2025'
+                    ? '4.0M Family Impact'
+                    : '5.0M Summit Milestone'
+                }
+                subtitle={`${item.year} Milestone Reached`}
+                badgeText={`${item.year} Milestone`}
+                badgeColor={
+                  item.year === '2023'
+                    ? '#f59e0b'
+                    : item.year === '2024'
+                    ? '#72a5cf'
+                    : item.year === '2025'
+                    ? '#c29be4'
+                    : '#e5c158'
+                }
+              />
+            </div>
+
             {/* Mobile Touch Photo Carousel */}
             <div className="relative z-10 w-full flex gap-3.5 overflow-x-auto pt-3 pb-2 snap-x snap-mandatory no-scrollbar">
               {item.photos.map((src, i) => (
@@ -477,18 +517,40 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           </div>
         </div>
 
-        {/* Love Button */}
-        <button
-          onClick={() => {
-            setLoveCount((p) => p + 1);
-            setHeartBurst(true);
-            setTimeout(() => setHeartBurst(false), 1500);
-          }}
-          className="w-full py-4 rounded-full bg-gradient-to-r from-rose-500/20 via-rose-400/10 to-rose-500/20 border border-rose-400/50 text-rose-200 text-xs font-bold uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform"
-        >
-          <Heart className="w-4 h-4 text-rose-400 fill-rose-400" />
-          <span>Send Love to Shree ({loveCount.toLocaleString()}) 💖</span>
-        </button>
+        {/* Celebration Burst Canvas Component */}
+        <CelebrationBurst trigger={celebrationBurst} onComplete={() => setCelebrationBurst(false)} />
+
+        {/* Love Button & Share Tribute Buttons */}
+        <div className="w-full flex flex-col gap-3">
+          <SpecularButton
+            size="lg"
+            radius={24}
+            lineColor="#f43f5e"
+            baseColor="#0c0d12"
+            onClick={() => {
+              setLoveCount((p) => p + 1);
+              setHeartBurst(true);
+              setCelebrationBurst(true);
+              setTimeout(() => setHeartBurst(false), 1500);
+            }}
+            className="w-full justify-center py-4 text-xs font-bold uppercase tracking-widest text-[#f0f0f5]"
+          >
+            <Heart className="w-4 h-4 text-rose-400 fill-rose-400" />
+            <span>Send Love to Shree ({loveCount.toLocaleString()}) 💖</span>
+          </SpecularButton>
+
+          <SpecularButton
+            size="lg"
+            radius={24}
+            lineColor="#e5c158"
+            baseColor="#0c0d12"
+            onClick={() => setIsShareModalOpen(true)}
+            className="w-full justify-center py-4 text-xs font-bold uppercase tracking-widest text-[#e5c158]"
+          >
+            <Sparkles className="w-4 h-4 text-[#e5c158]" />
+            <span>Share Tribute 🌸</span>
+          </SpecularButton>
+        </div>
 
         {heartBurst && (
           <div className="text-xs font-bold text-rose-300 uppercase tracking-widest">
@@ -575,6 +637,9 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           </div>
         </div>
       )}
+
+      {/* SHARE TRIBUTE MODAL */}
+      <ShareTributeModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
 
       {/* FILM END CREDITS FOOTER ON MOBILE */}
       <FilmCredits onOpenSecretModal={onOpenSecretModal} />
