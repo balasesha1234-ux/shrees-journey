@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Heart, Sparkles, User, Globe, PenTool, Wind, Award, X } from 'lucide-react';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import SpecularButton from './SpecularButton';
+import TributeKeepsakeModal from './TributeKeepsakeModal';
 
 interface CommunityPetalSectionProps {
   onAddPetal: (name: string, country: string, message: string) => void;
@@ -302,6 +303,18 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
             </div>
           </div>
         </div>
+      )}
+
+      {/* Personalized 5M Certificate Modal */}
+      {savedPetalInfo && (
+        <TributeKeepsakeModal
+          isOpen={showKeepsake}
+          onClose={() => setShowKeepsake(false)}
+          defaultName={savedPetalInfo.name}
+          defaultCountry={savedPetalInfo.country}
+          defaultMessage={savedPetalInfo.message}
+          defaultId={savedPetalInfo.id}
+        />
       )}
     </section>
   );

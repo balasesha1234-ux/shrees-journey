@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Sparkles } from 'lucide-react';
@@ -21,7 +21,9 @@ export const MilestoneCounter: React.FC<MilestoneCounterProps> = ({
   badgeColor = '#e5c158',
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const numberRef = useRef<HTMLSpanElement | null>(null);
+  const [displayVal, setDisplayVal] = useState<string>('0');
+  const [isCounting, setIsCounting] = useState<boolean>(false);
+  const hasAnimated = useRef(false);
 
   const formatNumber = (num: number, isComplete: boolean = false): string => {
     if (targetValue >= 1000000) {
@@ -41,27 +43,23 @@ export const MilestoneCounter: React.FC<MilestoneCounterProps> = ({
     return Math.floor(num).toLocaleString();
   };
 
-  const hasAnimated = useRef(false);
-
   const startCountUp = () => {
     if (hasAnimated.current) return;
     hasAnimated.current = true;
+    setIsCounting(true);
 
     const counterObj = { val: 0 };
     gsap.to(counterObj, {
       val: targetValue,
-      duration: 2.2,
-      ease: 'power2.out',
+      duration: 2.5,
+      ease: 'power3.out',
       onUpdate: () => {
-        if (numberRef.current) {
-          const isDone = counterObj.val >= targetValue - 10;
-          numberRef.current.innerText = formatNumber(counterObj.val, isDone);
-        }
+        const isDone = counterObj.val >= targetValue - 10;
+        setDisplayVal(formatNumber(counterObj.val, isDone));
       },
       onComplete: () => {
-        if (numberRef.current) {
-          numberRef.current.innerText = formatNumber(targetValue, true);
-        }
+        setDisplayVal(formatNumber(targetValue, true));
+        setIsCounting(false);
       },
     });
   };
@@ -70,10 +68,7 @@ export const MilestoneCounter: React.FC<MilestoneCounterProps> = ({
     const el = containerRef.current;
     if (!el) return;
 
-    // Initialize displayed number immediately
-    if (numberRef.current) {
-      numberRef.current.innerText = formatNumber(0, false);
-    }
+    setDisplayVal(formatNumber(0, false));
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -84,18 +79,12 @@ export const MilestoneCounter: React.FC<MilestoneCounterProps> = ({
           }
         });
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0.15, rootMargin: '0px' }
     );
 
     observer.observe(el);
 
-    // Backup safety fallback to guarantee animation starts even if observer is bypassed
-    const safetyTimer = setTimeout(() => {
-      startCountUp();
-    }, 600);
-
     return () => {
-      clearTimeout(safetyTimer);
       observer.disconnect();
     };
   }, [targetValue]);
@@ -118,11 +107,8 @@ export const MilestoneCounter: React.FC<MilestoneCounterProps> = ({
 
       {/* Main Counter Display with High-Contrast Gold Gradient */}
       <div className="flex flex-col items-center leading-none my-1">
-        <span
-          ref={numberRef}
-          className="font-general font-black text-4xl sm:text-6xl md:text-7xl tracking-[0.05em] text-transparent bg-clip-text bg-gradient-to-b from-[#ffffff] via-[#f7e6a7] to-[#e5c158] drop-shadow-[0_0_25px_rgba(229,193,88,0.5)]"
-        >
-          0
+        <span className={`font-general font-black text-4xl sm:text-6xl md:text-7xl tracking-[0.05em] text-transparent bg-clip-text bg-gradient-to-b from-[#ffffff] via-[#f7e6a7] to-[#e5c158] drop-shadow-[0_0_25px_rgba(229,193,88,0.5)] transition-transform duration-300 ${isCounting ? 'scale-110' : ''}`}>
+          {displayVal}
         </span>
       </div>
 

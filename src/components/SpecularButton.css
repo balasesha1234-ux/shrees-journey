@@ -29,10 +29,12 @@
   outline: none;
   transition: transform 0.15s ease;
   user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .specular-button:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 .specular-button:focus-visible {

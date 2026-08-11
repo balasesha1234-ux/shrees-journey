@@ -270,8 +270,8 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
         ...style,
       } as React.CSSProperties}
     >
-      <span ref={fxRef} className="specular-button__fx" aria-hidden="true" />
-      <span className="specular-button__label flex items-center justify-center gap-2">{children}</span>
+      <span ref={fxRef} className="specular-button__fx pointer-events-none" aria-hidden="true" />
+      <span className="specular-button__label pointer-events-none flex items-center justify-center gap-2">{children}</span>
     </button>
   );
 };

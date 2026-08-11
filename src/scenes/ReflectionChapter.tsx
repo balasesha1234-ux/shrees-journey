@@ -5,6 +5,7 @@ import SpecularButton from '../components/SpecularButton';
 import LivingGardenCounter from '../components/LivingGardenCounter';
 import { useSupabasePetals } from '../hooks/useSupabasePetals';
 
+import StarBlessingCounter from '../components/StarBlessingCounter';
 import CelebrationBurst from '../components/CelebrationBurst';
 
 interface FallingPetal {
@@ -404,6 +405,11 @@ export const ReflectionChapter: React.FC = () => {
             💖 Heart sent into the sky!
           </div>
         )}
+      </div>
+
+      {/* GLOBAL STAR BLESSING COUNTER */}
+      <div className="relative z-20 max-w-xl w-full px-4 my-8">
+        <StarBlessingCounter />
       </div>
 
       {/* TOAST NOTIFICATION ON ADDING A PETAL */}

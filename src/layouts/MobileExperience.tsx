@@ -8,6 +8,7 @@ import MilestoneCounter from '../components/MilestoneCounter';
 import ShareTributeModal from '../components/ShareTributeModal';
 import CelebrationBurst from '../components/CelebrationBurst';
 import BlurText from '../components/BlurText';
+import StarBlessingCounter from '../components/StarBlessingCounter';
 import { ASSET_PATHS } from '../utils/assetPaths';
 import { useSupabasePetals } from '../hooks/useSupabasePetals';
 
@@ -30,6 +31,14 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
   const [celebrationBurst, setCelebrationBurst] = useState<boolean>(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
   const [developerMotiveOpen, setDeveloperMotiveOpen] = useState<boolean>(false);
+
+  const handleOpenShare = () => {
+    if (onOpenShareModal) {
+      onOpenShareModal();
+    } else {
+      setIsShareModalOpen(true);
+    }
+  };
 
   const mobilePetalBoxRef = useRef<HTMLDivElement | null>(null);
   const mobilePhysicsRef = useRef<Record<string, {
@@ -292,10 +301,7 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
             radius={22}
             lineColor="#e5c158"
             baseColor="#0c0d12"
-            onClick={() => {
-              if (onOpenShareModal) onOpenShareModal();
-              setIsShareModalOpen(true);
-            }}
+            onClick={handleOpenShare}
             className="w-full justify-center py-3.5 text-xs font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_30px_rgba(229,193,88,0.3)] active:scale-95"
           >
             <Share2 className="w-4 h-4 text-[#e5c158]" />
@@ -570,7 +576,7 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
             radius={24}
             lineColor="#e5c158"
             baseColor="#0c0d12"
-            onClick={() => setIsShareModalOpen(true)}
+            onClick={handleOpenShare}
             className="w-full justify-center py-4 text-xs font-bold uppercase tracking-widest text-[#e5c158]"
           >
             <Sparkles className="w-4 h-4 text-[#e5c158]" />
@@ -583,6 +589,11 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
             💖 Heart sent into the sky!
           </div>
         )}
+
+        {/* Global Star Blessing Counter */}
+        <div className="w-full mt-2">
+          <StarBlessingCounter />
+        </div>
 
         {/* Community Petal Form */}
         <div className="w-full">

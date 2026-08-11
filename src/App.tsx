@@ -51,14 +51,14 @@ export const App: React.FC = () => {
         <ParticleField count={20} />
         
         {/* Top Left Floating Share Button on Mobile */}
-        <div className="fixed top-5 left-5 z-50">
+        <div className="fixed top-5 left-4 z-[70]">
           <SpecularButton
             size="sm"
             radius={18}
             lineColor="#e5c158"
             baseColor="#0c0d12"
             onClick={() => setIsShareModalOpen(true)}
-            className="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.3)]"
+            className="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#e5c158] shadow-[0_0_20px_rgba(229,193,88,0.4)]"
           >
             <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
             <span>Share 🌸</span>
