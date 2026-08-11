@@ -103,10 +103,14 @@ export interface ParsedLocationResult {
 export const sanitizeInput = (str?: string | null): string => {
   if (!str) return '';
   return str
-    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '')
+    .replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200D\uFEFF]/g, '')
     .replace(/<[^>]*>/g, '')
     .replace(/javascript:/gi, '')
+    .replace(/data:/gi, '')
+    .replace(/vbscript:/gi, '')
     .replace(/on\w+=/gi, '')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
     .trim();
 };
 
