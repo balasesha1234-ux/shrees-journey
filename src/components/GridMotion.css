@@ -27,26 +27,26 @@
 }
 
 .gridMotion-container {
-  gap: 1.25rem;
+  gap: 1.5rem;
   flex: none;
   position: relative;
-  width: 240vw;
-  height: 220vh;
-  left: -20vw;
-  top: -10vh;
+  width: 190vw;
+  height: 170vh;
+  left: -10vw;
+  top: -5vh;
   display: grid;
   grid-template-rows: repeat(4, 1fr);
   grid-template-columns: 100%;
-  transform: rotate(-14deg) scale(1.1);
+  transform: rotate(-7deg) scale(1.05);
   transform-origin: center center;
   z-index: 2;
 }
 
 .row {
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem;
   grid-template-columns: repeat(7, 1fr);
-  will-change: transform, filter;
+  will-change: transform;
 }
 
 .row__item {
@@ -58,14 +58,16 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 16px;
   background-color: #0c0d12;
-  border: 1px solid rgba(229, 193, 88, 0.2);
+  border: 1px solid rgba(229, 193, 88, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #f0f0f5;
   font-size: 1rem;
+  transition: transform 0.4s ease, border-color 0.4s ease;
 }
 
 .row__item-img {

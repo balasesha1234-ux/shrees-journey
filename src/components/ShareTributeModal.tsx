@@ -137,10 +137,11 @@ export const ShareTributeModal: React.FC<ShareTributeModalProps> = ({ isOpen, on
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-2xl animate-fade-in overflow-y-auto">
       <div className="relative max-w-lg w-full p-6 sm:p-8 rounded-[36px] bg-[#0c0d12] border-2 border-[#e5c158]/60 shadow-[0_0_90px_rgba(229,193,88,0.35)] flex flex-col items-center text-center gap-6 my-auto">
         
-        {/* Close Button */}
+        {/* Prominent Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2.5 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-[#e5c158] hover:border-[#e5c158]/50 transition-all z-20"
+          aria-label="Close Share Modal"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2.5 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/60 text-[#e5c158] hover:text-white hover:bg-[#e5c158]/20 hover:scale-110 transition-all shadow-[0_0_20px_rgba(229,193,88,0.4)] z-30 flex items-center justify-center cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>

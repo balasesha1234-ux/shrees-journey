@@ -150,17 +150,22 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
                 Plant Another Petal 🌱
               </button>
 
-              {onDeletePetal && savedPetalInfo && (
-                <button
-                  onClick={() => {
+              <SpecularButton
+                size="md"
+                radius={20}
+                lineColor="#f43f5e"
+                baseColor="#1a0b10"
+                onClick={() => {
+                  if (onDeletePetal && savedPetalInfo) {
                     onDeletePetal(savedPetalInfo.id);
-                    handleResetForm();
-                  }}
-                  className="px-4 py-2 rounded-2xl bg-rose-500/10 border border-rose-400/30 text-xs text-rose-300 hover:bg-rose-500/20 hover:border-rose-400/60 transition-all font-semibold uppercase tracking-wider"
-                >
-                  Delete My Note 🗑️
-                </button>
-              )}
+                  }
+                  handleResetForm();
+                }}
+                className="px-6 py-2 text-xs text-rose-300 font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(244,63,94,0.3)]"
+              >
+                <X className="w-4 h-4 text-rose-400" />
+                <span>Delete Petal 🗑️</span>
+              </SpecularButton>
             </div>
           </div>
         ) : (
