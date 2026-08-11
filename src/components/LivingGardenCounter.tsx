@@ -6,22 +6,118 @@ interface LivingGardenCounterProps {
   petals: PetalData[];
 }
 
+const COUNTRY_ALIAS_MAP: Record<string, string> = {
+  // USA & States/Cities
+  'usa': 'united states',
+  'us': 'united states',
+  'united states': 'united states',
+  'united states of america': 'united states',
+  'america': 'united states',
+  'california': 'united states',
+  'texas': 'united states',
+  'new york': 'united states',
+  'florida': 'united states',
+  'washington': 'united states',
+  'illinois': 'united states',
+  
+  // UK & Regions
+  'uk': 'united kingdom',
+  'united kingdom': 'united kingdom',
+  'england': 'united kingdom',
+  'scotland': 'united kingdom',
+  'wales': 'united kingdom',
+  'london': 'united kingdom',
+
+  // India & States & Major Cities
+  'india': 'india',
+  'bharat': 'india',
+  'in': 'india',
+  'mumbai': 'india',
+  'delhi': 'india',
+  'bengaluru': 'india',
+  'bangalore': 'india',
+  'hyderabad': 'india',
+  'chennai': 'india',
+  'kolkata': 'india',
+  'pune': 'india',
+  'ahmedabad': 'india',
+  'maharashtra': 'india',
+  'karnataka': 'india',
+  'tamil nadu': 'india',
+  'telangana': 'india',
+  'kerala': 'india',
+  'gujarat': 'india',
+  'punjab': 'india',
+  'rajasthan': 'india',
+  'uttar pradesh': 'india',
+  'west bengal': 'india',
+  'goa': 'india',
+  'haryana': 'india',
+
+  // UAE
+  'uae': 'united arab emirates',
+  'united arab emirates': 'united arab emirates',
+  'dubai': 'united arab emirates',
+  'abu dhabi': 'united arab emirates',
+
+  // Canada
+  'canada': 'canada',
+  'ca': 'canada',
+  'toronto': 'canada',
+  'vancouver': 'canada',
+  'ontario': 'canada',
+
+  // Australia
+  'australia': 'australia',
+  'au': 'australia',
+  'sydney': 'australia',
+  'melbourne': 'australia',
+
+  // Germany & Europe
+  'germany': 'germany',
+  'de': 'germany',
+  'berlin': 'germany',
+  'munich': 'germany',
+  'japan': 'japan',
+  'jp': 'japan',
+  'tokyo': 'japan',
+  'france': 'france',
+  'paris': 'france',
+  'singapore': 'singapore',
+  'sg': 'singapore',
+};
+
+export const parseCanonicalCountry = (raw: string): string => {
+  if (!raw || !raw.trim()) return '';
+  const cleaned = raw.trim().toLowerCase();
+  
+  if (cleaned === 'global' || cleaned === 'global family' || cleaned === 'earth') {
+    return '';
+  }
+
+  // If input is "City, State, Country" or "State, Country", extract the last segment
+  const parts = cleaned.split(/[,/-]+/);
+  const candidate = parts[parts.length - 1].trim();
+
+  if (COUNTRY_ALIAS_MAP[candidate]) {
+    return COUNTRY_ALIAS_MAP[candidate];
+  }
+  if (COUNTRY_ALIAS_MAP[cleaned]) {
+    return COUNTRY_ALIAS_MAP[cleaned];
+  }
+
+  return candidate;
+};
+
 export const LivingGardenCounter: React.FC<LivingGardenCounterProps> = ({ petals }) => {
   const totalPetals = petals.length;
 
-  const indianStates = new Set([
-    'andhra pradesh','arunachal pradesh','assam','bihar','chhattisgarh','goa','gujarat','haryana','himachal pradesh','jharkhand','karnataka','kerala','madhya pradesh','maharashtra','manipur','meghalaya','mizoram','nagaland','odisha','punjab','rajasthan','sikkim','tamil nadu','telangana','tripura','uttar pradesh','uttarakhand','west bengal','delhi','puducherry','jammu and kashmir','ladakh']
-  );
-  const normalizeCountry = (c: string) => {
-    const lower = c.trim().toLowerCase();
-    if (indianStates.has(lower)) return 'india';
-    return lower;
-  };
   const uniqueCountriesCount = useMemo(() => {
     const set = new Set<string>();
     petals.forEach((p) => {
-      if (p.country && p.country.trim() && p.country.trim().toLowerCase() !== 'global') {
-        set.add(normalizeCountry(p.country));
+      if (p.country) {
+        const canonical = parseCanonicalCountry(p.country);
+        if (canonical) set.add(canonical);
       }
     });
     return set.size;
