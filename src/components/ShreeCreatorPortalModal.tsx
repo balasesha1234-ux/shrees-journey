@@ -4,6 +4,7 @@ import { ASSET_PATHS } from '../utils/assetPaths';
 import { type PetalData } from '../hooks/useSupabasePetals';
 import SpecularButton from './SpecularButton';
 import DepthCarousel, { type DepthCarouselItem } from './DepthCarousel';
+import { sanitizeInput } from '../utils/countryHelper';
 
 interface ShreeCreatorPortalModalProps {
   isOpen: boolean;
@@ -18,7 +19,11 @@ export const ShreeCreatorPortalModal: React.FC<ShreeCreatorPortalModalProps> = (
 }) => {
   const [passcode, setPasscode] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return sessionStorage.getItem('shree_vip_auth_session') === 'active';
+    const session = sessionStorage.getItem('shree_vip_auth_session');
+    if (!session) return false;
+    const sessionTime = parseInt(session, 10);
+    if (isNaN(sessionTime)) return false;
+    return Date.now() - sessionTime < 15 * 60 * 1000;
   });
   const [authError, setAuthError] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -59,7 +64,7 @@ export const ShreeCreatorPortalModal: React.FC<ShreeCreatorPortalModalProps> = (
 
       if (hashHex === TARGET_HASH) {
         setIsAuthenticated(true);
-        sessionStorage.setItem('shree_vip_auth_session', 'active');
+        sessionStorage.setItem('shree_vip_auth_session', Date.now().toString());
         setAuthError(false);
         setFailedAttempts(0);
         setPasscode('');
@@ -100,20 +105,23 @@ export const ShreeCreatorPortalModal: React.FC<ShreeCreatorPortalModalProps> = (
     return Array.from(countriesSet).sort();
   }, [petals]);
 
-  // Filter petals by search term & country
+  // Filter petals by search term & country with XSS/injection protection
+  const cleanSearch = sanitizeInput(searchTerm).toLowerCase();
   const filteredPetals = useMemo(() => {
     return petals.filter((p) => {
       const matchSearch =
-        p.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (p.country && p.country.toLowerCase().includes(searchTerm.toLowerCase()));
+        !cleanSearch ||
+        p.text.toLowerCase().includes(cleanSearch) ||
+        p.author.toLowerCase().includes(cleanSearch) ||
+        (p.country && p.country.toLowerCase().includes(cleanSearch)) ||
+        (p.location && p.location.toLowerCase().includes(cleanSearch));
 
       const matchCountry =
         selectedCountry === 'all' || (p.country && p.country.trim() === selectedCountry);
 
       return matchSearch && matchCountry;
     });
-  }, [petals, searchTerm, selectedCountry]);
+  }, [petals, cleanSearch, selectedCountry]);
 
   const carouselBackgrounds = [
     ASSET_PATHS.timeline.y2026.heroImage,

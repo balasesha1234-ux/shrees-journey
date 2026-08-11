@@ -98,14 +98,34 @@ export interface ParsedLocationResult {
 }
 
 /**
+ * Sanitizes input text to prevent XSS and control character injection.
+ */
+export const sanitizeInput = (str?: string | null): string => {
+  if (!str) return '';
+  return str
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/javascript:/gi, '')
+    .replace(/on\w+=/gi, '')
+    .trim();
+};
+
+const getAlias = (key: string): string | undefined => {
+  if (Object.prototype.hasOwnProperty.call(COUNTRY_ALIAS_MAP, key)) {
+    return COUNTRY_ALIAS_MAP[key];
+  }
+  return undefined;
+};
+
+/**
  * Normalizes raw country & location inputs (or legacy string) into structured country & location.
  */
 export const parseLocationAndCountry = (
   rawCountry?: string | null,
   rawLocation?: string | null
 ): ParsedLocationResult => {
-  const c = (rawCountry || '').trim();
-  const l = (rawLocation || '').trim();
+  const c = sanitizeInput(rawCountry);
+  const l = sanitizeInput(rawLocation);
 
   if (!c && !l) {
     return { country: 'Global', location: null };
@@ -182,19 +202,20 @@ export const extractPureCountry = (raw: string): string => {
  * Returns canonical capitalized Country name (e.g. "India", "United States", "Global")
  */
 export const getCanonicalCountryName = (raw: string): string => {
-  if (!raw || !raw.trim()) return 'Global';
-  const trimmed = raw.trim();
-  const lower = trimmed.toLowerCase();
+  const sanitized = sanitizeInput(raw);
+  if (!sanitized) return 'Global';
+  const lower = sanitized.toLowerCase();
 
   if (lower === 'global' || lower === 'global family' || lower === 'earth') {
     return 'Global';
   }
 
-  if (COUNTRY_ALIAS_MAP[lower]) {
-    return COUNTRY_ALIAS_MAP[lower];
+  const alias = getAlias(lower);
+  if (alias) {
+    return alias;
   }
 
-  return trimmed
+  return sanitized
     .split(/\s+/)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(' ');

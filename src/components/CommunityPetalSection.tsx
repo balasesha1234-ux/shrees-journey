@@ -3,7 +3,7 @@ import { Heart, Sparkles, User, Globe, MapPin, PenTool, Wind, Award, X } from 'l
 import { ASSET_PATHS } from '../utils/assetPaths';
 import SpecularButton from './SpecularButton';
 import TributeKeepsakeModal from './TributeKeepsakeModal';
-import { parseLocationAndCountry } from '../utils/countryHelper';
+import { parseLocationAndCountry, sanitizeInput } from '../utils/countryHelper';
 
 interface CommunityPetalSectionProps {
   onAddPetal: (name: string, country: string, message: string, location?: string) => void;
@@ -27,17 +27,35 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
     date: string;
   } | null>(null);
 
+  const [cooldownMessage, setCooldownMessage] = useState<string | null>(null);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanMessage = message.replace(/<[^>]*>/g, '').trim();
+
+    // Client-side anti-spam rate limiting (15s cooldown)
+    const lastSub = sessionStorage.getItem('shree_last_petal_sub');
+    const now = Date.now();
+    if (lastSub) {
+      const elapsed = (now - parseInt(lastSub, 10)) / 1000;
+      if (elapsed < 15) {
+        const remaining = Math.ceil(15 - elapsed);
+        setCooldownMessage(`Please wait ${remaining}s before leaving another petal. 🌸`);
+        setTimeout(() => setCooldownMessage(null), 3000);
+        return;
+      }
+    }
+
+    const cleanMessage = sanitizeInput(message).slice(0, 1000);
     if (!cleanMessage) return;
 
-    const cleanName = name.replace(/<[^>]*>/g, '').trim().slice(0, 40);
-    const cleanCountry = country.replace(/<[^>]*>/g, '').trim().slice(0, 40);
-    const cleanLocation = location.replace(/<[^>]*>/g, '').trim().slice(0, 50);
+    const cleanName = sanitizeInput(name).slice(0, 40);
+    const cleanCountry = sanitizeInput(country).slice(0, 40);
+    const cleanLocation = sanitizeInput(location).slice(0, 50);
 
     const parsed = parseLocationAndCountry(cleanCountry, cleanLocation);
 
+    sessionStorage.setItem('shree_last_petal_sub', now.toString());
+    setCooldownMessage(null);
     setIsLifting(true);
 
     const petalId = `PETAL #${Math.floor(4800 + Math.random() * 400)}`;
@@ -229,6 +247,12 @@ export const CommunityPetalSection: React.FC<CommunityPetalSectionProps> = ({ on
                 className="w-full pl-11 pr-4 pt-4 pb-4 sm:pt-5 sm:pb-6 rounded-3xl bg-white/[0.04] border border-white/15 text-[#f0f0f5] font-serif italic text-base sm:text-lg leading-relaxed focus:outline-none focus:border-[#e5c158] focus:ring-1 focus:ring-[#e5c158]/60 transition-all placeholder:text-[#f0f0f5]/35 backdrop-blur-md resize-none shadow-inner min-h-[120px]"
               />
             </div>
+
+            {cooldownMessage && (
+              <div className="w-full text-center py-2 px-4 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-semibold animate-fade-in">
+                {cooldownMessage}
+              </div>
+            )}
 
             {/* SUBMIT PETAL LIFTING BUTTON EXPERIENCE */}
             <div className="relative w-full flex justify-center mt-1 sm:mt-2">

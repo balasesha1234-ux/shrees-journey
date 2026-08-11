@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured, type PetalRow } from '../lib/supabase';
-import { parseLocationAndCountry } from '../utils/countryHelper';
+import { parseLocationAndCountry, sanitizeInput } from '../utils/countryHelper';
 
 export interface PetalData {
   id: number | string;
@@ -90,11 +90,16 @@ export function useSupabasePetals() {
     message: string,
     location?: string
   ): Promise<PetalData> => {
-    const parsed = parseLocationAndCountry(country, location);
+    const cleanName = sanitizeInput(name).slice(0, 40) || 'A Grateful Friend';
+    const cleanCountry = sanitizeInput(country).slice(0, 40);
+    const cleanLocation = sanitizeInput(location).slice(0, 50);
+    const cleanMsg = sanitizeInput(message).slice(0, 1000);
+
+    const parsed = parseLocationAndCountry(cleanCountry, cleanLocation);
     const newPetal: PetalData = {
       id: Date.now(),
-      text: message,
-      author: name || 'A Grateful Friend',
+      text: cleanMsg,
+      author: cleanName,
       country: parsed.country,
       location: parsed.location || undefined,
       created_at: new Date().toISOString(),
@@ -107,9 +112,9 @@ export function useSupabasePetals() {
     if (isSupabaseConfigured && supabase) {
       try {
         const insertPayload: Record<string, unknown> = {
-          name: name.trim() || 'A Grateful Friend',
+          name: cleanName,
           country: parsed.country,
-          message: message.trim(),
+          message: cleanMsg,
           created_at: new Date().toISOString(),
         };
 
