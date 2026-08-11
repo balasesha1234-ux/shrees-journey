@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Lock, Sparkles, X, Heart, Feather, ZoomIn } from 'lucide-react';
-import { ASSET_PATHS } from '../utils/assetPaths';
+import { ASSET_PATHS, getAssetObjectPositionStyle } from '../utils/assetPaths';
 import SpecularButton from './SpecularButton';
 
 interface PrivateEpilogueModalProps {
@@ -350,6 +350,7 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
                   <img
                     src={img.src}
                     alt={img.title}
+                    style={getAssetObjectPositionStyle(img.src)}
                     className="w-full h-full object-cover filter contrast-105 group-hover:scale-[1.03] transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12] via-transparent to-transparent opacity-80" />

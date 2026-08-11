@@ -263,7 +263,7 @@ export const ShareTributeModal: React.FC<ShareTributeModalProps> = ({ isOpen, on
             className="w-full justify-center text-[10px]"
           >
             <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
-            <span>Share</span>
+              <span>Share</span>
           </SpecularButton>
         </div>
 

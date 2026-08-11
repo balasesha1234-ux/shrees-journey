@@ -9,7 +9,7 @@ import ShareTributeModal from '../components/ShareTributeModal';
 import CelebrationBurst from '../components/CelebrationBurst';
 import BlurText from '../components/BlurText';
 import StarBlessingCounter from '../components/StarBlessingCounter';
-import { ASSET_PATHS } from '../utils/assetPaths';
+import { ASSET_PATHS, getAssetObjectPositionStyle } from '../utils/assetPaths';
 import { useSupabasePetals } from '../hooks/useSupabasePetals';
 
 interface MobileExperienceProps {
@@ -420,6 +420,7 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
                   <img
                     src={src}
                     alt={`${item.year} memory ${i}`}
+                    style={getAssetObjectPositionStyle(src)}
                     className="w-full h-full object-cover group-active:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />
@@ -469,7 +470,12 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
               className="relative rounded-2xl overflow-hidden border-2 border-[#e5c158]/40 bg-[#0c0d12] shadow-xl p-1.5 flex flex-col gap-1.5 active:scale-95 transition-transform cursor-pointer"
             >
               <div className="w-full h-40 rounded-xl overflow-hidden bg-black/50">
-                <img src={m.img} alt={m.title} className="w-full h-full object-cover" />
+                <img
+                  src={m.img}
+                  alt={m.title}
+                  style={getAssetObjectPositionStyle(m.img)}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <span className="text-[11px] font-extrabold text-[#e5c158] truncate px-1">{m.title}</span>
             </div>
@@ -537,9 +543,9 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
                 data-petal-id={p.id || idx}
                 onClick={() => setActivePetalModal(p)}
                 aria-label={`Unfold memory petal by ${p.author}`}
-                className="mobile-petal-node absolute top-0 left-0 z-20 w-11 h-16 rounded-[50%_0_50%_50%] bg-gradient-to-br from-rose-300 via-pink-400 to-rose-500 border-2 border-[#e5c158] shadow-[0_0_25px_rgba(244,63,94,0.7)] flex items-center justify-center active:scale-125 transition-transform will-change-transform"
+                className="mobile-petal-node absolute top-0 left-0 z-20 w-8 h-12 rounded-[50%_0_50%_50%] bg-gradient-to-br from-rose-300 via-pink-400 to-rose-500 border-2 border-[#e5c158] shadow-[0_0_25px_rgba(244,63,94,0.7)] flex items-center justify-center active:scale-125 transition-transform will-change-transform"
               >
-                <Heart className="w-4 h-4 text-white fill-white pointer-events-none" />
+                <Heart className="w-3.5 h-3.5 text-white fill-white pointer-events-none" />
               </button>
             ))}
           </div>

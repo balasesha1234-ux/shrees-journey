@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { getAssetBackgroundPositionStyle } from '../utils/assetPaths';
 import './GridMotion.css';
 
 export interface GridMotionProps {
@@ -80,6 +81,7 @@ export const GridMotion: React.FC<GridMotionProps> = ({
                           className="row__item-img"
                           style={{
                             backgroundImage: `url(${content})`,
+                            ...getAssetBackgroundPositionStyle(content as string),
                           }}
                         />
                       ) : (

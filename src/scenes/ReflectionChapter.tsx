@@ -365,14 +365,14 @@ export const ReflectionChapter: React.FC = () => {
                 left: `${p.xPercent}%`,
                 top: `${p.yPercent}%`,
               }}
-              className={`absolute pointer-events-auto group w-8 h-12 rounded-[50%_0_50%_50%] transition-transform duration-200 ease-out active:scale-95 cursor-pointer flex items-center justify-center ${
+              className={`absolute pointer-events-auto group w-6.5 h-10 rounded-[50%_0_50%_50%] transition-transform duration-200 ease-out active:scale-95 cursor-pointer flex items-center justify-center ${
                 p.isStatic
                   ? 'bg-gradient-to-br from-[#e5c158] via-[#ffd700] to-[#b89530] border-2 border-white shadow-[0_0_35px_#e5c158] z-30'
                   : 'bg-gradient-to-br from-rose-300/90 via-pink-400/95 to-rose-400/90 border-2 border-[#e5c158]/70 hover:border-white shadow-[0_0_20px_rgba(244,63,94,0.45)] hover:shadow-[0_0_35px_rgba(255,255,255,0.9)]'
               } petal-node`}
             >
               {/* Central Glowing Heart Essence inside Petal */}
-              <Heart className={`w-3.5 h-3.5 ${p.isStatic ? 'text-[#0c0d12] fill-[#0c0d12]' : 'text-white/80 fill-white/80 group-hover:scale-130 group-hover:text-white'} transition-all duration-200`} />
+              <Heart className={`w-3 h-3 ${p.isStatic ? 'text-[#0c0d12] fill-[#0c0d12]' : 'text-white/80 fill-white/80 group-hover:scale-130 group-hover:text-white'} transition-all duration-200`} />
             </button>
           ))}
         </div>

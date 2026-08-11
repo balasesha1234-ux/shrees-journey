@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { getAssetObjectPositionStyle } from '../utils/assetPaths';
 
 export interface DriftWallItem {
   image: string;
@@ -267,6 +268,7 @@ export const DriftWall: React.FC<DriftWallProps> = ({
               alt={item.title}
               loading="lazy"
               decoding="async"
+              style={getAssetObjectPositionStyle(item.image)}
               className="absolute inset-0 w-full h-full object-cover filter contrast-105 group-hover:scale-110 transition-transform duration-300"
               onError={(e) => {
                 (e.target as HTMLElement).style.display = 'none';

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ASSET_PATHS } from '../utils/assetPaths';
+import { ASSET_PATHS, getAssetObjectPositionStyle } from '../utils/assetPaths';
 import { SectionBackground } from '../components/SectionBackground';
 import DriftWall from '../components/DriftWall';
 import type { DriftWallItem } from '../components/DriftWall';
@@ -396,6 +396,7 @@ export const TimelineScene: React.FC = () => {
                             <img
                               src={item.image}
                               alt={item.title}
+                              style={getAssetObjectPositionStyle(item.image)}
                               className="w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2">

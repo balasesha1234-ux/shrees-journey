@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getAssetObjectPositionStyle } from '../utils/assetPaths';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -131,8 +132,11 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
           <img
             src={src}
             alt={alt}
+            style={{
+              transform: `scale(${currentZoom})`,
+              ...getAssetObjectPositionStyle(src),
+            }}
             className="w-full h-full object-cover transition-transform duration-100"
-            style={{ transform: `scale(${currentZoom})` }}
             onError={(e) => {
               (e.target as HTMLElement).style.display = 'none';
             }}
