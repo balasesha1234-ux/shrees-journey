@@ -9,6 +9,8 @@ export interface PetalData {
   created_at?: string;
 }
 
+import { extractPureCountry } from '../utils/countryHelper';
+
 export function useSupabasePetals() {
   const [petals, setPetals] = useState<PetalData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -63,11 +65,12 @@ export function useSupabasePetals() {
   }, [fetchPetals]);
 
   const addPetal = async (name: string, country: string, message: string): Promise<PetalData> => {
+    const pureCountry = extractPureCountry(country);
     const newPetal: PetalData = {
       id: Date.now(),
       text: message,
       author: name || 'A Grateful Friend',
-      country: country || 'Global',
+      country: pureCountry,
       created_at: new Date().toISOString(),
     };
 
@@ -82,7 +85,7 @@ export function useSupabasePetals() {
           .insert([
             {
               name: name.trim() || 'A Grateful Friend',
-              country: country.trim() || 'Global',
+              country: pureCountry,
               message: message.trim(),
               created_at: new Date().toISOString(),
             },
