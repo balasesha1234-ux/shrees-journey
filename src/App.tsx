@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { useLenis } from './hooks/useLenis';
 import { useAudio } from './hooks/useAudio';
 import { useIsMobile } from './hooks/useIsMobile';
@@ -47,6 +48,7 @@ export const App: React.FC = () => {
   if (isMobile) {
     return (
       <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white">
+        <Analytics />
         <FilmGrain />
         <ParticleField count={20} />
         
@@ -88,6 +90,7 @@ export const App: React.FC = () => {
 
   return (
     <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white flex flex-col justify-between">
+      <Analytics />
       {/* Luxury Magnetic Custom Cursor */}
       <CustomCursor />
 
