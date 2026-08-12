@@ -67,12 +67,12 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
           pointerStrength={0.42}
           refraction={0.022}
           ripple
-          fontSize="clamp(2.6rem, 9vw, 7.5rem)"
+          fontSize="clamp(3.5rem, 13vw, 11rem)"
           fontWeight={900}
           fontFamily="inherit"
           letterSpacing="-0.06em"
           lineHeight={0.92}
-          style={{ height: 'clamp(110px, 18vw, 200px)', width: '100%', maxWidth: '900px' }}
+          style={{ height: 'clamp(160px, 26vw, 320px)', width: '100%', maxWidth: '1100px' }}
         />
 
         <BlurText
