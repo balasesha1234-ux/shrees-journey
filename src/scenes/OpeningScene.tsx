@@ -5,6 +5,7 @@ import { GridMotion } from '../components/GridMotion';
 import SpecularButton from '../components/SpecularButton';
 import ElasticSlider from '../components/ElasticSlider';
 import BlurText from '../components/BlurText';
+import WarpText from '../components/WarpText';
 import { Sparkles } from 'lucide-react';
 
 interface OpeningSceneProps {
@@ -56,12 +57,22 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
           </span>
         </div>
 
-        <BlurText
+        <WarpText
           text="SHREE'S JOURNEY"
-          delay={120}
-          animateBy="words"
-          direction="top"
-          className="font-general text-4xl sm:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight leading-tight sm:leading-none drop-shadow-[0_0_60px_rgba(229,193,88,0.5)] justify-center text-center"
+          color="#e5c158"
+          warpStrength={0.09}
+          warpScale={1.7}
+          speed={0.5}
+          pointerInfluence={0.45}
+          pointerStrength={0.42}
+          refraction={0.022}
+          ripple
+          fontSize="clamp(2.6rem, 9vw, 7.5rem)"
+          fontWeight={900}
+          fontFamily="inherit"
+          letterSpacing="-0.06em"
+          lineHeight={0.92}
+          style={{ height: 'clamp(110px, 18vw, 200px)', width: '100%', maxWidth: '900px' }}
         />
 
         <BlurText
