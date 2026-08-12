@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Lock, Sparkles, X, Heart, Feather, ZoomIn } from 'lucide-react';
 import { ASSET_PATHS, getAssetObjectPositionStyle } from '../utils/assetPaths';
 import SpecularButton from './SpecularButton';
+import BlurText from './BlurText';
 
 interface PrivateEpilogueModalProps {
   isOpen?: boolean;
@@ -258,20 +259,27 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
       {/* FULLSCREEN DOCUMENTARY-ENDING PRIVATE LETTER EXPERIENCE */}
       {internalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-[#0B0B0F]/95 backdrop-blur-3xl animate-fade-in overflow-hidden">
-          
-          {/* BLURRED BACKGROUND PLACEHOLDER CANVAS */}
-          <img
-            src={ASSET_PATHS.ending.treeImage}
-            alt="Letter Background"
-            className="absolute inset-0 w-full h-full object-cover filter blur-3xl scale-110 opacity-25 pointer-events-none z-0"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = 'none';
-            }}
-          />
+
+          {/* MULTI-IMAGE COLLAGE BACKGROUND using provided timeline assets */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            {/* Tiled collage of timeline hero images */}
+            <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-0 opacity-30">
+              <img src={ASSET_PATHS.timeline.y2023.heroImage} alt="" className="w-full h-full object-cover filter blur-sm" />
+              <img src={ASSET_PATHS.timeline.y2024.heroImage} alt="" className="w-full h-full object-cover filter blur-sm" />
+              <img src={ASSET_PATHS.timeline.y2025.heroImage} alt="" className="w-full h-full object-cover filter blur-sm" />
+              <img src={ASSET_PATHS.timeline.y2026.heroImage} alt="" className="w-full h-full object-cover filter blur-sm" />
+              <img src={ASSET_PATHS.timeline.y2024.gallery1} alt="" className="w-full h-full object-cover filter blur-sm" />
+              <img src={ASSET_PATHS.timeline.y2023.gallery1} alt="" className="w-full h-full object-cover filter blur-sm" />
+            </div>
+            {/* Deep dark vignette over the collage */}
+            <div className="absolute inset-0 bg-[#0B0B0F]/80" />
+            {/* Warm gold radial glow from center */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,rgba(229,193,88,0.12),transparent_80%)]" />
+          </div>
 
           {/* OBSIDIAN OVERLAY & WARM SPOTLIGHT */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/95 via-[#0B0B0F]/85 to-[#0B0B0F] pointer-events-none z-0" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,193,88,0.22),transparent_70%)] pointer-events-none z-0" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/60 via-transparent to-[#0B0B0F]/80 pointer-events-none z-0" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,193,88,0.18),transparent_65%)] pointer-events-none z-0" />
 
           {/* Close Button top-right */}
           <button
@@ -383,25 +391,40 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
                     if (item.type === 'signoff') {
                       return (
                         <div key={idx} className="mt-8 pt-6 border-t border-white/10 flex flex-col gap-2 font-serif not-italic animate-fade-in transition-all duration-700 ease-out">
-                          <p className="text-[#e5c158] italic text-xl">{item.salutation}</p>
-                          <p className="text-3xl font-bold text-[#f0f0f5] tracking-wide">{item.author}</p>
+                          <BlurText
+                            text={item.salutation ?? ''}
+                            delay={80}
+                            animateBy="words"
+                            direction="bottom"
+                            className="text-[#e5c158] italic text-xl"
+                          />
+                          <BlurText
+                            text={item.author ?? ''}
+                            delay={120}
+                            animateBy="letters"
+                            direction="bottom"
+                            className="text-3xl font-bold text-[#f0f0f5] tracking-wide not-italic"
+                          />
                         </div>
                       );
                     }
 
                     return (
-                      <p
-                        key={idx}
-                        className={`animate-fade-in transition-all duration-700 ease-out will-change-transform ${
-                          item.highlight
-                            ? 'font-bold text-2xl sm:text-3xl text-[#e5c158] not-italic font-general tracking-tight my-2'
-                            : item.bold
-                            ? 'font-bold text-xl sm:text-2xl text-[#f0f0f5] not-italic'
-                            : 'font-serif text-lg sm:text-2xl text-[#f5ebd6]'
-                        }`}
-                      >
-                        {item.content}
-                      </p>
+                      <div key={idx} className="animate-fade-in">
+                        <BlurText
+                          text={item.content ?? ''}
+                          delay={item.highlight ? 60 : item.bold ? 70 : 80}
+                          animateBy="words"
+                          direction="bottom"
+                          className={
+                            item.highlight
+                              ? 'font-bold text-2xl sm:text-3xl text-[#e5c158] not-italic font-general tracking-tight'
+                              : item.bold
+                              ? 'font-bold text-xl sm:text-2xl text-[#f0f0f5] not-italic font-general'
+                              : 'font-serif italic text-lg sm:text-2xl text-[#f5ebd6] leading-relaxed'
+                          }
+                        />
+                      </div>
                     );
                   })}
                 </div>
