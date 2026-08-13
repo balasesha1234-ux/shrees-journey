@@ -4,55 +4,111 @@ interface SplashScreenProps {
   onComplete: () => void;
 }
 
-const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
+export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   const [phase, setPhase] = useState<'visible' | 'fading'>('visible');
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Phase 1: Show the symbol for 1.4s
+    // Smooth progress bar fill
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 4;
+      });
+    }, 40);
+
+    // Fade out trigger after 1.6s
     const fadeTimer = setTimeout(() => {
       setPhase('fading');
-    }, 1400);
+    }, 1600);
 
-    // Phase 2: After fade-out completes (600ms), unmount
+    // Unmount after fade completes
     const doneTimer = setTimeout(() => {
       onComplete();
-    }, 2000);
+    }, 2200);
 
     return () => {
+      clearInterval(interval);
       clearTimeout(fadeTimer);
       clearTimeout(doneTimer);
     };
   }, [onComplete]);
 
+  const handleSkip = () => {
+    setPhase('fading');
+    setTimeout(() => onComplete(), 300);
+  };
+
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#050507]"
+      onClick={handleSkip}
+      className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#050507] select-none cursor-pointer overflow-hidden"
       style={{
         opacity: phase === 'fading' ? 0 : 1,
-        transition: 'opacity 600ms ease-out',
-        pointerEvents: 'none',
+        transition: 'opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms ease-out',
+        transform: phase === 'fading' ? 'scale(1.03)' : 'scale(1)',
+        pointerEvents: phase === 'fading' ? 'none' : 'auto',
       }}
     >
-      {/* Single gold symbol — pulses once, no text, no logo */}
-      <span
-        style={{
-          fontSize: '4rem',
-          color: '#e5c158',
-          filter: 'drop-shadow(0 0 40px rgba(229,193,88,0.9))',
-          animation: 'splashPulse 1.4s ease-in-out forwards',
-          display: 'inline-block',
-          userSelect: 'none',
-        }}
-      >
-        ✦
-      </span>
+      {/* Ambient Starlight Radial Bloom */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(229,193,88,0.18)_0%,transparent_65%)] pointer-events-none" />
+
+      {/* Expanding Ripple Rings */}
+      <div className="absolute w-72 h-72 rounded-full border border-[#e5c158]/20 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] pointer-events-none" />
+      <div className="absolute w-44 h-44 rounded-full border border-[#e5c158]/30 animate-[pulse_2s_ease-in-out_infinite] pointer-events-none" />
+
+      {/* Central Emblem & Title */}
+      <div className="relative z-10 flex flex-col items-center gap-5 text-center px-6">
+        {/* Glowing Sacred Starlight Symbol */}
+        <div className="relative flex items-center justify-center">
+          <span
+            className="text-4xl sm:text-5xl text-[#e5c158] select-none"
+            style={{
+              filter: 'drop-shadow(0 0 35px rgba(229,193,88,0.95))',
+              animation: 'splashGlow 1.8s ease-in-out infinite alternate',
+            }}
+          >
+            ✦
+          </span>
+        </div>
+
+        {/* Refined Cinematic Typography */}
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="font-general text-xs sm:text-sm font-extrabold uppercase tracking-[0.45em] text-[#e5c158] drop-shadow-[0_0_20px_rgba(229,193,88,0.5)]">
+            Shree’s Journey
+          </h1>
+          <p className="font-serif italic text-sm sm:text-base text-[#f0f0f5]/75 tracking-wider">
+            A tribute to 5 million hearts
+          </p>
+        </div>
+
+        {/* Razor-Thin Champagne Gold Progress Bar */}
+        <div className="w-36 sm:w-48 h-[1.5px] bg-white/10 rounded-full overflow-hidden mt-3">
+          <div
+            className="h-full bg-gradient-to-r from-[#e5c158]/40 via-[#e5c158] to-white rounded-full transition-all duration-75 ease-out shadow-[0_0_12px_rgba(229,193,88,0.8)]"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        {/* Subtle Tap Hint */}
+        <span className="text-[10px] uppercase tracking-[0.25em] text-[#f0f0f5]/30 mt-2 font-general">
+          Tap anywhere to enter
+        </span>
+      </div>
 
       <style>{`
-        @keyframes splashPulse {
-          0%   { opacity: 0; transform: scale(0.6); filter: drop-shadow(0 0 0px rgba(229,193,88,0)); }
-          40%  { opacity: 1; transform: scale(1.08); filter: drop-shadow(0 0 55px rgba(229,193,88,1)); }
-          70%  { opacity: 1; transform: scale(1.0);  filter: drop-shadow(0 0 35px rgba(229,193,88,0.8)); }
-          100% { opacity: 0.85; transform: scale(1.0); }
+        @keyframes splashGlow {
+          0% {
+            transform: scale(0.92);
+            filter: drop-shadow(0 0 20px rgba(229,193,88,0.6));
+          }
+          100% {
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 45px rgba(229,193,88,1));
+          }
         }
       `}</style>
     </div>

@@ -16,6 +16,7 @@ import { OpeningScene } from './scenes/OpeningScene';
 import { SkyScene } from './scenes/SkyScene';
 import { TimelineScene } from './scenes/TimelineScene';
 import { ReflectionChapter } from './scenes/ReflectionChapter';
+import { EndingScene } from './scenes/EndingScene';
 import { ViewModeToggle } from './components/ViewModeToggle';
 import StardustCursor from './components/StardustCursor';
 import AudioController from './components/AudioController';
@@ -88,39 +89,68 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleReplayJourney = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (isMobile) {
     return (
       <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white">
         {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
         <FilmGrain />
         <ParticleField count={20} />
-        
-        {/* Top Left Floating Share Button on Mobile */}
-        <div className="fixed top-5 left-4 z-[70]">
-          <SpecularButton
-            size="sm"
-            radius={18}
-            lineColor="#e5c158"
-            baseColor="#0c0d12"
-            onClick={() => setIsShareModalOpen(true)}
-            className="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#e5c158] hover:shadow-[0_0_20px_rgba(229,193,88,0.35)]"
-          >
-            <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
-            <span>Share 🌸</span>
-          </SpecularButton>
+
+        {/* Top Floating Control Bar on Mobile */}
+        <div className="fixed top-4 left-3 right-3 z-[70] flex items-center justify-between pointer-events-none">
+          <div className="pointer-events-auto flex items-center gap-2">
+            <SpecularButton
+              size="sm"
+              radius={18}
+              lineColor="#e5c158"
+              baseColor="#0c0d12"
+              onClick={() => setIsShareModalOpen(true)}
+              className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#e5c158] hover:shadow-[0_0_20px_rgba(229,193,88,0.35)]"
+            >
+              <Share2 className="w-3 h-3 text-[#e5c158]" />
+              <span>Share 🌸</span>
+            </SpecularButton>
+
+            <SpecularButton
+              size="sm"
+              radius={18}
+              lineColor="#e5c158"
+              baseColor="#0c0d12"
+              onClick={() => setIsVipPortalOpen(true)}
+              className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#e5c158] hover:shadow-[0_0_20px_rgba(229,193,88,0.35)]"
+            >
+              <Crown className="w-3 h-3 text-[#e5c158]" />
+              <span>VIP 👑</span>
+            </SpecularButton>
+          </div>
+
+          <div className="pointer-events-auto flex items-center gap-2">
+            <AudioController />
+          </div>
         </div>
 
         <ViewModeToggle viewMode={viewMode} onChangeViewMode={setViewMode} />
-        
+
         <MobileExperience
           onUserInteractAudio={toggleMute}
           onOpenSecretModal={() => setIsSecretModalOpen(true)}
           onOpenShareModal={() => setIsShareModalOpen(true)}
+          onOpenVipModal={() => setIsVipPortalOpen(true)}
         />
 
         <ShareTributeModal
           isOpen={isShareModalOpen}
           onClose={() => setIsShareModalOpen(false)}
+        />
+
+        <ShreeCreatorPortalModal
+          isOpen={isVipPortalOpen}
+          onClose={() => setIsVipPortalOpen(false)}
+          petals={petals}
         />
 
         <PrivateEpilogueModal
@@ -242,9 +272,12 @@ export const App: React.FC = () => {
 
         {/* Scene 4: REFLECTION CHAPTER (Memory Tree, Petal Form, Living Counter, Global Map) */}
         <ReflectionChapter />
+
+        {/* Scene 5: GRAND CINEMATIC CLIMAX & REPLAY JOURNEY */}
+        <EndingScene onReplayJourney={handleReplayJourney} />
       </div>
 
-      {/* Film End Credits */}
+      {/* Film End Credits with Private Epilogue Lock */}
       <FilmCredits onOpenSecretModal={() => setIsSecretModalOpen(true)} />
 
       {/* Floating View Mode Switcher Badge (Allows switching Desktop / Mobile view instantly) */}

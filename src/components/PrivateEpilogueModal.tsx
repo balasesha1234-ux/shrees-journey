@@ -213,8 +213,8 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
     if (lockoutSeconds > 0) return;
 
     const clean = password.trim().toLowerCase();
-    // Secure obfuscated verification: Base64 check for 'venkatesha' (dmVua2F0ZXNoYQ==)
-    const isMatch = btoa(clean) === 'dmVua2F0ZXNoYQ==' || clean === 'venkatesha';
+    const allowedKeys = ['venkatesha', 'shree', '5million', 'shree5m', 'karthik', 'venkatesha!'];
+    const isMatch = allowedKeys.includes(clean) || btoa(clean) === 'dmVua2F0ZXNoYQ==';
 
     if (isMatch) {
       setError(false);

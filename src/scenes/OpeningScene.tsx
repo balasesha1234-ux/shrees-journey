@@ -7,6 +7,7 @@ import ElasticSlider from '../components/ElasticSlider';
 import BlurText from '../components/BlurText';
 import WarpText from '../components/WarpText';
 import { Sparkles } from 'lucide-react';
+import { useAudio } from '../hooks/useAudio';
 
 interface OpeningSceneProps {
   onTransitionToSky: () => void;
@@ -18,6 +19,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
   onUserInteractAudio,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { playAudio, setVolume, volume } = useAudio();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -33,6 +35,18 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
 
   // GridMotion Pure High-Resolution Serial Photo Collection Array
   const gridItems = [...ASSET_PATHS.serial, ...ASSET_PATHS.serial.slice(0, 3)];
+
+  const handleBegin = () => {
+    playAudio();
+    if (onUserInteractAudio) onUserInteractAudio();
+    onTransitionToSky();
+  };
+
+  const handleVolume = (val: number) => {
+    setVolume(val / 100);
+    playAudio();
+    if (onUserInteractAudio) onUserInteractAudio();
+  };
 
   return (
     <section
@@ -53,7 +67,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
         <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/80 px-4 py-1.5 rounded-full border border-[#e5c158]/30 backdrop-blur-md animate-fade-in">
           <Sparkles className="w-4 h-4 animate-spin-slow" />
           <span className="font-general text-xs font-bold uppercase tracking-[0.3em]">
-            A Love Letter in Code ✦
+            A Tribute of Gratitude ✦
           </span>
         </div>
 
@@ -88,7 +102,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
           className="font-general text-[11px] sm:text-sm text-[#f0f0f5]/50 italic max-w-md leading-relaxed tracking-wide"
           style={{ animation: 'fadeIn 1.6s ease-out 2.6s both' }}
         >
-          Built with love, for someone who changed thousands of lives — including mine.
+          Built with love, honoring the quiet consistency that inspired millions.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-6 mt-4">
@@ -98,10 +112,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
             lineColor="#e5c158"
             baseColor="#0c0d12"
             followMouse
-            onClick={() => {
-              if (onUserInteractAudio) onUserInteractAudio();
-              onTransitionToSky();
-            }}
+            onClick={handleBegin}
           >
             <Sparkles className="w-4 h-4" />
             <span>Begin Experience</span>
@@ -109,10 +120,8 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
 
           {/* ELASTIC SLIDER SOUND CONTROL */}
           <ElasticSlider
-            defaultValue={40}
-            onVolumeChange={() => {
-              if (onUserInteractAudio) onUserInteractAudio();
-            }}
+            defaultValue={Math.round(volume * 100) || 45}
+            onVolumeChange={handleVolume}
           />
         </div>
       </div>

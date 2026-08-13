@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Calendar, Heart, Compass, Image, X, Lock, Share2 } from 'lucide-react';
+import { Sparkles, Calendar, Heart, Compass, Image, X, Lock, Share2, Crown } from 'lucide-react';
 import SpecularButton from '../components/SpecularButton';
 import CommunityPetalSection from '../components/CommunityPetalSection';
 import LivingGardenCounter from '../components/LivingGardenCounter';
@@ -16,12 +16,14 @@ interface MobileExperienceProps {
   onUserInteractAudio?: () => void;
   onOpenSecretModal?: () => void;
   onOpenShareModal?: () => void;
+  onOpenVipModal?: () => void;
 }
 
 export const MobileExperience: React.FC<MobileExperienceProps> = ({
   onUserInteractAudio,
   onOpenSecretModal,
   onOpenShareModal,
+  onOpenVipModal,
 }) => {
   const [selectedEra, setSelectedEra] = useState<string>('all');
   const [activeMoment, setActiveMoment] = useState<any | null>(null);
@@ -616,9 +618,23 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           <LivingGardenCounter petals={dbPetals} />
         </div>
 
-        {/* UNLOCK SECRET EPILOGUE BUTTON ON MOBILE */}
-        {onOpenSecretModal && (
-          <div className="w-full flex justify-center py-6">
+        {/* VIP SANCTUARY & UNLOCK SECRET EPILOGUE BUTTONS ON MOBILE */}
+        <div className="w-full flex flex-col items-center gap-3 py-6">
+          {onOpenVipModal && (
+            <SpecularButton
+              size="md"
+              radius={20}
+              lineColor="#e5c158"
+              baseColor="#0c0d12"
+              onClick={onOpenVipModal}
+              className="w-full max-w-xs justify-center py-3.5 text-xs font-extrabold uppercase tracking-widest"
+            >
+              <Crown className="w-4 h-4 text-[#e5c158]" />
+              <span>VIP Creator Sanctuary 👑</span>
+            </SpecularButton>
+          )}
+
+          {onOpenSecretModal && (
             <SpecularButton
               size="md"
               radius={20}
@@ -630,8 +646,8 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
               <Lock className="w-4 h-4 text-[#e5c158]" />
               <span>Unlock Secret Epilogue ✦</span>
             </SpecularButton>
-          </div>
-        )}
+          )}
+        </div>
       </section>
 
       {/* FULL SCREEN PHOTO MODAL */}
