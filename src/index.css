@@ -206,3 +206,19 @@ html {
     filter: none !important;
   }
 }
+
+/* ─── Global fade-in keyframe (used across dedication lines, ending text) ─── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1.2s ease-out both;
+}

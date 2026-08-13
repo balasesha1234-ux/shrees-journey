@@ -33,12 +33,13 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
     tag: 'AUGUST 2023 • WARM SUNRISE',
     badge: 'Started August 2023',
     headline: 'The Quiet Inception of a Grand Dream',
-    quote: '“Small, quiet beginnings lay the groundwork for legendary journeys.”',
+    quote: '"Small, quiet beginnings lay the groundwork for legendary journeys."',
     bullets: [
-      'Started creating content with pure intention and unwavering faith.',
-      'Embracing the journey of continuous learning and daily consistency.',
-      'Nurturing early dreams that would soon inspire millions.',
+      'Chose to show up every single day, even when nobody was watching.',
+      'Built something pure — not for numbers, but because it needed to exist.',
+      'The first 500K weren\'t followers. They were the first people who believed.',
     ],
+    milestones: ['August 2023 Debut', 'First 500K Hearts', 'Daily Consistency'],
     bgImage: ASSET_PATHS.backgrounds.y2023,
     driftItems: [
       { image: ASSET_PATHS.timeline.y2023.heroImage, title: '2023 Inception' },
@@ -63,11 +64,11 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
     tag: '2024 • GOLDEN DAYLIGHT',
     badge: 'Massive Breakthrough',
     headline: 'Surging Momentum & Rapid Growth',
-    quote: '“When authenticity meets passion, momentum becomes unstoppable.”',
+    quote: '"When authenticity meets passion, momentum becomes unstoppable."',
     bullets: [
-      'A massive breakthrough that united hundreds of thousands worldwide.',
-      'Connecting deeply with an expanding, vibrant community.',
-      'Turning everyday effort into unforgettable shared milestones.',
+      'A million hearts found each other through one shared story.',
+      'The community didn\'t grow — it bloomed, organically and beautifully.',
+      'Turning everyday effort into milestones that moved an entire generation.',
     ],
     milestones: ['500K Milestone', '1 Million Family', '2 Million Breakthrough'],
     bgImage: ASSET_PATHS.backgrounds.y2024,
@@ -92,12 +93,13 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
     tag: '2025 • GOLDEN-ORANGE SUNSET',
     badge: 'Deepened Impact',
     headline: 'Growth Continued Across Boundaries',
-    quote: '“True impact is measured not just in numbers, but in lives transformed.”',
+    quote: '"True impact is measured not just in numbers, but in lives transformed."',
     bullets: [
-      'Growth continued gracefully as the message reached a larger global audience.',
-      'Creating deeper impact and weaving timeless memories with the community.',
-      'Solidifying a foundation of purpose, creativity, and mutual trust.',
+      'The message crossed borders — different languages, one shared feeling.',
+      'Millions didn\'t just watch. They carried something home with them.',
+      'A foundation of purpose, creativity and trust that no algorithm can erase.',
     ],
+    milestones: ['4M Global Family', 'Cross-Border Reach', 'Purpose Solidified'],
     bgImage: ASSET_PATHS.backgrounds.y2025,
     driftItems: [
       { image: ASSET_PATHS.timeline.y2025.heroImage, title: 'Global Reach' },
@@ -121,11 +123,11 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
     tag: '2026 • DEEP BLUE TWILIGHT',
     badge: '5 Million Reached',
     headline: 'The Dream Became Reality',
-    quote: '“Where a dream transcended into a global family.”',
+    quote: '"Where a dream transcended into a global family."',
     bullets: [
-      'Reached the monumental summit of 5 Million strong.',
-      'Celebrating the journey, the hardships overcome, and the joy ahead.',
-      'Where followers became family, and the story continues forever.',
+      'Five million people didn\'t just find a creator. They found a reason to keep going.',
+      'The summit wasn\'t the end — it was the beginning of everything that comes next.',
+      'Where followers became family, and a quiet August promise became eternal.',
     ],
     milestones: ['5 Million Summit', 'Global Family', 'Eternal Story'],
     bgImage: ASSET_PATHS.backgrounds.y2026,
@@ -227,13 +229,18 @@ export const TimelineScene: React.FC = () => {
         
         {MAGAZINE_SPREADS.map((spread, spreadIdx) => {
           const isEven = spreadIdx % 2 === 0;
+          const BRIDGE_PHRASES: Record<string, string> = {
+            '2023': 'And then… everything changed.',
+            '2024': 'The world was watching now. And she kept going.',
+            '2025': 'Numbers became names. Names became family.',
+          };
 
           return (
-            <article
-              key={spread.year}
-              id={`year-section-${spread.year}`}
-              className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-16 sm:my-24 scroll-mt-24"
-            >
+            <React.Fragment key={spread.year}>
+              <article
+                id={`year-section-${spread.year}`}
+                className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-16 sm:my-24 scroll-mt-24"
+              >
               {/* GRADUAL BLUR CINEMATIC FOCUS REVEAL */}
               <GradualBlur
                 height="5rem"
@@ -466,10 +473,29 @@ export const TimelineScene: React.FC = () => {
                   </div>
                 </MagicBento>
               </GradualBlur>
-            </article>
+              </article>
+
+              {/* CHAPTER BRIDGE — cinematic breath between years */}
+              {spreadIdx < MAGAZINE_SPREADS.length - 1 && BRIDGE_PHRASES[spread.year] && (
+                <div className="relative flex flex-col items-center justify-center py-8 sm:py-12 gap-5 animate-reveal">
+                  {/* Top hairline */}
+                  <div className="w-full max-w-xs h-px bg-gradient-to-r from-transparent via-[#e5c158]/40 to-transparent" />
+
+                  {/* Bridge content */}
+                  <div className="flex flex-col items-center gap-2 px-6 text-center">
+                    <span className="text-[#e5c158]/50 text-lg select-none">✦</span>
+                    <p className="font-serif italic text-base sm:text-xl text-[#f0f0f5]/55 tracking-wide leading-relaxed max-w-sm">
+                      {BRIDGE_PHRASES[spread.year]}
+                    </p>
+                  </div>
+
+                  {/* Bottom hairline */}
+                  <div className="w-full max-w-xs h-px bg-gradient-to-r from-transparent via-[#e5c158]/40 to-transparent" />
+                </div>
+              )}
+            </React.Fragment>
           );
         })}
-
       </div>
 
       {/* DRIFTWALL PHOTO POPUP LIGHTBOX MODAL */}

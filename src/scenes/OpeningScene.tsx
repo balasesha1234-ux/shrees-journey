@@ -50,10 +50,10 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
 
       {/* Title Text Mask & Opening Sequence Content */}
       <div className="relative z-10 flex flex-col items-center gap-6 max-w-4xl p-8">
-        <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/80 px-4 py-1.5 rounded-full border border-[#e5c158]/30 backdrop-blur-md">
+        <div className="flex items-center gap-2 text-[#e5c158] bg-[#0c0d12]/80 px-4 py-1.5 rounded-full border border-[#e5c158]/30 backdrop-blur-md animate-fade-in">
           <Sparkles className="w-4 h-4 animate-spin-slow" />
           <span className="font-general text-xs font-bold uppercase tracking-[0.3em]">
-            A Tribute Experience
+            A Love Letter in Code ✦
           </span>
         </div>
 
@@ -76,12 +76,20 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
         />
 
         <BlurText
-          text="“Some journeys are not measured by time... but by the hearts they touch.”"
+          text="“Some journeys are not measured by time… but by the hearts they touch.”"
           delay={90}
           animateBy="words"
           direction="bottom"
           className="font-general italic text-base sm:text-2xl text-[#f0f0f5]/90 max-w-2xl leading-relaxed mt-2 drop-shadow-lg justify-center text-center"
         />
+
+        {/* Dedication line — emotional hook that arrives last, softly */}
+        <p
+          className="font-general text-[11px] sm:text-sm text-[#f0f0f5]/50 italic max-w-md leading-relaxed tracking-wide"
+          style={{ animation: 'fadeIn 1.6s ease-out 2.6s both' }}
+        >
+          Built with love, for someone who changed thousands of lives — including mine.
+        </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-6 mt-4">
           <SpecularButton
@@ -101,7 +109,7 @@ export const OpeningScene: React.FC<OpeningSceneProps> = ({
 
           {/* ELASTIC SLIDER SOUND CONTROL */}
           <ElasticSlider
-            defaultValue={75}
+            defaultValue={40}
             onVolumeChange={() => {
               if (onUserInteractAudio) onUserInteractAudio();
             }}

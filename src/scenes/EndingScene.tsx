@@ -168,8 +168,8 @@ export const EndingScene: React.FC<EndingSceneProps> = ({ onReplayJourney }) => 
       </div>
 
       {/* Heart Icon Accent */}
-      <div className="relative z-10 mb-6 opacity-80 animate-pulse">
-        <Heart className="w-8 h-8 text-[#e5c158] fill-[#e5c158]/30 drop-shadow-[0_0_15px_rgba(229,193,88,0.6)]" />
+      <div className="relative z-10 mb-6 flex flex-col items-center gap-3">
+        <Heart className="w-16 h-16 text-[#e5c158] fill-[#e5c158]/20 drop-shadow-[0_0_30px_rgba(229,193,88,0.7)] animate-pulse" />
       </div>
 
       {/* Thank You Message */}
@@ -177,17 +177,25 @@ export const EndingScene: React.FC<EndingSceneProps> = ({ onReplayJourney }) => 
         <h2 className="font-cinzel text-4xl sm:text-6xl md:text-7xl font-black text-[#f0f0f5] leading-tight tracking-tight drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
           Thank you for experiencing <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-[#ffffff] to-[#e5c158]">
-            Shree's Journey.
+            Shree’s Journey.
           </span>
         </h2>
-        
+
         <p className="font-cormorant italic text-lg sm:text-2xl text-[#f0f0f5]/70 max-w-xl mt-2">
           Every story shared is a light that continues to shine across time.
+        </p>
+
+        {/* Specific Shree line — emotionally precise */}
+        <p
+          className="font-general italic text-sm sm:text-base text-[#e5c158]/80 max-w-lg mt-3 leading-relaxed"
+          style={{ animation: 'fadeIn 1.8s ease-out 1.0s both' }}
+        >
+          Five million people didn’t just find a creator. They found a reason to keep going.
         </p>
       </div>
 
       {/* Replay Button */}
-      <div className="relative z-10 mt-12">
+      <div className="relative z-10 mt-12 flex flex-col items-center gap-6">
         <button
           ref={buttonRef}
           onClick={onReplayJourney}
@@ -199,6 +207,15 @@ export const EndingScene: React.FC<EndingSceneProps> = ({ onReplayJourney }) => 
             Replay Journey
           </span>
         </button>
+
+        {/* Closing narrative callback — loops the story back to its origin */}
+        <p
+          className="font-general text-[10px] sm:text-xs italic text-[#f0f0f5]/40 max-w-sm text-center leading-relaxed tracking-wide"
+          style={{ animation: 'fadeIn 2.2s ease-out 1.8s both' }}
+        >
+          This journey began with 0 followers and one quiet promise.<br />
+          Today it stands at 5 million hearts — and counting.
+        </p>
       </div>
     </section>
   );

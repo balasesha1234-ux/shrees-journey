@@ -52,11 +52,11 @@ export const SkyScene: React.FC<SkySceneProps> = ({ onScrollToNext }) => {
           </div>
 
           <p className="font-general italic text-base sm:text-xl text-[#e5c158] leading-relaxed drop-shadow-md">
-            “Some journeys are not measured by time... but by the hearts they touch.”
+            "What follows is three years of quiet mornings, late nights, and the kind of love that multiplies when shared."
           </p>
 
           <span className="font-general text-[11px] font-bold uppercase tracking-widest text-[#f0f0f5]/70 mt-1">
-            Scroll to expand • Timeline unlocks at 100%
+            Let it open.
           </span>
         </div>
       </ScrollExpand>

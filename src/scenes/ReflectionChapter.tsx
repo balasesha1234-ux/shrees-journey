@@ -309,14 +309,20 @@ export const ReflectionChapter: React.FC = () => {
           </span>
         </div>
 
-        <h2 className="font-general text-4xl sm:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight drop-shadow-[0_0_60px_rgba(229,193,88,0.45)] leading-tight">
-          Reflection Chapter
-        </h2>
+        {/* Two-line poetic heading */}
+        <div className="flex flex-col items-center gap-2">
+          <span className="font-general text-[11px] sm:text-xs font-bold uppercase tracking-[0.45em] text-[#e5c158]/70">
+            A Garden of Gratitude
+          </span>
+          <h2 className="font-general text-4xl sm:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#e5c158] via-white to-[#e5c158] tracking-tight drop-shadow-[0_0_60px_rgba(229,193,88,0.45)] leading-tight">
+            Every Light Matters
+          </h2>
+        </div>
 
         {/* ELEGANT SPACED REFLECTION ESSAY QUOTE */}
         <div className="my-4 sm:my-6 p-6 sm:p-10 rounded-3xl bg-[#0c0d12]/80 border border-[#e5c158]/35 backdrop-blur-2xl shadow-2xl max-w-3xl">
           <p className="font-serif italic text-base sm:text-2xl text-[#f0f0f5]/90 leading-relaxed sm:leading-loose tracking-wide">
-            “Every petal falling inside this garden holds a real memory planted by someone whose life was touched by Shree.”
+            “Every light here was left by someone whose life she touched. You are not just a viewer. You are part of this story.”
           </p>
         </div>
 
@@ -454,6 +460,9 @@ export const ReflectionChapter: React.FC = () => {
               {activeUnfoldedPetal.country && (
                 <span className="text-[11px] text-[#f0f0f5]/50">{activeUnfoldedPetal.country}</span>
               )}
+              <span className="text-[10px] text-[#f0f0f5]/30 normal-case tracking-normal font-normal mt-1">
+                Left on this garden — August 2026
+              </span>
             </div>
 
             <SpecularButton
