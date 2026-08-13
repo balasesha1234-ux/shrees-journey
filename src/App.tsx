@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLenis } from './hooks/useLenis';
 import { useAudio } from './hooks/useAudio';
 import { useIsMobile } from './hooks/useIsMobile';
@@ -24,6 +24,7 @@ import ShreeCreatorPortalModal from './components/ShreeCreatorPortalModal';
 import SpecularButton from './components/SpecularButton';
 import { Share2, Crown } from 'lucide-react';
 import { useSupabasePetals } from './hooks/useSupabasePetals';
+import SplashScreen from './components/SplashScreen';
 
 export const App: React.FC = () => {
   // Smooth scroll instance
@@ -35,9 +36,48 @@ export const App: React.FC = () => {
   const { petals } = useSupabasePetals();
 
   const [viewMode, setViewMode] = useState<'auto' | 'mobile' | 'desktop'>('auto');
+  const [showSplash, setShowSplash] = useState(true);
   const [isSecretModalOpen, setIsSecretModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isVipPortalOpen, setIsVipPortalOpen] = useState(false);
+
+  // Volume cross-fade: swells from 25% → 55% when 2026 chapter enters viewport
+  useEffect(() => {
+    const el = document.getElementById('year-section-2026');
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        const audio = document.querySelector('audio') as HTMLAudioElement | null;
+        if (!audio) return;
+        if (entry.isIntersecting) {
+          // Smoothly swell to 55% over 3s
+          const start = audio.volume;
+          const end = 0.55;
+          const steps = 60;
+          let i = 0;
+          const interval = setInterval(() => {
+            i++;
+            audio.volume = Math.min(start + (end - start) * (i / steps), 1);
+            if (i >= steps) clearInterval(interval);
+          }, 3000 / steps);
+        } else {
+          // Fade back down to 30%
+          const start = audio.volume;
+          const end = 0.3;
+          const steps = 60;
+          let i = 0;
+          const interval = setInterval(() => {
+            i++;
+            audio.volume = Math.max(start + (end - start) * (i / steps), 0);
+            if (i >= steps) clearInterval(interval);
+          }, 2000 / steps);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [showSplash]);
 
   const isMobile = viewMode === 'auto' ? autoMobile : viewMode === 'mobile';
 
@@ -51,6 +91,7 @@ export const App: React.FC = () => {
   if (isMobile) {
     return (
       <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white">
+        {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
         <FilmGrain />
         <ParticleField count={20} />
         
@@ -92,6 +133,7 @@ export const App: React.FC = () => {
 
   return (
     <main className="relative min-h-screen bg-[#0B0B0F] text-[#f0f0f5] overflow-x-hidden font-general selection:bg-[#e5c158]/30 selection:text-white flex flex-col justify-between">
+      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
       {/* Luxury Magnetic Custom Cursor */}
       <CustomCursor />
 

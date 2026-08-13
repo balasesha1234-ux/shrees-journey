@@ -23,6 +23,7 @@ interface YearSpreadData {
   quote: string;
   bullets: string[];
   milestones?: string[];
+  youWereThere?: boolean;
   bgImage: string;
   driftItems: DriftWallItem[];
 }
@@ -130,6 +131,7 @@ const MAGAZINE_SPREADS: YearSpreadData[] = [
       'Where followers became family, and a quiet August promise became eternal.',
     ],
     milestones: ['5 Million Summit', 'Global Family', 'Eternal Story'],
+    youWereThere: true,
     bgImage: ASSET_PATHS.backgrounds.y2026,
     driftItems: [
       { image: ASSET_PATHS.timeline.y2026.heroImage, title: '5 Million Summit' },
@@ -347,6 +349,21 @@ export const TimelineScene: React.FC = () => {
                               <span>{ms}</span>
                             </div>
                           ))}
+                        </div>
+                      )}
+
+                      {/* YOU WERE THERE — direct address moment, only in 2026 */}
+                      {spread.youWereThere && (
+                        <div
+                          className="animate-reveal mt-3 w-full px-5 py-4 rounded-2xl border border-[#e5c158]/25 bg-[#e5c158]/5 backdrop-blur-sm"
+                          style={{ animation: 'fadeIn 1.4s ease-out 0.6s both' }}
+                        >
+                          <p className="font-serif italic text-sm sm:text-base text-[#f0f0f5]/85 leading-relaxed">
+                            If you're reading this, you're one of the 5 million.
+                            <span className="block mt-1.5 text-[#e5c158] not-italic font-general text-xs font-bold uppercase tracking-[0.25em]">
+                              This chapter belongs to you too. ✦
+                            </span>
+                          </p>
                         </div>
                       )}
 
