@@ -58,77 +58,156 @@ export const ShareTributeModal: React.FC<ShareTributeModalProps> = ({ isOpen, on
       canvas.width = 1080;
       canvas.height = 1920;
       const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+      if (!ctx) {
+        setDownloading(false);
+        return;
+      }
 
-      // Dark background
+      // 1. Draw luxury dark background & gradient
       ctx.fillStyle = '#0B0B0F';
       ctx.fillRect(0, 0, 1080, 1920);
 
-      // Draw photo asset
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src = ASSET_PATHS.timeline.y2026.heroImage;
-
-      img.onload = () => {
-        // Draw photo with cover crop in top 60%
-        ctx.drawImage(img, 0, 0, 1080, 1300);
+      // Function to render text, borders, and trigger download/share
+      const renderCardAndExport = async (imgElement?: HTMLImageElement) => {
+        if (imgElement) {
+          try {
+            ctx.drawImage(imgElement, 0, 0, 1080, 1250);
+          } catch {
+            console.warn('Canvas drawImage error, using fallback background');
+          }
+        }
 
         // Dark gradient overlay
-        const grad = ctx.createLinearGradient(0, 800, 0, 1920);
+        const grad = ctx.createLinearGradient(0, 600, 0, 1920);
         grad.addColorStop(0, 'rgba(11, 11, 15, 0)');
-        grad.addColorStop(0.3, 'rgba(11, 11, 15, 0.85)');
+        grad.addColorStop(0.35, 'rgba(11, 11, 15, 0.88)');
         grad.addColorStop(1, 'rgba(11, 11, 15, 1)');
         ctx.fillStyle = grad;
-        ctx.fillRect(0, 800, 1080, 1120);
+        ctx.fillRect(0, 600, 1080, 1320);
 
         // Gold border
         ctx.strokeStyle = '#e5c158';
-        ctx.lineWidth = 12;
-        ctx.strokeRect(30, 30, 1020, 1860);
+        ctx.lineWidth = 14;
+        ctx.strokeRect(36, 36, 1008, 1848);
 
-        // Header badge
+        // Inner subtle border
+        ctx.strokeStyle = 'rgba(229, 193, 88, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(48, 48, 984, 1824);
+
+        // Header badge pill
         ctx.fillStyle = 'rgba(229, 193, 88, 0.2)';
-        ctx.strokeStyle = 'rgba(229, 193, 88, 0.6)';
+        ctx.strokeStyle = 'rgba(229, 193, 88, 0.7)';
         ctx.lineWidth = 4;
         ctx.beginPath();
-        ctx.roundRect(290, 1260, 500, 70, 35);
+        ctx.roundRect(290, 1220, 500, 75, 37.5);
         ctx.fill();
         ctx.stroke();
 
-        ctx.font = 'bold 28px "Cinzel", sans-serif';
+        ctx.font = 'bold 30px "Cinzel", "Playfair Display", serif';
         ctx.fillStyle = '#e5c158';
         ctx.textAlign = 'center';
-        ctx.fillText('5 MILLION MILESTONE 🌸', 540, 1305);
+        ctx.fillText('5 MILLION MILESTONE 🌸', 540, 1268);
 
         // Title
-        ctx.font = '900 68px "General Sans", sans-serif';
+        ctx.font = '900 68px "General Sans", "Plus Jakarta Sans", sans-serif';
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText("EXPERIENCE SHREE'S JOURNEY", 540, 1440);
+        ctx.fillText("EXPERIENCE SHREE'S JOURNEY", 540, 1400);
 
         // Quote
-        ctx.font = 'italic 34px "General Sans", serif';
-        ctx.fillStyle = 'rgba(240, 240, 245, 0.85)';
-        ctx.fillText('“Some journeys are not measured by time...', 540, 1520);
-        ctx.fillText('but by the hearts they touch.”', 540, 1570);
+        ctx.font = 'italic 36px "Playfair Display", serif';
+        ctx.fillStyle = 'rgba(240, 240, 245, 0.9)';
+        ctx.fillText('“Some journeys are not measured by time...', 540, 1490);
+        ctx.fillText('but by the hearts they touch.”', 540, 1545);
 
-        // Call to action url badge
-        const displayHost = typeof window !== 'undefined' ? window.location.host : 'shreesjourney.com';
-        ctx.font = 'bold 30px "General Sans", sans-serif';
+        // Subtitle dedication
+        ctx.font = '500 28px "General Sans", sans-serif';
+        ctx.fillStyle = 'rgba(229, 193, 88, 0.85)';
+        ctx.fillText('A 5 Million Retrospective • 2023 — 2026', 540, 1630);
+
+        // URL display
+        const displayHost = typeof window !== 'undefined' && window.location.host ? window.location.host : 'shreesjourney.com';
+        ctx.font = 'bold 32px "General Sans", monospace';
         ctx.fillStyle = '#e5c158';
-        ctx.fillText(displayHost, 540, 1720);
+        ctx.fillText(displayHost, 540, 1740);
 
-        // Download trigger
-        const link = document.createElement('a');
-        link.download = 'shrees-journey-story-card.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        setDownloading(false);
+        // Convert canvas to Blob for universal iOS/Android compatibility
+        canvas.toBlob(async (blob) => {
+          if (!blob) {
+            setDownloading(false);
+            return;
+          }
+
+          const file = new File([blob], 'shrees-journey-story-card.png', { type: 'image/png' });
+
+          // If mobile native file sharing is supported (iOS Safari / Android Chrome)
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                files: [file],
+                title: "Shree's Journey Story Card",
+                text: "Celebrating 5 Million on Shree's Journey 🌸",
+              });
+              setDownloading(false);
+              return;
+            } catch (err: unknown) {
+              if (err instanceof Error && err.name === 'AbortError') {
+                setDownloading(false);
+                return;
+              }
+            }
+          }
+
+          // Fallback: Create Object URL and trigger download link
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'shrees-journey-story-card.png';
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          setTimeout(() => {
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            setDownloading(false);
+          }, 1000);
+        }, 'image/png');
       };
 
+      // Load hero photo with timeout safety
+      const img = new Image();
+      let hasRendered = false;
+
+      const triggerRender = () => {
+        if (!hasRendered) {
+          hasRendered = true;
+          renderCardAndExport(img);
+        }
+      };
+
+      img.onload = triggerRender;
       img.onerror = () => {
-        setDownloading(false);
+        console.warn('Hero image failed to load for story card, rendering fallback graphic');
+        if (!hasRendered) {
+          hasRendered = true;
+          renderCardAndExport(undefined);
+        }
       };
-    } catch {
+
+      // 2.5s safety timeout so it never hangs
+      setTimeout(() => {
+        if (!hasRendered) {
+          hasRendered = true;
+          renderCardAndExport(undefined);
+        }
+      }, 2500);
+
+      img.src = ASSET_PATHS.timeline.y2026.heroImage;
+      if (img.complete) {
+        triggerRender();
+      }
+    } catch (err) {
+      console.error('Error generating story card:', err);
       setDownloading(false);
     }
   };
