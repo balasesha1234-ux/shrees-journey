@@ -3,6 +3,14 @@ import { X, Share2, Copy, Check, Sparkles, Send, Download, Camera } from 'lucide
 import SpecularButton from './SpecularButton';
 import { ASSET_PATHS } from '../utils/assetPaths';
 
+const InstagramIcon: React.FC<{ className?: string }> = ({ className = 'w-3.5 h-3.5' }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
+
 interface ShareTributeModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -47,6 +55,25 @@ export const ShareTributeModal: React.FC<ShareTributeModalProps> = ({ isOpen, on
 
   const handleTwitterShare = () => {
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+  };
+
+  // Direct Instagram Story Deep-Link & Share
+  const handleInstagramShare = () => {
+    handleCopy();
+    handleDownloadStoryCard();
+
+    // Deep link to Instagram Story Camera on mobile devices
+    setTimeout(() => {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = 'instagram-stories://share';
+        setTimeout(() => {
+          window.open('https://www.instagram.com/', '_blank');
+        }, 1200);
+      } else {
+        window.open('https://www.instagram.com/', '_blank');
+      }
+    }, 500);
   };
 
   // Download 9:16 Instagram Story Card Graphic
@@ -321,8 +348,17 @@ export const ShareTributeModal: React.FC<ShareTributeModalProps> = ({ isOpen, on
           </button>
         </div>
 
-        {/* Quick Social Buttons */}
-        <div className="w-full grid grid-cols-3 gap-2">
+        {/* Quick Social Buttons: Instagram, WhatsApp, X, and Native Share */}
+        <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <SpecularButton
+            onClick={handleInstagramShare}
+            size="sm"
+            className="w-full justify-center text-[10px] bg-gradient-to-r from-[#833ab4]/10 via-[#fd1d1d]/10 to-[#fcb045]/10 border-[#fd1d1d]/40 hover:border-[#fd1d1d]"
+          >
+            <InstagramIcon className="w-3.5 h-3.5 text-[#fd1d1d]" />
+            <span>Insta Story</span>
+          </SpecularButton>
+
           <SpecularButton
             onClick={handleWhatsAppShare}
             size="sm"
