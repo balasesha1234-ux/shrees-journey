@@ -656,12 +656,19 @@ export const MobileExperience: React.FC<MobileExperienceProps> = ({
           onClick={() => setActiveMoment(null)}
           className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl p-6 flex flex-col items-center justify-center text-center gap-4 cursor-pointer"
         >
-          <div className="w-full max-w-sm h-80 rounded-2xl overflow-hidden border border-[#e5c158]/50 shadow-2xl">
-            <img src={activeMoment.img} alt={activeMoment.title} className="w-full h-full object-cover" />
+          <div className="w-full max-w-sm max-h-[60vh] rounded-2xl overflow-hidden border border-[#e5c158]/50 bg-[#050507] shadow-2xl flex items-center justify-center p-1">
+            <img
+              src={activeMoment.img}
+              alt={activeMoment.title}
+              className="max-w-full max-h-[56vh] object-contain rounded-xl"
+            />
           </div>
           <h3 className="text-xl font-bold text-[#e5c158]">{activeMoment.title}</h3>
           <span className="text-xs text-[#f0f0f5]/60">{activeMoment.year} Memory</span>
-          <button className="px-6 py-2 rounded-full bg-white/10 text-xs font-bold uppercase tracking-widest text-[#f0f0f5] mt-2">
+          <button
+            onClick={() => setActiveMoment(null)}
+            className="px-6 py-2 rounded-full bg-white/10 text-xs font-bold uppercase tracking-widest text-[#f0f0f5] mt-2 border border-white/20 active:scale-95 transition-transform"
+          >
             Close
           </button>
         </div>

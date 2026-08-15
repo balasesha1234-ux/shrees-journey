@@ -129,6 +129,11 @@ export const EndingScene: React.FC<EndingSceneProps> = ({ onReplayJourney }) => 
     >
       {/* Background Visual Layer */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+        <img
+          src={ASSET_PATHS.ending.treeImage}
+          alt="Ending Tree"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-0' : 'opacity-100'}`}
+        />
         <video
           ref={videoRef}
           src={ASSET_PATHS.ending.treeVideo}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { preloadCriticalAssets } from '../utils/imagePreloader';
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -9,6 +10,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    // Warm up critical image assets in parallel
+    preloadCriticalAssets().catch(() => {});
+
     // Smooth progress bar fill
     const interval = setInterval(() => {
       setProgress((prev) => {

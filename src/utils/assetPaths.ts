@@ -131,116 +131,134 @@ export const ASSET_PATHS = {
   },
 } as const;
 
+export interface AssetFraming {
+  objectPosition: string;
+  scale?: number;
+  objectFit?: 'cover' | 'contain';
+  focalPoint?: FocalPoint;
+  aspectRatio?: string;
+}
+
 /**
  * Central Focal Point Registry for Assets.
  * Maps exact image paths to custom focal positions (X% Y%).
+ * Tuned specifically for 9:16 portrait and landscape compositions.
  */
 export const ASSET_FOCAL_POINTS: Record<string, FocalPoint> = {
-  // Timeline 2026
-  '/assets/timeline/2026/hero.jpg': { x: 50, y: 22 },
-  '/assets/timeline/2026/gallery-1.jpg': { x: 50, y: 20 },
-  '/assets/timeline/2026/gallery-2.jpg': { x: 50, y: 18 },
-  '/assets/timeline/2026/gallery-3.jpg': { x: 50, y: 25 },
-  '/assets/timeline/2026/gallery-4.jpg': { x: 45, y: 22 },
-  '/assets/timeline/2026/gallery-5.jpg': { x: 50, y: 20 },
-  '/assets/timeline/2026/gallery-6.jpg': { x: 50, y: 22 },
+  // Timeline 2026 (5 Million Era - Summit)
+  '/assets/timeline/2026/hero.jpg': { x: 50, y: 16 },
+  '/assets/timeline/2026/gallery-1.jpg': { x: 50, y: 18 },
+  '/assets/timeline/2026/gallery-2.jpg': { x: 50, y: 16 },
+  '/assets/timeline/2026/gallery-3.jpg': { x: 50, y: 22 },
+  '/assets/timeline/2026/gallery-4.jpg': { x: 50, y: 20 },
+  '/assets/timeline/2026/gallery-5.jpg': { x: 50, y: 18 },
+  '/assets/timeline/2026/gallery-6.jpg': { x: 50, y: 20 },
   '/assets/timeline/2026/landscape.jpg': { x: 50, y: 50 },
 
-  // Timeline 2025
-  '/assets/timeline/2025/hero.jpg': { x: 50, y: 20 },
-  '/assets/timeline/2025/gallery-1.jpg': { x: 50, y: 22 },
-  '/assets/timeline/2025/gallery-2.jpg': { x: 50, y: 25 },
-  '/assets/timeline/2025/gallery-3.jpg': { x: 50, y: 20 },
-  '/assets/timeline/2025/gallery-4.jpg': { x: 50, y: 22 },
-  '/assets/timeline/2025/gallery-5.jpg': { x: 40, y: 30 },
+  // Timeline 2025 (Global Impact Era)
+  '/assets/timeline/2025/hero.jpg': { x: 50, y: 18 },
+  '/assets/timeline/2025/gallery-1.jpg': { x: 50, y: 20 },
+  '/assets/timeline/2025/gallery-2.jpg': { x: 50, y: 22 },
+  '/assets/timeline/2025/gallery-3.jpg': { x: 50, y: 18 },
+  '/assets/timeline/2025/gallery-4.jpg': { x: 50, y: 20 },
+  '/assets/timeline/2025/gallery-5.jpg': { x: 45, y: 22 },
   '/assets/timeline/2025/landscape.jpg': { x: 50, y: 50 },
 
-  // Timeline 2024
-  '/assets/timeline/2024/hero.jpg': { x: 50, y: 22 },
-  '/assets/timeline/2024/gallery-1.jpg': { x: 50, y: 20 },
-  '/assets/timeline/2024/gallery-2.jpg': { x: 50, y: 25 },
+  // Timeline 2024 (1M Breakthrough Era)
+  '/assets/timeline/2024/hero.jpg': { x: 50, y: 18 },
+  '/assets/timeline/2024/gallery-1.jpg': { x: 50, y: 18 },
+  '/assets/timeline/2024/gallery-2.jpg': { x: 50, y: 22 },
   '/assets/timeline/2024/landscape.jpg': { x: 50, y: 50 },
 
-  // Timeline 2023
-  '/assets/timeline/2023/hero.jpg': { x: 50, y: 20 },
-  '/assets/timeline/2023/gallery-1.jpg': { x: 50, y: 22 },
-  '/assets/timeline/2023/gallery-2.jpg': { x: 50, y: 25 },
+  // Timeline 2023 (Inception Era)
+  '/assets/timeline/2023/hero.jpg': { x: 50, y: 16 },
+  '/assets/timeline/2023/gallery-1.jpg': { x: 50, y: 18 },
+  '/assets/timeline/2023/gallery-2.jpg': { x: 50, y: 20 },
   '/assets/timeline/2023/landscape.jpg': { x: 50, y: 50 },
 
   // Cinematic Moments
-  '/assets/moments/moment1.jpg': { x: 50, y: 22 },
-  '/assets/moments/moment2.jpg': { x: 50, y: 20 },
-  '/assets/moments/moment3.jpg': { x: 50, y: 25 },
-  '/assets/moments/moment4.jpg': { x: 50, y: 22 },
-  '/assets/moments/moment5.jpg': { x: 50, y: 20 },
-  '/assets/moments/moment6.jpg': { x: 50, y: 24 },
+  '/assets/moments/moment1.jpg': { x: 50, y: 18 },
+  '/assets/moments/moment2.jpg': { x: 50, y: 16 },
+  '/assets/moments/moment3.jpg': { x: 50, y: 22 },
+  '/assets/moments/moment4.jpg': { x: 50, y: 18 },
+  '/assets/moments/moment5.jpg': { x: 50, y: 16 },
+  '/assets/moments/moment6.jpg': { x: 50, y: 20 },
 
   // Guide & Ending
-  '/assets/guide/guide.png': { x: 50, y: 30 },
+  '/assets/guide/guide.png': { x: 50, y: 25 },
   '/assets/ending/tree.jpg': { x: 50, y: 50 },
 
-  // Grid Motion & Serial Images (/assets/serial/ & root)
-  '/assets/serial/1s.jpg': { x: 50, y: 20 },
-  '/assets/serial/2s.jpg': { x: 50, y: 22 },
-  '/assets/serial/3s.jpg': { x: 50, y: 18 },
-  '/assets/serial/4s.jpg': { x: 50, y: 25 },
-  '/assets/serial/5s.jpg': { x: 50, y: 20 },
-  '/assets/serial/6s.jpg': { x: 50, y: 22 },
-  '/assets/serial/7s.jpg': { x: 50, y: 20 },
-  '/assets/serial/8s.jpg': { x: 50, y: 25 },
-  '/assets/serial/9s.jpg': { x: 50, y: 20 },
-  '/assets/serial/10s.jpg': { x: 50, y: 22 },
-  '/assets/serial/11s.jpg': { x: 50, y: 20 },
-  '/assets/serial/12s old.jpg': { x: 50, y: 25 },
-  '/assets/serial/13s old.jpg': { x: 50, y: 20 },
-  '/assets/serial/14s old.jpg': { x: 50, y: 22 },
-  '/assets/serial/15s old.jpg': { x: 50, y: 20 },
-  '/assets/serial/16s old.jpg': { x: 50, y: 25 },
-  '/assets/serial/17s mid.jpg': { x: 50, y: 20 },
-  '/assets/serial/18s mid.jpg': { x: 50, y: 22 },
-  '/assets/serial/19s mid.jpg': { x: 50, y: 20 },
-  '/assets/serial/20s mid.jpg': { x: 50, y: 25 },
-  '/assets/serial/21s.jpg': { x: 50, y: 20 },
-  '/assets/serial/22s.jpg': { x: 50, y: 22 },
-  '/assets/serial/23s.jpg': { x: 50, y: 20 },
-  '/assets/serial/24s.jpg': { x: 50, y: 25 },
-  '/assets/serial/25s.jpg': { x: 50, y: 20 },
-  '/assets/serial/26s.jpg': { x: 50, y: 22 },
-  '/assets/serial/27s.jpg': { x: 50, y: 20 },
-  '/assets/serial/28s.jpg': { x: 50, y: 22 },
-  '/assets/serial/29s.jpg': { x: 50, y: 20 },
-  '/assets/serial/30s.jpg': { x: 50, y: 25 },
-  '/assets/serial/31s.jpg': { x: 50, y: 20 },
-  '/assets/serial/32s.jpg': { x: 50, y: 22 },
-  '/assets/serial/33s.jpg': { x: 50, y: 20 },
+  // Backgrounds
+  '/assets/backgrounds/intro.jpg': { x: 50, y: 20 },
+  '/assets/backgrounds/2023.jpg': { x: 50, y: 22 },
+  '/assets/backgrounds/2024.jpg': { x: 50, y: 22 },
+  '/assets/backgrounds/2025.jpg': { x: 50, y: 20 },
+  '/assets/backgrounds/2026.jpg': { x: 50, y: 18 },
 
-  '/1s.jpg': { x: 50, y: 20 },
-  '/2s.jpg': { x: 50, y: 22 },
-  '/3s.jpg': { x: 50, y: 18 },
-  '/4s.jpg': { x: 50, y: 25 },
-  '/5s.jpg': { x: 50, y: 20 },
-  '/6s.jpg': { x: 50, y: 22 },
-  '/7s.jpg': { x: 50, y: 20 },
-  '/8s.jpg': { x: 50, y: 25 },
-  '/9s.jpg': { x: 50, y: 20 },
-  '/10s.jpg': { x: 50, y: 22 },
-  '/11s.jpg': { x: 50, y: 20 },
-  '/12s old.jpg': { x: 50, y: 25 },
-  '/13s old.jpg': { x: 50, y: 20 },
-  '/14s old.jpg': { x: 50, y: 22 },
-  '/15s old.jpg': { x: 50, y: 20 },
-  '/16s old.jpg': { x: 50, y: 25 },
-  '/17s mid.jpg': { x: 50, y: 20 },
-  '/18s mid.jpg': { x: 50, y: 22 },
-  '/19s mid.jpg': { x: 50, y: 20 },
-  '/20s mid.jpg': { x: 50, y: 25 },
-  '/21s.jpg': { x: 50, y: 20 },
+  // Grid Motion & Serial Images (/assets/serial/)
+  '/assets/serial/1s.jpg': { x: 50, y: 16 },
+  '/assets/serial/2s.jpg': { x: 50, y: 18 },
+  '/assets/serial/3s.jpg': { x: 50, y: 22 },
+  '/assets/serial/4s.jpg': { x: 50, y: 22 },
+  '/assets/serial/5s.jpg': { x: 50, y: 16 },
+  '/assets/serial/6s.jpg': { x: 50, y: 18 },
+  '/assets/serial/7s.jpg': { x: 50, y: 16 },
+  '/assets/serial/8s.jpg': { x: 50, y: 22 },
+  '/assets/serial/9s.jpg': { x: 50, y: 16 },
+  '/assets/serial/10s.jpg': { x: 50, y: 18 },
+  '/assets/serial/11s.jpg': { x: 50, y: 16 },
+  '/assets/serial/12s old.jpg': { x: 50, y: 20 },
+  '/assets/serial/13s old.jpg': { x: 50, y: 18 },
+  '/assets/serial/14s old.jpg': { x: 50, y: 18 },
+  '/assets/serial/15s old.jpg': { x: 50, y: 22 },
+  '/assets/serial/16 s old.jpg': { x: 50, y: 20 },
+  '/assets/serial/16s old.jpg': { x: 50, y: 20 },
+  '/assets/serial/17s mid.jpg': { x: 50, y: 18 },
+  '/assets/serial/18s mid.jpg': { x: 50, y: 18 },
+  '/assets/serial/19s mid.jpg': { x: 50, y: 18 },
+  '/assets/serial/20s mid.jpg': { x: 50, y: 20 },
+  '/assets/serial/21s.jpg': { x: 50, y: 16 },
+  '/assets/serial/22s.jpg': { x: 50, y: 22 },
+  '/assets/serial/23s.jpg': { x: 50, y: 16 },
+  '/assets/serial/24s.jpg': { x: 50, y: 20 },
+  '/assets/serial/25s.jpg': { x: 50, y: 18 },
+  '/assets/serial/26s.jpg': { x: 50, y: 16 },
+  '/assets/serial/27s.jpg': { x: 50, y: 18 },
+  '/assets/serial/28s.jpg': { x: 50, y: 18 },
+  '/assets/serial/29s.jpg': { x: 50, y: 16 },
+  '/assets/serial/30s.jpg': { x: 50, y: 20 },
+  '/assets/serial/31s.jpg': { x: 50, y: 16 },
+  '/assets/serial/32s.jpg': { x: 50, y: 18 },
+  '/assets/serial/33s.jpg': { x: 50, y: 18 },
+
+  // Root path fallbacks
+  '/1s.jpg': { x: 50, y: 16 },
+  '/2s.jpg': { x: 50, y: 18 },
+  '/3s.jpg': { x: 50, y: 22 },
+  '/4s.jpg': { x: 50, y: 22 },
+  '/5s.jpg': { x: 50, y: 16 },
+  '/6s.jpg': { x: 50, y: 18 },
+  '/7s.jpg': { x: 50, y: 16 },
+  '/8s.jpg': { x: 50, y: 22 },
+  '/9s.jpg': { x: 50, y: 16 },
+  '/10s.jpg': { x: 50, y: 18 },
+  '/11s.jpg': { x: 50, y: 16 },
+  '/12s old.jpg': { x: 50, y: 20 },
+  '/13s old.jpg': { x: 50, y: 18 },
+  '/14s old.jpg': { x: 50, y: 18 },
+  '/15s old.jpg': { x: 50, y: 22 },
+  '/16s old.jpg': { x: 50, y: 20 },
+  '/17s mid.jpg': { x: 50, y: 18 },
+  '/18s mid.jpg': { x: 50, y: 18 },
+  '/19s mid.jpg': { x: 50, y: 18 },
+  '/20s mid.jpg': { x: 50, y: 20 },
+  '/21s.jpg': { x: 50, y: 16 },
   '/22s.jpg': { x: 50, y: 22 },
-  '/23s.jpg': { x: 50, y: 20 },
-  '/24s.jpg': { x: 50, y: 25 },
-  '/25s.jpg': { x: 50, y: 20 },
-  '/26s.jpg': { x: 50, y: 22 },
-  '/27s.jpg': { x: 50, y: 20 },
+  '/23s.jpg': { x: 50, y: 16 },
+  '/24s.jpg': { x: 50, y: 20 },
+  '/25s.jpg': { x: 50, y: 18 },
+  '/26s.jpg': { x: 50, y: 16 },
+  '/27s.jpg': { x: 50, y: 18 },
 };
 
 /**
@@ -251,7 +269,7 @@ export const getAssetFocalPoint = (src?: string | null, customFocalPoint?: Focal
     return customFocalPoint;
   }
   if (!src) {
-    return { x: 50, y: 22 };
+    return { x: 50, y: 18 };
   }
 
   // Exact match lookup
@@ -286,12 +304,12 @@ export const getAssetFocalPoint = (src?: string | null, customFocalPoint?: Focal
   const lower = src.toLowerCase();
 
   // Landscape photos fallback
-  if (lower.includes('landscape') || lower.includes('tree') || lower.includes('background')) {
+  if (lower.includes('landscape') || lower.includes('tree') || lower.includes('horizon')) {
     return { x: 50, y: 50 };
   }
 
-  // Default face-focus fallback for person/portrait photos
-  return { x: 50, y: 22 };
+  // Default face-focus fallback for person/portrait photos (tuned to 18% to preserve head/crown)
+  return { x: 50, y: 18 };
 };
 
 /**
@@ -323,6 +341,8 @@ export const getAssetBackgroundPositionStyle = (
 ): React.CSSProperties => {
   return {
     backgroundPosition: getAssetObjectPosition(src, customFocalPoint),
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
   };
 };
 

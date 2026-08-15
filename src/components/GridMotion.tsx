@@ -51,7 +51,7 @@ export const GridMotion: React.FC<GridMotionProps> = ({
   }, []);
 
   return (
-    <div className="noscroll loading" ref={gridRef}>
+    <div className="noscroll" ref={gridRef}>
       <section
         className="intro"
         style={{

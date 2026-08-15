@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Sparkles, X, ZoomIn } from 'lucide-react';
-import { ASSET_PATHS } from '../utils/assetPaths';
+import { ASSET_PATHS, getAssetObjectPositionStyle } from '../utils/assetPaths';
 import SpecularButton from './SpecularButton';
 
 export interface MemoryMoment {
@@ -236,14 +236,15 @@ export const CinematicMemoryWall: React.FC = () => {
                 ⭐ Main Memory
               </div>
 
-              {/* Uncropped Hero Photo Container */}
+              {/* Smart Framed Hero Photo Container */}
               <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
                 <img
                   src={heroMoment.image}
                   alt={heroMoment.title}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-contain filter contrast-105 group-hover:scale-[1.03] transition-transform duration-400 ease-out"
+                  style={getAssetObjectPositionStyle(heroMoment.image)}
+                  className="w-full h-full object-cover filter contrast-105 group-hover:scale-[1.03] transition-transform duration-400 ease-out"
                 />
                 {/* Smooth Fading Ambient Dark Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-[#0c0d12]/20 to-transparent opacity-50 group-hover:opacity-85 transition-opacity duration-400 ease-out pointer-events-none" />
@@ -308,14 +309,15 @@ export const CinematicMemoryWall: React.FC = () => {
                       filter: isHovered ? 'brightness(112%) contrast(104%)' : 'brightness(92%)',
                     }}
                   >
-                    {/* Uncropped Photo Container */}
+                    {/* Smart Framed Photo Container */}
                     <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#050507] flex items-center justify-center">
                       <img
                         src={moment.image}
                         alt={moment.title}
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-full object-contain filter contrast-105 group-hover:scale-[1.03] transition-transform duration-400 ease-out"
+                        style={getAssetObjectPositionStyle(moment.image)}
+                        className="w-full h-full object-cover filter contrast-105 group-hover:scale-[1.03] transition-transform duration-400 ease-out"
                       />
                       {/* Smooth Fading Ambient Dark Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-[#0c0d12]/20 to-transparent opacity-50 group-hover:opacity-85 transition-opacity duration-400 ease-out pointer-events-none" />
@@ -368,7 +370,8 @@ export const CinematicMemoryWall: React.FC = () => {
                 alt={heroMoment.title}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full object-contain"
+                style={getAssetObjectPositionStyle(heroMoment.image)}
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-transparent to-transparent opacity-80" />
             </div>
@@ -400,7 +403,8 @@ export const CinematicMemoryWall: React.FC = () => {
                     alt={moment.title}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-contain"
+                    style={getAssetObjectPositionStyle(moment.image)}
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d12]/90 via-transparent to-transparent opacity-75" />
                 </div>

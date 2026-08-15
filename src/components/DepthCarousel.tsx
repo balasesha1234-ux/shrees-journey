@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { getAssetObjectPositionStyle } from '../utils/assetPaths';
 import './DepthCarousel.css';
 
 export interface DepthCarouselItem {
@@ -404,7 +405,13 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
             aria-hidden={active !== i}
             onClick={() => onCardClick(i)}
           >
-            <img className="depth-carousel__img" src={item.image} alt={item.alt || ''} draggable={false} />
+            <img
+              className="depth-carousel__img"
+              src={item.image}
+              alt={item.alt || ''}
+              style={getAssetObjectPositionStyle(item.image)}
+              draggable={false}
+            />
             <span
               className="depth-carousel__tint"
               ref={(el) => { overlayRefs.current[i] = el; }}
