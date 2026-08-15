@@ -33,14 +33,16 @@ export function useSupabasePetals() {
       const resWithLoc = await supabase
         .from('petals')
         .select('id, name, country, location, message, created_at')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(100);
 
       if (resWithLoc.error) {
         // Fallback query if location column doesn't exist yet in Supabase schema
         const resFallback = await supabase
           .from('petals')
           .select('id, name, country, message, created_at')
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .limit(100);
 
         data = resFallback.data as PetalRow[] | null;
         dbError = resFallback.error;

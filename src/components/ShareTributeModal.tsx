@@ -134,14 +134,19 @@ export const ShareTributeModal: React.FC<ShareTributeModalProps> = ({ isOpen, on
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-2xl animate-fade-in overflow-y-auto">
-      <div className="relative max-w-lg w-full p-6 sm:p-8 rounded-[36px] bg-[#0c0d12] border-2 border-[#e5c158]/60 shadow-[0_0_90px_rgba(229,193,88,0.35)] flex flex-col items-center text-center gap-6 my-auto">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-2xl animate-fade-in overflow-y-auto cursor-pointer"
+    >
+      <div className="relative max-w-lg w-full p-6 sm:p-8 rounded-[36px] bg-[#0c0d12] border-2 border-[#e5c158]/60 shadow-[0_0_90px_rgba(229,193,88,0.35)] flex flex-col items-center text-center gap-6 my-auto cursor-default">
         
-        {/* Prominent Close Button */}
+        {/* Prominent Exit Close Button */}
         <button
           onClick={onClose}
           aria-label="Close Share Modal"
-          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2.5 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/60 text-[#e5c158] hover:text-white hover:bg-[#e5c158]/20 hover:scale-110 transition-all shadow-[0_0_20px_rgba(229,193,88,0.4)] z-30 flex items-center justify-center cursor-pointer"
+          className="fixed top-4 right-4 sm:absolute sm:top-5 sm:right-5 p-3 rounded-full bg-[#0c0d12] border-2 border-[#e5c158] text-[#e5c158] hover:text-white hover:bg-[#e5c158]/20 hover:scale-110 active:scale-95 transition-all shadow-[0_0_25px_rgba(229,193,88,0.5)] z-50 flex items-center justify-center cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -263,9 +268,18 @@ export const ShareTributeModal: React.FC<ShareTributeModalProps> = ({ isOpen, on
             className="w-full justify-center text-[10px]"
           >
             <Share2 className="w-3.5 h-3.5 text-[#e5c158]" />
-              <span>Share</span>
+            <span>Share</span>
           </SpecularButton>
         </div>
+
+        {/* Bottom Close Button for effortless Mobile Dismissal */}
+        <button
+          onClick={onClose}
+          className="w-full py-2.5 rounded-2xl bg-[#14151c] border border-white/10 hover:border-[#e5c158]/50 text-[#f0f0f5]/80 hover:text-white font-general text-xs font-bold uppercase tracking-widest transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer mt-1"
+        >
+          <X className="w-3.5 h-3.5 text-[#e5c158]" />
+          <span>Close Window</span>
+        </button>
 
       </div>
     </div>

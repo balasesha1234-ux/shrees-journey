@@ -154,14 +154,19 @@ export const ShreeCreatorPortalModal: React.FC<ShreeCreatorPortalModalProps> = (
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/92 backdrop-blur-2xl animate-fade-in overflow-y-auto">
-      <div className="relative max-w-5xl w-full p-6 sm:p-10 rounded-[36px] bg-[#0c0d12] border-2 border-[#e5c158]/70 shadow-[0_0_120px_rgba(229,193,88,0.4)] flex flex-col items-center gap-6 my-auto text-left max-h-[92vh] overflow-hidden">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/92 backdrop-blur-2xl animate-fade-in overflow-y-auto cursor-pointer"
+    >
+      <div className="relative max-w-5xl w-full p-6 sm:p-10 rounded-[36px] bg-[#0c0d12] border-2 border-[#e5c158]/70 shadow-[0_0_120px_rgba(229,193,88,0.4)] flex flex-col items-center gap-6 my-auto text-left max-h-[92vh] overflow-hidden cursor-default">
         
         {/* Prominent Close Button */}
         <button
           onClick={onClose}
           aria-label="Close VIP Portal"
-          className="absolute top-5 right-5 p-2.5 rounded-full bg-[#0c0d12]/90 border border-[#e5c158]/60 text-[#e5c158] hover:text-white hover:bg-[#e5c158]/20 hover:scale-110 transition-all shadow-[0_0_20px_rgba(229,193,88,0.3)] z-30 flex items-center justify-center cursor-pointer"
+          className="fixed top-4 right-4 sm:absolute sm:top-5 sm:right-5 p-3 rounded-full bg-[#0c0d12] border-2 border-[#e5c158] text-[#e5c158] hover:text-white hover:bg-[#e5c158]/20 hover:scale-110 active:scale-95 transition-all shadow-[0_0_25px_rgba(229,193,88,0.5)] z-50 flex items-center justify-center cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
