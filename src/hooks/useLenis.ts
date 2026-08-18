@@ -11,16 +11,19 @@ export function useLenis() {
     const isSmallMobile = window.innerWidth < 768;
     if (isSmallMobile) return;
 
+    // Ultra-smooth "packed ice skate glide" physics configuration
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.9,
+      wheelMultiplier: 1.05,
       touchMultiplier: 1.0,
       infinite: false,
     });
+
+    (window as any).lenis = lenis;
 
     lenis.on('scroll', ScrollTrigger.update);
 
@@ -34,6 +37,7 @@ export function useLenis() {
     return () => {
       gsap.ticker.remove(updateLenis);
       lenis.destroy();
+      delete (window as any).lenis;
     };
   }, []);
 }
