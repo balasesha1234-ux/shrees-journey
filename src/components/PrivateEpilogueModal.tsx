@@ -213,7 +213,7 @@ export const PrivateEpilogueModal: React.FC<PrivateEpilogueModalProps> = ({
     if (lockoutSeconds > 0) return;
 
     const clean = password.trim().toLowerCase();
-    const allowedKeys = ['venkatesha', 'shree', '5million', 'shree5m', 'karthik', 'venkatesha!'];
+    const allowedKeys = ['shree@06032005', '06032005', 'shree5m', 'shree', '5million', 'venkatesha', 'karthik', 'venkatesha!'];
     const isMatch = allowedKeys.includes(clean) || btoa(clean) === 'dmVua2F0ZXNoYQ==';
 
     if (isMatch) {
